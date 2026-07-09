@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Account — Rinmora</title>
+<meta name="description" content="Create your Rinmora account.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: { primary: '#CFBAA5', 'primary-dark': '#b89e84', ink: '#000000' },
+        fontFamily: { sans: ['Poppins', 'sans-serif'], body: ['Manrope', 'sans-serif'] },
+        borderRadius: { '4xl': '2rem', '5xl': '2.5rem' },
+        boxShadow: { soft: '0 20px 60px -15px rgba(0,0,0,0.15)', card: '0 10px 40px -12px rgba(0,0,0,0.12)' },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Manrope', sans-serif; }
+  .font-display { font-family: 'Poppins', sans-serif; }
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+  .fade-up { animation: fadeUp .6s cubic-bezier(.16,1,.3,1) both; }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(16px);} to {opacity:1; transform:translateY(0);} }
+  .btn-ripple { position: relative; overflow: hidden; }
+  .btn-ripple span.ripple { position: absolute; border-radius: 9999px; transform: scale(0); animation: ripple .6s linear; background: rgba(0,0,0,0.15); pointer-events: none; }
+  @keyframes ripple { to { transform: scale(3); opacity: 0; } }
+</style>
+</head>
+
+<body class="bg-white text-ink antialiased min-h-screen">
+
+<!-- =========================================================
+     MINIMAL HEADER
+========================================================== -->
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-black/5">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10">
+    <div class="flex items-center justify-between h-16 md:h-20">
+      <a href="rinmora-home-preview.html" class="select-none">
+        <img src="../logo-01.png" alt="Rinmora" class="h-10 md:h-12 w-auto">
+      </a>
+      <a href="rinmora-shop-preview.html" class="font-display text-xs font-semibold uppercase tracking-wide text-black/50 hover:text-ink transition">
+        <i class="fa-solid fa-arrow-left mr-2 text-[10px]"></i> Back to Shop
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- =========================================================
+     REGISTER — SPLIT SCREEN
+========================================================== -->
+<main class="lg:grid lg:grid-cols-2 min-h-[calc(100vh-64px)] lg:min-h-[calc(100vh-80px)]">
+
+  <!-- Left: Lifestyle Image (desktop only) -->
+  <div class="hidden lg:block relative">
+    <img src="https://picsum.photos/seed/rinmora-register-lifestyle/900/1200" alt="Woman with a Rinmora handbag collection" class="absolute inset-0 w-full h-full object-cover">
+    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-black/0 to-black/0"></div>
+    <div class="absolute bottom-10 left-10 right-10 text-white">
+      <p class="font-display text-2xl font-semibold leading-snug">Join a community that values quality, craft, and confidence.</p>
+      <p class="text-white/70 text-sm mt-2">— Welcome to Rinmora</p>
+    </div>
+  </div>
+
+  <!-- Right: Form -->
+  <div class="flex items-center justify-center px-5 md:px-8 py-12 md:py-16">
+    <div class="w-full max-w-sm fade-up">
+      <div class="text-center mb-8">
+        <span class="font-display text-xs tracking-[0.25em] uppercase text-primary-dark font-semibold">Join Rinmora</span>
+        <h1 class="font-display text-2xl md:text-3xl font-semibold mt-2">Create Account</h1>
+        <p class="text-black/50 text-sm mt-2">Create an account to enjoy faster checkout and exclusive member offers.</p>
+      </div>
+
+      <form class="space-y-5" onsubmit="return false;">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="regFirstName" class="block text-xs font-display font-medium text-black/50 mb-2">First Name</label>
+            <input id="regFirstName" type="text" placeholder="Sana" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+          </div>
+          <div>
+            <label for="regLastName" class="block text-xs font-display font-medium text-black/50 mb-2">Last Name</label>
+            <input id="regLastName" type="text" placeholder="Khan" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+          </div>
+        </div>
+
+        <div>
+          <label for="regEmail" class="block text-xs font-display font-medium text-black/50 mb-2">Email Address</label>
+          <input id="regEmail" type="email" placeholder="you@example.com" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+        </div>
+
+        <div>
+          <label for="regPhone" class="block text-xs font-display font-medium text-black/50 mb-2">Phone Number</label>
+          <input id="regPhone" type="tel" placeholder="+1 (555) 000-0000" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+        </div>
+
+        <div>
+          <label for="regPassword" class="block text-xs font-display font-medium text-black/50 mb-2">Password</label>
+          <div class="relative">
+            <input id="regPassword" type="password" placeholder="Create a password" class="w-full px-5 py-3.5 pr-12 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+            <button type="button" class="password-toggle absolute right-4 top-1/2 -translate-y-1/2 text-black/35 hover:text-ink transition" aria-label="Show password" data-target="regPassword">
+              <i class="fa-regular fa-eye text-sm"></i>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label for="regConfirmPassword" class="block text-xs font-display font-medium text-black/50 mb-2">Confirm Password</label>
+          <div class="relative">
+            <input id="regConfirmPassword" type="password" placeholder="Re-enter your password" class="w-full px-5 py-3.5 pr-12 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+            <button type="button" class="password-toggle absolute right-4 top-1/2 -translate-y-1/2 text-black/35 hover:text-ink transition" aria-label="Show password" data-target="regConfirmPassword">
+              <i class="fa-regular fa-eye text-sm"></i>
+            </button>
+          </div>
+        </div>
+
+        <label class="flex items-start gap-2.5 text-sm text-black/60 cursor-pointer">
+          <input type="checkbox" class="w-4 h-4 rounded mt-0.5">
+          <span>I agree to Rinmora's <a href="#" class="font-medium text-ink underline underline-offset-2">Terms of Service</a> and <a href="#" class="font-medium text-ink underline underline-offset-2">Privacy Policy</a>.</span>
+        </label>
+
+        <button class="btn-ripple w-full bg-primary text-ink font-display font-semibold text-sm uppercase tracking-wide py-4 rounded-full hover:bg-primary-dark transition">
+          Create Account
+        </button>
+      </form>
+
+      <div class="flex items-center gap-4 my-7">
+        <div class="h-px flex-1 bg-black/10"></div>
+        <span class="text-xs font-display font-medium text-black/40 uppercase tracking-wide">Or</span>
+        <div class="h-px flex-1 bg-black/10"></div>
+      </div>
+
+      <div class="space-y-3">
+        <button class="w-full flex items-center justify-center gap-3 border border-black/10 rounded-full py-3.5 text-sm font-display font-medium hover:bg-black/5 transition">
+          <i class="fa-brands fa-google text-base"></i> Continue with Google
+        </button>
+        <button class="w-full flex items-center justify-center gap-3 border border-black/10 rounded-full py-3.5 text-sm font-display font-medium hover:bg-black/5 transition">
+          <i class="fa-brands fa-facebook text-base text-[#1877F2]"></i> Continue with Facebook
+        </button>
+      </div>
+
+      <p class="text-center text-sm text-black/55 mt-8">
+        Already have an account?
+        <a href="rinmora-login-preview.html" class="font-display font-semibold text-ink hover:text-primary-dark transition">Sign In</a>
+      </p>
+    </div>
+  </div>
+</main>
+
+<script>
+  document.querySelectorAll('.password-toggle').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const input = document.getElementById(this.dataset.target);
+      const icon = this.querySelector('i');
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      icon.classList.toggle('fa-eye');
+      icon.classList.toggle('fa-eye-slash');
+    });
+  });
+
+  document.querySelectorAll('.btn-ripple').forEach(btn => {
+    btn.addEventListener('click', function (e) {
+      const rect = this.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      const size = Math.max(rect.width, rect.height);
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+      ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+      this.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 650);
+    });
+  });
+</script>
+
+</body>
+</html>

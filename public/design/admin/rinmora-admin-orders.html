@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orders — Rinmora Admin</title>
+<meta name="description" content="Rinmora Admin — manage and track customer orders.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: '#CFBAA5', 'primary-dark': '#b89e84', ink: '#000000',
+          canvas: '#F8F8F8',
+          success: '#22C55E', warning: '#F59E0B', danger: '#EF4444', info: '#3B82F6',
+        },
+        fontFamily: { sans: ['Inter', 'sans-serif'] },
+        borderRadius: { '4xl': '2rem' },
+        boxShadow: { soft: '0 20px 60px -15px rgba(0,0,0,0.12)', card: '0 4px 24px -8px rgba(0,0,0,0.08)' },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Inter', sans-serif; }
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+  .snap-row { scroll-snap-type: x mandatory; }
+  .snap-item { scroll-snap-align: start; }
+  .sidebar-collapsed .nav-label,
+  .sidebar-collapsed .nav-section-label,
+  .sidebar-collapsed .sidebar-brand-text,
+  .sidebar-collapsed .nav-chevron { display: none; }
+  .sidebar-collapsed .submenu { display: none !important; }
+</style>
+</head>
+
+<body class="bg-canvas text-ink antialiased">
+
+<!-- =========================================================
+     TOPBAR
+========================================================== -->
+<header class="sticky top-0 z-40 bg-white border-b border-black/5">
+  <div class="flex items-center gap-3 h-16 px-4 md:px-6">
+    <button id="mobileSidebarBtn" aria-label="Open sidebar" class="lg:hidden w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <button id="collapseSidebarBtn" aria-label="Collapse sidebar" class="hidden lg:grid w-9 h-9 place-items-center rounded-full hover:bg-black/5 transition">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <a href="rinmora-admin-dashboard.html" class="flex items-center gap-2 shrink-0">
+      <img src="../../logo-01.png" alt="Rinmora" class="h-7 w-auto">
+      <span class="hidden sm:inline text-[10px] font-semibold uppercase tracking-wider bg-ink text-white px-2 py-0.5 rounded-full">Admin</span>
+    </a>
+
+    <div class="flex-1 max-w-xl mx-auto hidden sm:block">
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-black/30 text-sm"></i>
+        <label for="globalSearch" class="sr-only">Global search</label>
+        <input id="globalSearch" type="text" placeholder="Search products, orders, customers..." class="w-full pl-11 pr-4 py-2.5 rounded-full bg-black/[0.03] border border-transparent text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition">
+      </div>
+    </div>
+
+    <div class="flex items-center gap-1 ml-auto sm:ml-0">
+      <button aria-label="Search" class="sm:hidden w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+        <i class="fa-solid fa-magnifying-glass text-sm"></i>
+      </button>
+
+      <div class="relative">
+        <button id="quickActionsBtn" class="hidden md:inline-flex items-center gap-2 bg-primary text-ink font-semibold text-xs uppercase tracking-wide px-4 py-2.5 rounded-full hover:bg-primary-dark transition">
+          <i class="fa-solid fa-plus text-[10px]"></i> Quick Actions
+        </button>
+        <div id="quickActionsMenu" class="hidden absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <a href="rinmora-admin-product-add.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-bag-shopping w-4 text-black/40"></i> New Product</a>
+          <a href="rinmora-admin-orders.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-receipt w-4 text-black/40"></i> New Order</a>
+          <a href="rinmora-admin-customers.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-user-plus w-4 text-black/40"></i> New Customer</a>
+        </div>
+      </div>
+
+      <div class="relative">
+        <button id="notifBtn" aria-label="Notifications" class="relative w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+          <i class="fa-regular fa-bell text-sm"></i>
+          <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-danger"></span>
+        </button>
+        <div id="notifMenu" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <p class="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black/40">Notifications</p>
+          <a href="#" class="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <span class="w-8 h-8 rounded-full bg-success/15 grid place-items-center shrink-0"><i class="fa-solid fa-circle-check text-success text-xs"></i></span>
+            <span class="text-sm"><span class="font-medium">Order #RIN-20591 delivered</span><br><span class="text-black/45 text-xs">2 minutes ago</span></span>
+          </a>
+        </div>
+      </div>
+
+      <div class="relative">
+        <button id="msgBtn" aria-label="Messages" class="relative w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+          <i class="fa-regular fa-envelope text-sm"></i>
+          <span class="absolute top-1 right-1.5 w-4 h-4 rounded-full bg-ink text-white text-[9px] font-bold grid place-items-center">2</span>
+        </button>
+        <div id="msgMenu" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <p class="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black/40">Messages</p>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <img src="https://picsum.photos/seed/admin-msg-1/60/60" alt="" class="w-8 h-8 rounded-full object-cover">
+            <span class="text-sm"><span class="font-medium">Sana K.</span><br><span class="text-black/45 text-xs">Question about order #RIN-20583</span></span>
+          </a>
+        </div>
+      </div>
+
+      <button id="themeToggleBtn" aria-label="Toggle theme" class="w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+        <i class="fa-regular fa-moon text-sm"></i>
+      </button>
+
+      <div class="relative pl-1">
+        <button id="profileBtn" class="flex items-center gap-2 pl-1.5 pr-2.5 py-1.5 rounded-full hover:bg-black/5 transition">
+          <img src="https://picsum.photos/seed/admin-avatar/80/80" alt="Admin" class="w-7 h-7 rounded-full object-cover">
+          <span class="hidden md:inline text-sm font-medium">Ayesha N.</span>
+          <i class="fa-solid fa-chevron-down text-[10px] text-black/40"></i>
+        </button>
+        <div id="profileMenu" class="hidden absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-regular fa-user w-4 text-black/40"></i> My Profile</a>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-gear w-4 text-black/40"></i> Settings</a>
+          <div class="border-t border-black/5 my-1"></div>
+          <a href="../rinmora-login-preview.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-danger hover:bg-danger/5 transition"><i class="fa-solid fa-right-from-bracket w-4"></i> Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="flex">
+
+  <!-- =========================================================
+       SIDEBAR
+  ========================================================== -->
+  <div id="sidebarOverlay" class="fixed inset-0 bg-black/0 z-30 lg:hidden invisible pointer-events-none transition-colors duration-300"></div>
+
+  <aside id="sidebar" class="fixed lg:sticky top-16 left-0 z-30 h-[calc(100vh-4rem)] w-72 bg-white border-r border-black/5 -translate-x-full lg:translate-x-0 transition-all duration-300 ease-out overflow-y-auto shrink-0">
+    <nav class="p-4 space-y-1">
+      <p class="nav-section-label px-3 pt-2 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Main</p>
+
+      <a href="rinmora-admin-dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-gauge w-4 text-center"></i> <span class="nav-label">Dashboard</span>
+      </a>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-bag-shopping w-4 text-center"></i> <span class="nav-label">Products</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-products.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Products</a>
+          <a href="rinmora-admin-product-add.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Add Product</a>
+          <a href="rinmora-admin-product-categories.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Categories</a>
+          <a href="rinmora-admin-product-brands.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Brands &amp; Collections</a>
+          <a href="rinmora-admin-product-attributes.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Attributes</a>
+          <a href="rinmora-admin-reviews.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Reviews</a>
+          <a href="rinmora-admin-inventory.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Inventory</a>
+        </div>
+      </div>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl bg-primary/20 text-ink font-semibold text-sm">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-receipt w-4 text-center"></i> <span class="nav-label">Orders</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform rotate-180"></i>
+        </button>
+        <div class="submenu pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm bg-black/5 text-ink font-medium transition">All Orders</a>
+          <a href="rinmora-admin-orders.html?status=pending" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Pending</a>
+          <a href="rinmora-admin-orders.html?status=shipped" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Shipped</a>
+          <a href="rinmora-admin-orders.html?status=returned" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Returned / Refunded</a>
+        </div>
+      </div>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-users w-4 text-center"></i> <span class="nav-label">Customers</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-customers.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Customers</a>
+          <a href="rinmora-admin-customer-addresses.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Addresses</a>
+          <a href="rinmora-admin-wishlist-reports.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Wishlist Reports</a>
+          <a href="rinmora-admin-reward-points.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Reward Points</a>
+        </div>
+      </div>
+
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-bullhorn w-4 text-center"></i> <span class="nav-label">Marketing</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Content &amp; Store</p>
+
+      <a href="rinmora-admin-cms-homepage-builder.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-file-lines w-4 text-center"></i> <span class="nav-label">CMS</span>
+      </a>
+      <a href="rinmora-admin-media-manager.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-images w-4 text-center"></i> <span class="nav-label">Media Manager</span>
+      </a>
+      <a href="rinmora-admin-reviews.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-star w-4 text-center"></i> <span class="nav-label">Reviews</span>
+      </a>
+      <a href="rinmora-admin-inventory.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-warehouse w-4 text-center"></i> <span class="nav-label">Inventory</span>
+      </a>
+      <a href="rinmora-admin-shipping.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-truck-fast w-4 text-center"></i> <span class="nav-label">Shipping</span>
+      </a>
+      <a href="rinmora-admin-payments.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-credit-card w-4 text-center"></i> <span class="nav-label">Payments</span>
+      </a>
+      <a href="rinmora-admin-users.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-user-shield w-4 text-center"></i> <span class="nav-label">Users &amp; Roles</span>
+      </a>
+      <a href="rinmora-admin-reports.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-chart-line w-4 text-center"></i> <span class="nav-label">Reports</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">System</p>
+
+      <a href="rinmora-admin-seo.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-magnifying-glass-chart w-4 text-center"></i> <span class="nav-label">SEO</span>
+      </a>
+      <a href="rinmora-admin-contact-support.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-headset w-4 text-center"></i> <span class="nav-label">Contact &amp; Support</span>
+      </a>
+      <a href="rinmora-admin-notifications.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-bell w-4 text-center"></i> <span class="nav-label">Notifications</span>
+      </a>
+      <a href="rinmora-admin-activity-logs.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-clock-rotate-left w-4 text-center"></i> <span class="nav-label">Activity Logs</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Account</p>
+
+      <a href="rinmora-admin-profile.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-user w-4 text-center"></i> <span class="nav-label">My Profile</span>
+      </a>
+      <a href="rinmora-admin-settings.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-gear w-4 text-center"></i> <span class="nav-label">Settings</span>
+      </a>
+      <a href="../rinmora-login-preview.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-right-from-bracket w-4 text-center"></i> <span class="nav-label">Logout</span>
+      </a>
+    </nav>
+  </aside>
+
+
+  <!-- =========================================================
+       MAIN CONTENT
+  ========================================================== -->
+  <main class="flex-1 min-w-0 px-4 md:px-6 py-6">
+
+    <nav aria-label="Breadcrumb" class="text-xs text-black/40 mb-2">
+      <span>Admin</span> <i class="fa-solid fa-chevron-right text-[8px] mx-1.5"></i> <span>Orders</span> <i class="fa-solid fa-chevron-right text-[8px] mx-1.5"></i> <span class="text-ink font-medium">All Orders</span>
+    </nav>
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+      <div>
+        <h1 class="text-xl md:text-2xl font-bold">All Orders</h1>
+        <p class="text-black/45 text-sm mt-1">Track, fulfill, and manage every customer order.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button class="hidden sm:inline-flex items-center gap-2 bg-white border border-black/10 rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-black/[0.03] transition">
+          <i class="fa-solid fa-file-export text-black/40"></i> Export
+        </button>
+        <button class="inline-flex items-center gap-2 bg-primary text-ink rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-primary-dark transition">
+          <i class="fa-solid fa-plus text-[10px]"></i> Create Order
+        </button>
+      </div>
+    </div>
+
+    <!-- Status Tabs -->
+    <div class="flex gap-2 overflow-x-auto snap-row -mx-4 px-4 md:mx-0 md:px-0 mb-5">
+      <button data-status="all" class="order-status-tab snap-item shrink-0 text-xs font-semibold px-4 py-2 rounded-full bg-ink text-white transition">All <span class="opacity-60">(412)</span></button>
+      <button data-status="pending" class="order-status-tab snap-item shrink-0 text-xs font-medium px-4 py-2 rounded-full bg-white border border-black/10 hover:bg-black/5 transition">Pending <span class="text-black/40">(18)</span></button>
+      <button data-status="processing" class="order-status-tab snap-item shrink-0 text-xs font-medium px-4 py-2 rounded-full bg-white border border-black/10 hover:bg-black/5 transition">Processing <span class="text-black/40">(24)</span></button>
+      <button data-status="packed" class="order-status-tab snap-item shrink-0 text-xs font-medium px-4 py-2 rounded-full bg-white border border-black/10 hover:bg-black/5 transition">Packed <span class="text-black/40">(9)</span></button>
+      <button data-status="shipped" class="order-status-tab snap-item shrink-0 text-xs font-medium px-4 py-2 rounded-full bg-white border border-black/10 hover:bg-black/5 transition">Shipped <span class="text-black/40">(31)</span></button>
+      <button data-status="delivered" class="order-status-tab snap-item shrink-0 text-xs font-medium px-4 py-2 rounded-full bg-white border border-black/10 hover:bg-black/5 transition">Delivered <span class="text-black/40">(298)</span></button>
+      <button data-status="cancelled" class="order-status-tab snap-item shrink-0 text-xs font-medium px-4 py-2 rounded-full bg-white border border-black/10 hover:bg-black/5 transition">Cancelled <span class="text-black/40">(17)</span></button>
+      <button data-status="returned" class="order-status-tab snap-item shrink-0 text-xs font-medium px-4 py-2 rounded-full bg-white border border-black/10 hover:bg-black/5 transition">Returned <span class="text-black/40">(11)</span></button>
+      <button data-status="refunded" class="order-status-tab snap-item shrink-0 text-xs font-medium px-4 py-2 rounded-full bg-white border border-black/10 hover:bg-black/5 transition">Refunded <span class="text-black/40">(4)</span></button>
+    </div>
+
+    <!-- Filters + Table -->
+    <div class="bg-white rounded-3xl shadow-card overflow-hidden">
+      <div class="p-4 md:p-5 border-b border-black/5 flex flex-wrap items-center gap-3">
+        <div class="relative flex-1 min-w-[200px]">
+          <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-black/30 text-xs"></i>
+          <label for="orderSearch" class="sr-only">Search orders</label>
+          <input id="orderSearch" type="text" placeholder="Search by order # or customer..." class="w-full pl-10 pr-4 py-2.5 rounded-full bg-black/[0.03] text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition">
+        </div>
+        <button class="inline-flex items-center gap-2 border border-black/10 rounded-full px-4 py-2.5 text-xs font-medium hover:bg-black/5 transition">
+          <i class="fa-regular fa-calendar text-black/40"></i> Jul 1 – Jul 31, 2026
+        </button>
+        <div class="relative">
+          <select aria-label="Filter by payment status" class="appearance-none border border-black/10 rounded-full pl-4 pr-8 py-2.5 text-xs font-medium bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary">
+            <option>Payment: All</option>
+            <option>Paid</option>
+            <option>Pending</option>
+            <option>Refunded</option>
+          </select>
+          <i class="fa-solid fa-chevron-down text-[9px] absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-black/40"></i>
+        </div>
+        <div class="relative">
+          <select aria-label="Filter by order status" class="appearance-none border border-black/10 rounded-full pl-4 pr-8 py-2.5 text-xs font-medium bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary">
+            <option>Status: All</option>
+            <option>Processing</option>
+            <option>Shipped</option>
+            <option>Delivered</option>
+          </select>
+          <i class="fa-solid fa-chevron-down text-[9px] absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-black/40"></i>
+        </div>
+      </div>
+
+      <!-- Bulk actions bar -->
+      <div id="bulkActionsBar" class="hidden items-center justify-between gap-3 px-4 md:px-5 py-3 bg-ink text-white text-sm">
+        <span><span id="bulkSelectedCount">0</span> selected</span>
+        <div class="flex items-center gap-2">
+          <button class="text-xs font-semibold px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 transition">Print Invoices</button>
+          <button class="text-xs font-semibold px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 transition">Mark as Shipped</button>
+          <button class="text-xs font-semibold px-3 py-1.5 rounded-full bg-danger hover:bg-danger/85 transition">Cancel</button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm min-w-[960px]">
+          <thead>
+            <tr class="text-left text-black/40 text-xs uppercase tracking-wide border-b border-black/5">
+              <th class="py-3 pl-5 w-10"><input type="checkbox" id="selectAllOrders" class="w-4 h-4 rounded"></th>
+              <th class="py-3 font-medium">Order</th>
+              <th class="py-3 font-medium">Customer</th>
+              <th class="py-3 font-medium">Items</th>
+              <th class="py-3 font-medium">Payment</th>
+              <th class="py-3 font-medium">Status</th>
+              <th class="py-3 font-medium">Shipping</th>
+              <th class="py-3 font-medium">Date</th>
+              <th class="py-3 font-medium text-right">Total</th>
+              <th class="py-3 pr-5 font-medium text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-black/5">
+
+            <tr class="hover:bg-black/[0.02] transition">
+              <td class="py-3 pl-5"><input type="checkbox" class="order-row-checkbox w-4 h-4 rounded"></td>
+              <td class="py-3 font-semibold">#RIN-20591</td>
+              <td class="py-3">
+                <div class="flex items-center gap-2.5">
+                  <img src="https://picsum.photos/seed/order-cust-1/60/60" alt="" class="w-7 h-7 rounded-full object-cover">
+                  <span class="text-black/70">Sana Khan</span>
+                </div>
+              </td>
+              <td class="py-3 text-black/60">2 items</td>
+              <td class="py-3"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Paid</span></td>
+              <td class="py-3"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Delivered</span></td>
+              <td class="py-3"><span class="bg-black/5 text-black/50 text-[11px] font-semibold px-2.5 py-1 rounded-full">Shipped</span></td>
+              <td class="py-3 text-black/50 text-xs">Jul 08, 2026</td>
+              <td class="py-3 text-right font-semibold">$192.00</td>
+              <td class="py-3 pr-5 text-right relative">
+                <button class="row-action-btn w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition ml-auto"><i class="fa-solid fa-ellipsis-vertical text-black/40"></i></button>
+                <div class="row-action-menu hidden absolute right-5 mt-1 w-44 bg-white rounded-xl shadow-soft border border-black/5 p-1.5 z-20 text-left">
+                  <a href="rinmora-admin-order-detail.html?order=RIN-20591" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-black/5 transition"><i class="fa-regular fa-eye w-3.5 text-black/40"></i> View Details</a>
+                  <a href="rinmora-admin-order-invoice.html?order=RIN-20591" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-black/5 transition"><i class="fa-solid fa-print w-3.5 text-black/40"></i> Print Invoice</a>
+                  <a href="rinmora-admin-order-shipping-label.html?order=RIN-20591" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-black/5 transition"><i class="fa-solid fa-tag w-3.5 text-black/40"></i> Shipping Label</a>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="hover:bg-black/[0.02] transition">
+              <td class="py-3 pl-5"><input type="checkbox" class="order-row-checkbox w-4 h-4 rounded"></td>
+              <td class="py-3 font-semibold">#RIN-20590</td>
+              <td class="py-3">
+                <div class="flex items-center gap-2.5">
+                  <img src="https://picsum.photos/seed/order-cust-2/60/60" alt="" class="w-7 h-7 rounded-full object-cover">
+                  <span class="text-black/70">Amina Raza</span>
+                </div>
+              </td>
+              <td class="py-3 text-black/60">1 item</td>
+              <td class="py-3"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Paid</span></td>
+              <td class="py-3"><span class="bg-info/10 text-info text-[11px] font-semibold px-2.5 py-1 rounded-full">Shipped</span></td>
+              <td class="py-3"><span class="bg-info/10 text-info text-[11px] font-semibold px-2.5 py-1 rounded-full">In Transit</span></td>
+              <td class="py-3 text-black/50 text-xs">Jul 08, 2026</td>
+              <td class="py-3 text-right font-semibold">$58.00</td>
+              <td class="py-3 pr-5 text-right relative">
+                <button class="row-action-btn w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition ml-auto"><i class="fa-solid fa-ellipsis-vertical text-black/40"></i></button>
+                <div class="row-action-menu hidden absolute right-5 mt-1 w-44 bg-white rounded-xl shadow-soft border border-black/5 p-1.5 z-20 text-left">
+                  <a href="rinmora-admin-order-detail.html?order=RIN-20590" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-black/5 transition"><i class="fa-regular fa-eye w-3.5 text-black/40"></i> View Details</a>
+                  <a href="rinmora-admin-order-invoice.html?order=RIN-20590" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-black/5 transition"><i class="fa-solid fa-print w-3.5 text-black/40"></i> Print Invoice</a>
+                  <a href="rinmora-admin-order-shipping-label.html?order=RIN-20590" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-black/5 transition"><i class="fa-solid fa-tag w-3.5 text-black/40"></i> Shipping Label</a>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="hover:bg-black/[0.02] transition">
+              <td class="py-3 pl-5"><input type="checkbox" class="order-row-checkbox w-4 h-4 rounded"></td>
+              <td class="py-3 font-semibold">#RIN-20589</td>
+              <td class="py-3">
+                <div class="flex items-center gap-2.5">
+                  <img src="https://picsum.photos/seed/order-cust-3/60/60" alt="" class="w-7 h-7 rounded-full object-cover">
+                  <span class="text-black/70">Hira Malik</span>
+                </div>
+              </td>
+              <td class="py-3 text-black/60">3 items</td>
+              <td class="py-3"><span class="bg-warning/10 text-warning text-[11px] font-semibold px-2.5 py-1 rounded-full">Pending</span></td>
+              <td class="py-3"><span class="bg-warning/10 text-warning text-[11px] font-semibold px-2.5 py-1 rounded-full">Processing</span></td>
+              <td class="py-3"><span class="bg-black/5 text-black/45 text-[11px] font-semibold px-2.5 py-1 rounded-full">Not Shipped</span></td>
+              <td class="py-3 text-black/50 text-xs">Jul 07, 2026</td>
+              <td class="py-3 text-right font-semibold">$264.00</td>
+              <td class="py-3 pr-5 text-right relative">
+                <button class="row-action-btn w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition ml-auto"><i class="fa-solid fa-ellipsis-vertical text-black/40"></i></button>
+                <div class="row-action-menu hidden absolute right-5 mt-1 w-44 bg-white rounded-xl shadow-soft border border-black/5 p-1.5 z-20 text-left">
+                  <a href="rinmora-admin-order-detail.html?order=RIN-20589" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-black/5 transition"><i class="fa-regular fa-eye w-3.5 text-black/40"></i> View Details</a>
+                  <a href="rinmora-admin-order-invoice.html?order=RIN-20589" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-black/5 transition"><i class="fa-solid fa-print w-3.5 text-black/40"></i> Print Invoice</a>
+                  <a href="rinmora-admin-order-shipping-label.html?order=RIN-20589" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-black/5 transition"><i class="fa-solid fa-tag w-3.5 text-black/40"></i> Shipping Label</a>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="hover:bg-black/[0.02] transition">
+              <td class="py-3 pl-5"><input type="checkbox" class="order-row-checkbox w-4 h-4 rounded"></td>
+              <td class="py-3 font-semibold">#RIN-20588</td>
+              <td class="py-3">
+                <div class="flex items-center gap-2.5">
+                  <img src="https://picsum.photos/seed/order-cust-4/60/60" alt="" class="w-7 h-7 rounded-full object-cover">
+                  <span class="text-black/70">Zoya Ahmed</span>
+                </div>
+              </td>
+              <td class="py-3 text-black/60">1 item</td>
+              <td class="py-3"><span class="bg-danger/10 text-danger text-[11px] font-semibold px-2.5 py-1 rounded-full">Refunded</span></td>
+              <td class="py-3"><span class="bg-black/5 text-black/45 text-[11px] font-semibold px-2.5 py-1 rounded-full">Cancelled</span></td>
+              <td class="py-3"><span class="bg-black/5 text-black/45 text-[11px] font-semibold px-2.5 py-1 rounded-full">—</span></td>
+              <td class="py-3 text-black/50 text-xs">Jul 06, 2026</td>
+              <td class="py-3 text-right font-semibold">$89.00</td>
+              <td class="py-3 pr-5 text-right relative">
+                <button class="row-action-btn w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition ml-auto"><i class="fa-solid fa-ellipsis-vertical text-black/40"></i></button>
+                <div class="row-action-menu hidden absolute right-5 mt-1 w-44 bg-white rounded-xl shadow-soft border border-black/5 p-1.5 z-20 text-left">
+                  <a href="rinmora-admin-order-detail.html?order=RIN-20588" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-black/5 transition"><i class="fa-regular fa-eye w-3.5 text-black/40"></i> View Details</a>
+                  <a href="rinmora-admin-order-invoice.html?order=RIN-20588" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs hover:bg-black/5 transition"><i class="fa-solid fa-print w-3.5 text-black/40"></i> Print Invoice</a>
+                </div>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-4 px-4 md:px-5 py-4 border-t border-black/5">
+        <p class="text-xs text-black/45">Showing 1–4 of 412 orders</p>
+        <nav aria-label="Pagination" class="flex items-center gap-1.5">
+          <button aria-label="Previous page" class="w-8 h-8 rounded-full border border-black/10 grid place-items-center hover:bg-black/5 transition text-xs"><i class="fa-solid fa-chevron-left"></i></button>
+          <button aria-current="page" class="w-8 h-8 rounded-full bg-ink text-white grid place-items-center text-xs font-semibold">1</button>
+          <button class="w-8 h-8 rounded-full border border-black/10 grid place-items-center hover:bg-black/5 transition text-xs font-medium">2</button>
+          <button class="w-8 h-8 rounded-full border border-black/10 grid place-items-center hover:bg-black/5 transition text-xs font-medium">3</button>
+          <button aria-label="Next page" class="w-8 h-8 rounded-full border border-black/10 grid place-items-center hover:bg-black/5 transition text-xs"><i class="fa-solid fa-chevron-right"></i></button>
+        </nav>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+  const mobileSidebarBtn = document.getElementById('mobileSidebarBtn');
+  const collapseSidebarBtn = document.getElementById('collapseSidebarBtn');
+
+  function openMobileSidebar() {
+    sidebar.classList.remove('-translate-x-full');
+    sidebarOverlay.classList.remove('invisible', 'pointer-events-none');
+    requestAnimationFrame(() => sidebarOverlay.classList.add('bg-black/40'));
+  }
+  function closeMobileSidebar() {
+    sidebar.classList.add('-translate-x-full');
+    sidebarOverlay.classList.remove('bg-black/40');
+    sidebarOverlay.classList.add('pointer-events-none');
+    setTimeout(() => sidebarOverlay.classList.add('invisible'), 300);
+  }
+  mobileSidebarBtn.addEventListener('click', openMobileSidebar);
+  sidebarOverlay.addEventListener('click', closeMobileSidebar);
+
+  collapseSidebarBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('sidebar-collapsed');
+    sidebar.classList.toggle('w-72');
+    sidebar.classList.toggle('w-20');
+  });
+
+  document.querySelectorAll('.submenu-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const submenu = btn.nextElementSibling;
+      const chevron = btn.querySelector('.nav-chevron');
+      submenu.classList.toggle('hidden');
+      chevron.classList.toggle('rotate-180');
+    });
+  });
+
+  const dropdowns = [
+    ['quickActionsBtn', 'quickActionsMenu'],
+    ['notifBtn', 'notifMenu'],
+    ['msgBtn', 'msgMenu'],
+    ['profileBtn', 'profileMenu'],
+  ];
+  dropdowns.forEach(([btnId, menuId]) => {
+    const btn = document.getElementById(btnId);
+    const menu = document.getElementById(menuId);
+    if (!btn || !menu) return;
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = !menu.classList.contains('hidden');
+      dropdowns.forEach(([, mId]) => document.getElementById(mId)?.classList.add('hidden'));
+      document.querySelectorAll('.row-action-menu').forEach(m => m.classList.add('hidden'));
+      menu.classList.toggle('hidden', isOpen);
+    });
+  });
+
+  document.querySelectorAll('.row-action-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const menu = btn.nextElementSibling;
+      const isOpen = !menu.classList.contains('hidden');
+      document.querySelectorAll('.row-action-menu').forEach(m => m.classList.add('hidden'));
+      dropdowns.forEach(([, mId]) => document.getElementById(mId)?.classList.add('hidden'));
+      menu.classList.toggle('hidden', isOpen);
+    });
+  });
+
+  document.addEventListener('click', () => {
+    dropdowns.forEach(([, mId]) => document.getElementById(mId)?.classList.add('hidden'));
+    document.querySelectorAll('.row-action-menu').forEach(m => m.classList.add('hidden'));
+  });
+
+  document.getElementById('themeToggleBtn').addEventListener('click', function () {
+    const icon = this.querySelector('i');
+    icon.classList.toggle('fa-moon');
+    icon.classList.toggle('fa-sun');
+  });
+
+  const selectAllOrders = document.getElementById('selectAllOrders');
+  const rowCheckboxes = document.querySelectorAll('.order-row-checkbox');
+  const bulkActionsBar = document.getElementById('bulkActionsBar');
+  const bulkSelectedCount = document.getElementById('bulkSelectedCount');
+
+  function updateBulkBar() {
+    const checked = document.querySelectorAll('.order-row-checkbox:checked').length;
+    bulkSelectedCount.textContent = checked;
+    bulkActionsBar.classList.toggle('hidden', checked === 0);
+    bulkActionsBar.classList.toggle('flex', checked > 0);
+    selectAllOrders.checked = checked === rowCheckboxes.length;
+  }
+  selectAllOrders.addEventListener('change', function () {
+    rowCheckboxes.forEach(cb => cb.checked = this.checked);
+    updateBulkBar();
+  });
+  rowCheckboxes.forEach(cb => cb.addEventListener('change', updateBulkBar));
+
+  // Pre-select status tab from sidebar deep link (?status=pending|shipped|returned)
+  const statusTabs = document.querySelectorAll('.order-status-tab');
+  function activateStatusTab(status) {
+    statusTabs.forEach(tab => {
+      const isActive = tab.dataset.status === status;
+      tab.classList.toggle('bg-ink', isActive);
+      tab.classList.toggle('text-white', isActive);
+      tab.classList.toggle('font-semibold', isActive);
+      tab.classList.toggle('bg-white', !isActive);
+      tab.classList.toggle('border', !isActive);
+      tab.classList.toggle('border-black/10', !isActive);
+      tab.classList.toggle('font-medium', !isActive);
+    });
+  }
+  statusTabs.forEach(tab => {
+    tab.addEventListener('click', () => activateStatusTab(tab.dataset.status));
+  });
+  const requestedStatus = new URLSearchParams(window.location.search).get('status');
+  if (requestedStatus) activateStatusTab(requestedStatus);
+</script>
+
+</body>
+</html>

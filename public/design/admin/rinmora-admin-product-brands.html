@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brands & Collections — Rinmora Admin</title>
+<meta name="description" content="Rinmora Admin — manage brands and curated collections.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: '#CFBAA5', 'primary-dark': '#b89e84', ink: '#000000',
+          canvas: '#F8F8F8',
+          success: '#22C55E', warning: '#F59E0B', danger: '#EF4444', info: '#3B82F6',
+        },
+        fontFamily: { sans: ['Inter', 'sans-serif'] },
+        borderRadius: { '4xl': '2rem' },
+        boxShadow: { soft: '0 20px 60px -15px rgba(0,0,0,0.12)', card: '0 4px 24px -8px rgba(0,0,0,0.08)' },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Inter', sans-serif; }
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+  .hover-lift { transition: transform .2s ease, box-shadow .2s ease; }
+  .hover-lift:hover { transform: translateY(-2px); }
+  .sidebar-collapsed .nav-label,
+  .sidebar-collapsed .nav-section-label,
+  .sidebar-collapsed .sidebar-brand-text,
+  .sidebar-collapsed .nav-chevron { display: none; }
+  .sidebar-collapsed .submenu { display: none !important; }
+  .upload-dropzone { border: 1.5px dashed rgba(0,0,0,.15); }
+  .upload-dropzone:hover { border-color: #CFBAA5; }
+</style>
+</head>
+
+<body class="bg-canvas text-ink antialiased">
+
+<!-- =========================================================
+     TOPBAR
+========================================================== -->
+<header class="sticky top-0 z-40 bg-white border-b border-black/5">
+  <div class="flex items-center gap-3 h-16 px-4 md:px-6">
+    <button id="mobileSidebarBtn" aria-label="Open sidebar" class="lg:hidden w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <button id="collapseSidebarBtn" aria-label="Collapse sidebar" class="hidden lg:grid w-9 h-9 place-items-center rounded-full hover:bg-black/5 transition">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <a href="rinmora-admin-dashboard.html" class="flex items-center gap-2 shrink-0">
+      <img src="../../logo-01.png" alt="Rinmora" class="h-7 w-auto">
+      <span class="hidden sm:inline text-[10px] font-semibold uppercase tracking-wider bg-ink text-white px-2 py-0.5 rounded-full">Admin</span>
+    </a>
+
+    <div class="flex-1 max-w-xl mx-auto hidden sm:block">
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-black/30 text-sm"></i>
+        <label for="globalSearch" class="sr-only">Global search</label>
+        <input id="globalSearch" type="text" placeholder="Search products, orders, customers..." class="w-full pl-11 pr-4 py-2.5 rounded-full bg-black/[0.03] border border-transparent text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition">
+      </div>
+    </div>
+
+    <div class="flex items-center gap-1 ml-auto sm:ml-0">
+      <button aria-label="Search" class="sm:hidden w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+        <i class="fa-solid fa-magnifying-glass text-sm"></i>
+      </button>
+
+      <div class="relative">
+        <button id="quickActionsBtn" class="hidden md:inline-flex items-center gap-2 bg-primary text-ink font-semibold text-xs uppercase tracking-wide px-4 py-2.5 rounded-full hover:bg-primary-dark transition">
+          <i class="fa-solid fa-plus text-[10px]"></i> Quick Actions
+        </button>
+        <div id="quickActionsMenu" class="hidden absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <a href="rinmora-admin-product-add.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-bag-shopping w-4 text-black/40"></i> New Product</a>
+          <a href="rinmora-admin-orders.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-receipt w-4 text-black/40"></i> New Order</a>
+          <a href="rinmora-admin-customers.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-user-plus w-4 text-black/40"></i> New Customer</a>
+        </div>
+      </div>
+
+      <div class="relative">
+        <button id="notifBtn" aria-label="Notifications" class="relative w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+          <i class="fa-regular fa-bell text-sm"></i>
+          <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-danger"></span>
+        </button>
+        <div id="notifMenu" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <p class="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black/40">Notifications</p>
+          <a href="#" class="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <span class="w-8 h-8 rounded-full bg-warning/15 grid place-items-center shrink-0"><i class="fa-solid fa-triangle-exclamation text-warning text-xs"></i></span>
+            <span class="text-sm"><span class="font-medium">Low stock alert</span><br><span class="text-black/45 text-xs">Aurora Mini Bag has 3 units left</span></span>
+          </a>
+        </div>
+      </div>
+
+      <div class="relative">
+        <button id="msgBtn" aria-label="Messages" class="relative w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+          <i class="fa-regular fa-envelope text-sm"></i>
+          <span class="absolute top-1 right-1.5 w-4 h-4 rounded-full bg-ink text-white text-[9px] font-bold grid place-items-center">2</span>
+        </button>
+        <div id="msgMenu" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <p class="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black/40">Messages</p>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <img src="https://picsum.photos/seed/admin-msg-1/60/60" alt="" class="w-8 h-8 rounded-full object-cover">
+            <span class="text-sm"><span class="font-medium">Sana K.</span><br><span class="text-black/45 text-xs">Question about order #RIN-20583</span></span>
+          </a>
+        </div>
+      </div>
+
+      <button id="themeToggleBtn" aria-label="Toggle theme" class="w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+        <i class="fa-regular fa-moon text-sm"></i>
+      </button>
+
+      <div class="relative pl-1">
+        <button id="profileBtn" class="flex items-center gap-2 pl-1.5 pr-2.5 py-1.5 rounded-full hover:bg-black/5 transition">
+          <img src="https://picsum.photos/seed/admin-avatar/80/80" alt="Admin" class="w-7 h-7 rounded-full object-cover">
+          <span class="hidden md:inline text-sm font-medium">Ayesha N.</span>
+          <i class="fa-solid fa-chevron-down text-[10px] text-black/40"></i>
+        </button>
+        <div id="profileMenu" class="hidden absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-regular fa-user w-4 text-black/40"></i> My Profile</a>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-gear w-4 text-black/40"></i> Settings</a>
+          <div class="border-t border-black/5 my-1"></div>
+          <a href="../rinmora-login-preview.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-danger hover:bg-danger/5 transition"><i class="fa-solid fa-right-from-bracket w-4"></i> Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="flex">
+
+  <!-- =========================================================
+       SIDEBAR
+  ========================================================== -->
+  <div id="sidebarOverlay" class="fixed inset-0 bg-black/0 z-30 lg:hidden invisible pointer-events-none transition-colors duration-300"></div>
+
+  <aside id="sidebar" class="fixed lg:sticky top-16 left-0 z-30 h-[calc(100vh-4rem)] w-72 bg-white border-r border-black/5 -translate-x-full lg:translate-x-0 transition-all duration-300 ease-out overflow-y-auto shrink-0">
+    <nav class="p-4 space-y-1">
+      <p class="nav-section-label px-3 pt-2 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Main</p>
+
+      <a href="rinmora-admin-dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-gauge w-4 text-center"></i> <span class="nav-label">Dashboard</span>
+      </a>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl bg-primary/20 text-ink font-semibold text-sm">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-bag-shopping w-4 text-center"></i> <span class="nav-label">Products</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform rotate-180"></i>
+        </button>
+        <div class="submenu pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-products.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Products</a>
+          <a href="rinmora-admin-product-add.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Add Product</a>
+          <a href="rinmora-admin-product-categories.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Categories</a>
+          <a href="rinmora-admin-product-brands.html" class="block px-3 py-2 rounded-lg text-sm bg-black/5 text-ink font-medium transition">Brands &amp; Collections</a>
+          <a href="rinmora-admin-product-attributes.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Attributes</a>
+          <a href="rinmora-admin-reviews.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Reviews</a>
+          <a href="rinmora-admin-inventory.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Inventory</a>
+        </div>
+      </div>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-receipt w-4 text-center"></i> <span class="nav-label">Orders</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Orders</a>
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Pending</a>
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Shipped</a>
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Returned / Refunded</a>
+        </div>
+      </div>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-users w-4 text-center"></i> <span class="nav-label">Customers</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-customers.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Customers</a>
+          <a href="rinmora-admin-customer-addresses.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Addresses</a>
+          <a href="rinmora-admin-wishlist-reports.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Wishlist Reports</a>
+          <a href="rinmora-admin-reward-points.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Reward Points</a>
+        </div>
+      </div>
+
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-bullhorn w-4 text-center"></i> <span class="nav-label">Marketing</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Content &amp; Store</p>
+
+      <a href="rinmora-admin-cms-homepage-builder.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-file-lines w-4 text-center"></i> <span class="nav-label">CMS</span>
+      </a>
+      <a href="rinmora-admin-media-manager.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-images w-4 text-center"></i> <span class="nav-label">Media Manager</span>
+      </a>
+      <a href="rinmora-admin-reviews.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-star w-4 text-center"></i> <span class="nav-label">Reviews</span>
+      </a>
+      <a href="rinmora-admin-inventory.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-warehouse w-4 text-center"></i> <span class="nav-label">Inventory</span>
+      </a>
+      <a href="rinmora-admin-shipping.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-truck-fast w-4 text-center"></i> <span class="nav-label">Shipping</span>
+      </a>
+      <a href="rinmora-admin-payments.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-credit-card w-4 text-center"></i> <span class="nav-label">Payments</span>
+      </a>
+      <a href="rinmora-admin-users.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-user-shield w-4 text-center"></i> <span class="nav-label">Users &amp; Roles</span>
+      </a>
+      <a href="rinmora-admin-reports.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-chart-line w-4 text-center"></i> <span class="nav-label">Reports</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">System</p>
+
+      <a href="rinmora-admin-seo.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-magnifying-glass-chart w-4 text-center"></i> <span class="nav-label">SEO</span>
+      </a>
+      <a href="rinmora-admin-contact-support.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-headset w-4 text-center"></i> <span class="nav-label">Contact &amp; Support</span>
+      </a>
+      <a href="rinmora-admin-notifications.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-bell w-4 text-center"></i> <span class="nav-label">Notifications</span>
+      </a>
+      <a href="rinmora-admin-activity-logs.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-clock-rotate-left w-4 text-center"></i> <span class="nav-label">Activity Logs</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Account</p>
+
+      <a href="rinmora-admin-profile.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-user w-4 text-center"></i> <span class="nav-label">My Profile</span>
+      </a>
+      <a href="rinmora-admin-settings.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-gear w-4 text-center"></i> <span class="nav-label">Settings</span>
+      </a>
+      <a href="../rinmora-login-preview.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-right-from-bracket w-4 text-center"></i> <span class="nav-label">Logout</span>
+      </a>
+    </nav>
+  </aside>
+
+
+  <!-- =========================================================
+       MAIN CONTENT
+  ========================================================== -->
+  <main class="flex-1 min-w-0 px-4 md:px-6 py-6">
+
+    <nav aria-label="Breadcrumb" class="text-xs text-black/40 mb-2">
+      <span>Admin</span> <i class="fa-solid fa-chevron-right text-[8px] mx-1.5"></i> <a href="rinmora-admin-products.html" class="hover:text-ink transition">Products</a> <i class="fa-solid fa-chevron-right text-[8px] mx-1.5"></i> <span class="text-ink font-medium">Brands &amp; Collections</span>
+    </nav>
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+      <div>
+        <h1 class="text-xl md:text-2xl font-bold">Brands &amp; Collections</h1>
+        <p class="text-black/45 text-sm mt-1">Manage the brands you carry and curated product collections.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="addBrandBtn" class="inline-flex items-center gap-2 bg-primary text-ink rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-primary-dark transition">
+          <i class="fa-solid fa-plus text-[10px]"></i> Add Brand
+        </button>
+        <button id="addCollectionBtn" class="hidden inline-flex items-center gap-2 bg-primary text-ink rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-primary-dark transition">
+          <i class="fa-solid fa-plus text-[10px]"></i> Add Collection
+        </button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="inline-flex items-center gap-1 bg-white rounded-full shadow-card p-1.5 mb-6">
+      <button type="button" class="section-tab-btn active-section-tab px-5 py-2 rounded-full text-xs font-semibold bg-primary/20 text-ink transition" data-section="brands">
+        <i class="fa-solid fa-tag mr-1.5"></i> Brands
+      </button>
+      <button type="button" class="section-tab-btn px-5 py-2 rounded-full text-xs font-semibold text-black/50 hover:text-ink transition" data-section="collections">
+        <i class="fa-solid fa-layer-group mr-1.5"></i> Collections
+      </button>
+    </div>
+
+    <!-- =========================================================
+         BRANDS PANEL
+    ========================================================== -->
+    <div id="section-brands" class="section-panel">
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
+        <div class="bg-white rounded-2xl shadow-card p-5">
+          <p class="text-black/45 text-xs mb-1">Total Brands</p>
+          <p class="text-xl font-bold">6</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-card p-5">
+          <p class="text-black/45 text-xs mb-1">Active</p>
+          <p class="text-xl font-bold text-success">5</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-card p-5">
+          <p class="text-black/45 text-xs mb-1">Products Assigned</p>
+          <p class="text-xl font-bold">186</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-card p-5">
+          <p class="text-black/45 text-xs mb-1">Avg. Rating</p>
+          <p class="text-xl font-bold text-primary-dark">4.7</p>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        <div class="hover-lift bg-white rounded-3xl shadow-card overflow-hidden">
+          <div class="h-28 bg-black/[0.03] flex items-center justify-center">
+            <img src="https://picsum.photos/seed/brand-signature/160/80" alt="Rinmora Signature" class="h-12 object-contain">
+          </div>
+          <div class="p-4">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <p class="font-semibold text-sm">Rinmora Signature</p>
+                <p class="text-black/40 text-xs mt-0.5">118 products</p>
+              </div>
+              <span class="bg-success/10 text-success text-[10px] font-semibold px-2 py-1 rounded-full shrink-0">Active</span>
+            </div>
+            <div class="flex items-center gap-2 mt-4">
+              <button class="flex-1 text-xs font-semibold border border-black/10 rounded-full py-2 hover:bg-black/[0.03] transition">Edit</button>
+              <button aria-label="Delete brand" class="w-8 h-8 rounded-full border border-black/10 grid place-items-center text-black/40 hover:text-danger hover:border-danger/30 transition"><i class="fa-solid fa-trash-can text-xs"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="hover-lift bg-white rounded-3xl shadow-card overflow-hidden">
+          <div class="h-28 bg-black/[0.03] flex items-center justify-center">
+            <img src="https://picsum.photos/seed/brand-studio/160/80" alt="Rinmora Studio" class="h-12 object-contain">
+          </div>
+          <div class="p-4">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <p class="font-semibold text-sm">Rinmora Studio</p>
+                <p class="text-black/40 text-xs mt-0.5">42 products</p>
+              </div>
+              <span class="bg-success/10 text-success text-[10px] font-semibold px-2 py-1 rounded-full shrink-0">Active</span>
+            </div>
+            <div class="flex items-center gap-2 mt-4">
+              <button class="flex-1 text-xs font-semibold border border-black/10 rounded-full py-2 hover:bg-black/[0.03] transition">Edit</button>
+              <button aria-label="Delete brand" class="w-8 h-8 rounded-full border border-black/10 grid place-items-center text-black/40 hover:text-danger hover:border-danger/30 transition"><i class="fa-solid fa-trash-can text-xs"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="hover-lift bg-white rounded-3xl shadow-card overflow-hidden">
+          <div class="h-28 bg-black/[0.03] flex items-center justify-center">
+            <img src="https://picsum.photos/seed/brand-atelier/160/80" alt="Atelier Noor" class="h-12 object-contain">
+          </div>
+          <div class="p-4">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <p class="font-semibold text-sm">Atelier Noor</p>
+                <p class="text-black/40 text-xs mt-0.5">19 products</p>
+              </div>
+              <span class="bg-success/10 text-success text-[10px] font-semibold px-2 py-1 rounded-full shrink-0">Active</span>
+            </div>
+            <div class="flex items-center gap-2 mt-4">
+              <button class="flex-1 text-xs font-semibold border border-black/10 rounded-full py-2 hover:bg-black/[0.03] transition">Edit</button>
+              <button aria-label="Delete brand" class="w-8 h-8 rounded-full border border-black/10 grid place-items-center text-black/40 hover:text-danger hover:border-danger/30 transition"><i class="fa-solid fa-trash-can text-xs"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="hover-lift bg-white rounded-3xl shadow-card overflow-hidden">
+          <div class="h-28 bg-black/[0.03] flex items-center justify-center">
+            <img src="https://picsum.photos/seed/brand-maison/160/80" alt="Maison Reve" class="h-12 object-contain">
+          </div>
+          <div class="p-4">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <p class="font-semibold text-sm">Maison Reve</p>
+                <p class="text-black/40 text-xs mt-0.5">7 products</p>
+              </div>
+              <span class="bg-black/5 text-black/45 text-[10px] font-semibold px-2 py-1 rounded-full shrink-0">Hidden</span>
+            </div>
+            <div class="flex items-center gap-2 mt-4">
+              <button class="flex-1 text-xs font-semibold border border-black/10 rounded-full py-2 hover:bg-black/[0.03] transition">Edit</button>
+              <button aria-label="Delete brand" class="w-8 h-8 rounded-full border border-black/10 grid place-items-center text-black/40 hover:text-danger hover:border-danger/30 transition"><i class="fa-solid fa-trash-can text-xs"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="hover-lift bg-white rounded-3xl shadow-card overflow-hidden">
+          <div class="h-28 bg-black/[0.03] flex items-center justify-center">
+            <img src="https://picsum.photos/seed/brand-luxe/160/80" alt="Luxe & Co." class="h-12 object-contain">
+          </div>
+          <div class="p-4">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <p class="font-semibold text-sm">Luxe &amp; Co.</p>
+                <p class="text-black/40 text-xs mt-0.5">0 products</p>
+              </div>
+              <span class="bg-success/10 text-success text-[10px] font-semibold px-2 py-1 rounded-full shrink-0">Active</span>
+            </div>
+            <div class="flex items-center gap-2 mt-4">
+              <button class="flex-1 text-xs font-semibold border border-black/10 rounded-full py-2 hover:bg-black/[0.03] transition">Edit</button>
+              <button aria-label="Delete brand" class="w-8 h-8 rounded-full border border-black/10 grid place-items-center text-black/40 hover:text-danger hover:border-danger/30 transition"><i class="fa-solid fa-trash-can text-xs"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <label class="upload-dropzone hover-lift rounded-3xl grid place-items-center text-center cursor-pointer hover:bg-white transition min-h-[196px]">
+          <input type="file" class="hidden">
+          <span>
+            <i class="fa-solid fa-plus text-black/30 text-xl block mb-2"></i>
+            <span class="text-black/45 text-sm font-semibold">Add New Brand</span>
+          </span>
+        </label>
+
+      </div>
+    </div>
+
+    <!-- =========================================================
+         COLLECTIONS PANEL
+    ========================================================== -->
+    <div id="section-collections" class="section-panel hidden">
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
+        <div class="bg-white rounded-2xl shadow-card p-5">
+          <p class="text-black/45 text-xs mb-1">Total Collections</p>
+          <p class="text-xl font-bold">8</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-card p-5">
+          <p class="text-black/45 text-xs mb-1">Live</p>
+          <p class="text-xl font-bold text-success">6</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-card p-5">
+          <p class="text-black/45 text-xs mb-1">Scheduled</p>
+          <p class="text-xl font-bold text-info">1</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-card p-5">
+          <p class="text-black/45 text-xs mb-1">Draft</p>
+          <p class="text-xl font-bold text-black/50">1</p>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        <div class="hover-lift bg-white rounded-3xl shadow-card overflow-hidden">
+          <div class="relative h-36">
+            <img src="https://picsum.photos/seed/coll-summer/400/220" alt="Summer Essentials" class="w-full h-full object-cover">
+            <span class="absolute top-3 left-3 bg-success text-white text-[10px] font-semibold px-2.5 py-1 rounded-full">Live</span>
+          </div>
+          <div class="p-4">
+            <p class="font-semibold text-sm">Summer Essentials</p>
+            <p class="text-black/40 text-xs mt-0.5">24 products &middot; Manual</p>
+            <div class="flex items-center gap-2 mt-4">
+              <button class="flex-1 text-xs font-semibold border border-black/10 rounded-full py-2 hover:bg-black/[0.03] transition">Edit</button>
+              <button aria-label="Delete collection" class="w-8 h-8 rounded-full border border-black/10 grid place-items-center text-black/40 hover:text-danger hover:border-danger/30 transition"><i class="fa-solid fa-trash-can text-xs"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="hover-lift bg-white rounded-3xl shadow-card overflow-hidden">
+          <div class="relative h-36">
+            <img src="https://picsum.photos/seed/coll-new/400/220" alt="New Arrivals" class="w-full h-full object-cover">
+            <span class="absolute top-3 left-3 bg-success text-white text-[10px] font-semibold px-2.5 py-1 rounded-full">Live</span>
+          </div>
+          <div class="p-4">
+            <p class="font-semibold text-sm">New Arrivals</p>
+            <p class="text-black/40 text-xs mt-0.5">16 products &middot; Automatic</p>
+            <div class="flex items-center gap-2 mt-4">
+              <button class="flex-1 text-xs font-semibold border border-black/10 rounded-full py-2 hover:bg-black/[0.03] transition">Edit</button>
+              <button aria-label="Delete collection" class="w-8 h-8 rounded-full border border-black/10 grid place-items-center text-black/40 hover:text-danger hover:border-danger/30 transition"><i class="fa-solid fa-trash-can text-xs"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="hover-lift bg-white rounded-3xl shadow-card overflow-hidden">
+          <div class="relative h-36">
+            <img src="https://picsum.photos/seed/coll-everyday/400/220" alt="Everyday Carry" class="w-full h-full object-cover">
+            <span class="absolute top-3 left-3 bg-success text-white text-[10px] font-semibold px-2.5 py-1 rounded-full">Live</span>
+          </div>
+          <div class="p-4">
+            <p class="font-semibold text-sm">Everyday Carry</p>
+            <p class="text-black/40 text-xs mt-0.5">31 products &middot; Manual</p>
+            <div class="flex items-center gap-2 mt-4">
+              <button class="flex-1 text-xs font-semibold border border-black/10 rounded-full py-2 hover:bg-black/[0.03] transition">Edit</button>
+              <button aria-label="Delete collection" class="w-8 h-8 rounded-full border border-black/10 grid place-items-center text-black/40 hover:text-danger hover:border-danger/30 transition"><i class="fa-solid fa-trash-can text-xs"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="hover-lift bg-white rounded-3xl shadow-card overflow-hidden">
+          <div class="relative h-36">
+            <img src="https://picsum.photos/seed/coll-eid/400/220" alt="Eid Edit" class="w-full h-full object-cover">
+            <span class="absolute top-3 left-3 bg-info text-white text-[10px] font-semibold px-2.5 py-1 rounded-full">Scheduled</span>
+          </div>
+          <div class="p-4">
+            <p class="font-semibold text-sm">Eid Edit</p>
+            <p class="text-black/40 text-xs mt-0.5">12 products &middot; Launches Aug 1</p>
+            <div class="flex items-center gap-2 mt-4">
+              <button class="flex-1 text-xs font-semibold border border-black/10 rounded-full py-2 hover:bg-black/[0.03] transition">Edit</button>
+              <button aria-label="Delete collection" class="w-8 h-8 rounded-full border border-black/10 grid place-items-center text-black/40 hover:text-danger hover:border-danger/30 transition"><i class="fa-solid fa-trash-can text-xs"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="hover-lift bg-white rounded-3xl shadow-card overflow-hidden">
+          <div class="relative h-36">
+            <img src="https://picsum.photos/seed/coll-minimal/400/220" alt="Minimalist Edit" class="w-full h-full object-cover grayscale opacity-70">
+            <span class="absolute top-3 left-3 bg-black/60 text-white text-[10px] font-semibold px-2.5 py-1 rounded-full">Draft</span>
+          </div>
+          <div class="p-4">
+            <p class="font-semibold text-sm">Minimalist Edit</p>
+            <p class="text-black/40 text-xs mt-0.5">9 products &middot; Manual</p>
+            <div class="flex items-center gap-2 mt-4">
+              <button class="flex-1 text-xs font-semibold border border-black/10 rounded-full py-2 hover:bg-black/[0.03] transition">Edit</button>
+              <button aria-label="Delete collection" class="w-8 h-8 rounded-full border border-black/10 grid place-items-center text-black/40 hover:text-danger hover:border-danger/30 transition"><i class="fa-solid fa-trash-can text-xs"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <label class="upload-dropzone hover-lift rounded-3xl grid place-items-center text-center cursor-pointer hover:bg-white transition min-h-[196px]">
+          <input type="file" class="hidden">
+          <span>
+            <i class="fa-solid fa-plus text-black/30 text-xl block mb-2"></i>
+            <span class="text-black/45 text-sm font-semibold">Add New Collection</span>
+          </span>
+        </label>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+  const mobileSidebarBtn = document.getElementById('mobileSidebarBtn');
+  const collapseSidebarBtn = document.getElementById('collapseSidebarBtn');
+
+  function openMobileSidebar() {
+    sidebar.classList.remove('-translate-x-full');
+    sidebarOverlay.classList.remove('invisible', 'pointer-events-none');
+    requestAnimationFrame(() => sidebarOverlay.classList.add('bg-black/40'));
+  }
+  function closeMobileSidebar() {
+    sidebar.classList.add('-translate-x-full');
+    sidebarOverlay.classList.remove('bg-black/40');
+    sidebarOverlay.classList.add('pointer-events-none');
+    setTimeout(() => sidebarOverlay.classList.add('invisible'), 300);
+  }
+  mobileSidebarBtn.addEventListener('click', openMobileSidebar);
+  sidebarOverlay.addEventListener('click', closeMobileSidebar);
+
+  collapseSidebarBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('sidebar-collapsed');
+    sidebar.classList.toggle('w-72');
+    sidebar.classList.toggle('w-20');
+  });
+
+  document.querySelectorAll('.submenu-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const submenu = btn.nextElementSibling;
+      const chevron = btn.querySelector('.nav-chevron');
+      submenu.classList.toggle('hidden');
+      chevron.classList.toggle('rotate-180');
+    });
+  });
+
+  const dropdowns = [
+    ['quickActionsBtn', 'quickActionsMenu'],
+    ['notifBtn', 'notifMenu'],
+    ['msgBtn', 'msgMenu'],
+    ['profileBtn', 'profileMenu'],
+  ];
+  dropdowns.forEach(([btnId, menuId]) => {
+    const btn = document.getElementById(btnId);
+    const menu = document.getElementById(menuId);
+    if (!btn || !menu) return;
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = !menu.classList.contains('hidden');
+      dropdowns.forEach(([, mId]) => document.getElementById(mId)?.classList.add('hidden'));
+      menu.classList.toggle('hidden', isOpen);
+    });
+  });
+
+  document.addEventListener('click', () => {
+    dropdowns.forEach(([, mId]) => document.getElementById(mId)?.classList.add('hidden'));
+  });
+
+  document.getElementById('themeToggleBtn').addEventListener('click', function () {
+    const icon = this.querySelector('i');
+    icon.classList.toggle('fa-moon');
+    icon.classList.toggle('fa-sun');
+  });
+
+  // Brands / Collections tab switching
+  const sectionTabBtns = document.querySelectorAll('.section-tab-btn');
+  const addBrandBtn = document.getElementById('addBrandBtn');
+  const addCollectionBtn = document.getElementById('addCollectionBtn');
+  sectionTabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.section;
+      sectionTabBtns.forEach(b => {
+        b.classList.remove('active-section-tab', 'bg-primary/20', 'text-ink');
+        b.classList.add('text-black/50');
+      });
+      btn.classList.add('active-section-tab', 'bg-primary/20', 'text-ink');
+      btn.classList.remove('text-black/50');
+
+      document.querySelectorAll('.section-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById('section-' + target).classList.remove('hidden');
+
+      addBrandBtn.classList.toggle('hidden', target !== 'brands');
+      addCollectionBtn.classList.toggle('hidden', target !== 'collections');
+    });
+  });
+</script>
+
+</body>
+</html>

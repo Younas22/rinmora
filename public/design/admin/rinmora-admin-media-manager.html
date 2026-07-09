@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Media Manager — Rinmora Admin</title>
+<meta name="description" content="Rinmora Admin — manage images, videos, and files.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: '#CFBAA5', 'primary-dark': '#b89e84', ink: '#000000',
+          canvas: '#F8F8F8',
+          success: '#22C55E', warning: '#F59E0B', danger: '#EF4444', info: '#3B82F6',
+        },
+        fontFamily: { sans: ['Inter', 'sans-serif'] },
+        borderRadius: { '4xl': '2rem' },
+        boxShadow: { soft: '0 20px 60px -15px rgba(0,0,0,0.12)', card: '0 4px 24px -8px rgba(0,0,0,0.08)' },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Inter', sans-serif; }
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+  .hover-lift { transition: transform .2s ease, box-shadow .2s ease; }
+  .hover-lift:hover { transform: translateY(-2px); }
+  .sidebar-collapsed .nav-label,
+  .sidebar-collapsed .nav-section-label,
+  .sidebar-collapsed .sidebar-brand-text,
+  .sidebar-collapsed .nav-chevron { display: none; }
+  .sidebar-collapsed .submenu { display: none !important; }
+  .media-tile { position: relative; }
+  .media-tile .tile-overlay { opacity: 0; transition: opacity .2s ease; }
+  .media-tile:hover .tile-overlay { opacity: 1; }
+  .media-tile.selected { outline: 2px solid #b89e84; outline-offset: 2px; }
+</style>
+</head>
+
+<body class="bg-canvas text-ink antialiased">
+
+<!-- =========================================================
+     TOPBAR
+========================================================== -->
+<header class="sticky top-0 z-40 bg-white border-b border-black/5">
+  <div class="flex items-center gap-3 h-16 px-4 md:px-6">
+    <button id="mobileSidebarBtn" aria-label="Open sidebar" class="lg:hidden w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <button id="collapseSidebarBtn" aria-label="Collapse sidebar" class="hidden lg:grid w-9 h-9 place-items-center rounded-full hover:bg-black/5 transition">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <a href="rinmora-admin-dashboard.html" class="flex items-center gap-2 shrink-0">
+      <img src="../../logo-01.png" alt="Rinmora" class="h-7 w-auto">
+      <span class="hidden sm:inline text-[10px] font-semibold uppercase tracking-wider bg-ink text-white px-2 py-0.5 rounded-full">Admin</span>
+    </a>
+    <div class="flex-1 max-w-xl mx-auto hidden sm:block">
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-black/30 text-sm"></i>
+        <label for="globalSearch" class="sr-only">Global search</label>
+        <input id="globalSearch" type="text" placeholder="Search products, orders, customers..." class="w-full pl-11 pr-4 py-2.5 rounded-full bg-black/[0.03] border border-transparent text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition">
+      </div>
+    </div>
+    <div class="flex items-center gap-1 ml-auto sm:ml-0">
+      <button aria-label="Search" class="sm:hidden w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition"><i class="fa-solid fa-magnifying-glass text-sm"></i></button>
+      <div class="relative">
+        <button id="quickActionsBtn" class="hidden md:inline-flex items-center gap-2 bg-primary text-ink font-semibold text-xs uppercase tracking-wide px-4 py-2.5 rounded-full hover:bg-primary-dark transition">
+          <i class="fa-solid fa-plus text-[10px]"></i> Quick Actions
+        </button>
+        <div id="quickActionsMenu" class="hidden absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <a href="rinmora-admin-product-add.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-bag-shopping w-4 text-black/40"></i> New Product</a>
+          <a href="rinmora-admin-orders.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-receipt w-4 text-black/40"></i> New Order</a>
+          <a href="rinmora-admin-customers.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-user-plus w-4 text-black/40"></i> New Customer</a>
+        </div>
+      </div>
+      <div class="relative">
+        <button id="notifBtn" aria-label="Notifications" class="relative w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+          <i class="fa-regular fa-bell text-sm"></i><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-danger"></span>
+        </button>
+        <div id="notifMenu" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <p class="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black/40">Notifications</p>
+          <a href="#" class="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <span class="w-8 h-8 rounded-full bg-info/15 grid place-items-center shrink-0"><i class="fa-solid fa-cloud-arrow-up text-info text-xs"></i></span>
+            <span class="text-sm"><span class="font-medium">12 files uploaded</span><br><span class="text-black/45 text-xs">To Products folder</span></span>
+          </a>
+        </div>
+      </div>
+      <div class="relative">
+        <button id="msgBtn" aria-label="Messages" class="relative w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+          <i class="fa-regular fa-envelope text-sm"></i><span class="absolute top-1 right-1.5 w-4 h-4 rounded-full bg-ink text-white text-[9px] font-bold grid place-items-center">2</span>
+        </button>
+        <div id="msgMenu" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <p class="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black/40">Messages</p>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <img src="https://picsum.photos/seed/admin-msg-1/60/60" alt="" class="w-8 h-8 rounded-full object-cover">
+            <span class="text-sm"><span class="font-medium">Sana K.</span><br><span class="text-black/45 text-xs">Question about order #RIN-20583</span></span>
+          </a>
+        </div>
+      </div>
+      <button id="themeToggleBtn" aria-label="Toggle theme" class="w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition"><i class="fa-regular fa-moon text-sm"></i></button>
+      <div class="relative pl-1">
+        <button id="profileBtn" class="flex items-center gap-2 pl-1.5 pr-2.5 py-1.5 rounded-full hover:bg-black/5 transition">
+          <img src="https://picsum.photos/seed/admin-avatar/80/80" alt="Admin" class="w-7 h-7 rounded-full object-cover">
+          <span class="hidden md:inline text-sm font-medium">Ayesha N.</span>
+          <i class="fa-solid fa-chevron-down text-[10px] text-black/40"></i>
+        </button>
+        <div id="profileMenu" class="hidden absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-regular fa-user w-4 text-black/40"></i> My Profile</a>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-gear w-4 text-black/40"></i> Settings</a>
+          <div class="border-t border-black/5 my-1"></div>
+          <a href="../rinmora-login-preview.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-danger hover:bg-danger/5 transition"><i class="fa-solid fa-right-from-bracket w-4"></i> Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="flex">
+  <div id="sidebarOverlay" class="fixed inset-0 bg-black/0 z-30 lg:hidden invisible pointer-events-none transition-colors duration-300"></div>
+
+  <aside id="sidebar" class="fixed lg:sticky top-16 left-0 z-30 h-[calc(100vh-4rem)] w-72 bg-white border-r border-black/5 -translate-x-full lg:translate-x-0 transition-all duration-300 ease-out overflow-y-auto shrink-0">
+    <nav class="p-4 space-y-1">
+      <p class="nav-section-label px-3 pt-2 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Main</p>
+
+      <a href="rinmora-admin-dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-gauge w-4 text-center"></i> <span class="nav-label">Dashboard</span>
+      </a>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-bag-shopping w-4 text-center"></i> <span class="nav-label">Products</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-products.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Products</a>
+          <a href="rinmora-admin-product-add.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Add Product</a>
+          <a href="rinmora-admin-product-categories.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Categories</a>
+          <a href="rinmora-admin-product-brands.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Brands &amp; Collections</a>
+          <a href="rinmora-admin-product-attributes.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Attributes</a>
+          <a href="rinmora-admin-reviews.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Reviews</a>
+          <a href="rinmora-admin-inventory.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Inventory</a>
+        </div>
+      </div>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-receipt w-4 text-center"></i> <span class="nav-label">Orders</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Orders</a>
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Pending</a>
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Shipped</a>
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Returned / Refunded</a>
+        </div>
+      </div>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-users w-4 text-center"></i> <span class="nav-label">Customers</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-customers.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Customers</a>
+          <a href="rinmora-admin-customer-addresses.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Addresses</a>
+          <a href="rinmora-admin-wishlist-reports.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Wishlist Reports</a>
+          <a href="rinmora-admin-reward-points.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Reward Points</a>
+        </div>
+      </div>
+
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-bullhorn w-4 text-center"></i> <span class="nav-label">Marketing</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Content &amp; Store</p>
+
+      <a href="rinmora-admin-cms-homepage-builder.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-file-lines w-4 text-center"></i> <span class="nav-label">CMS</span>
+      </a>
+      <a href="rinmora-admin-media-manager.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary/20 text-ink font-semibold text-sm">
+        <i class="fa-regular fa-images w-4 text-center"></i> <span class="nav-label">Media Manager</span>
+      </a>
+      <a href="rinmora-admin-reviews.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-star w-4 text-center"></i> <span class="nav-label">Reviews</span>
+      </a>
+      <a href="rinmora-admin-inventory.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-warehouse w-4 text-center"></i> <span class="nav-label">Inventory</span>
+      </a>
+      <a href="rinmora-admin-shipping.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-truck-fast w-4 text-center"></i> <span class="nav-label">Shipping</span>
+      </a>
+      <a href="rinmora-admin-payments.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-credit-card w-4 text-center"></i> <span class="nav-label">Payments</span>
+      </a>
+      <a href="rinmora-admin-users.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-user-shield w-4 text-center"></i> <span class="nav-label">Users &amp; Roles</span>
+      </a>
+      <a href="rinmora-admin-reports.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-chart-line w-4 text-center"></i> <span class="nav-label">Reports</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">System</p>
+
+      <a href="rinmora-admin-seo.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-magnifying-glass-chart w-4 text-center"></i> <span class="nav-label">SEO</span>
+      </a>
+      <a href="rinmora-admin-contact-support.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-headset w-4 text-center"></i> <span class="nav-label">Contact &amp; Support</span>
+      </a>
+      <a href="rinmora-admin-notifications.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-bell w-4 text-center"></i> <span class="nav-label">Notifications</span>
+      </a>
+      <a href="rinmora-admin-activity-logs.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-clock-rotate-left w-4 text-center"></i> <span class="nav-label">Activity Logs</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Account</p>
+
+      <a href="rinmora-admin-profile.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-user w-4 text-center"></i> <span class="nav-label">My Profile</span>
+      </a>
+      <a href="rinmora-admin-settings.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-gear w-4 text-center"></i> <span class="nav-label">Settings</span>
+      </a>
+      <a href="../rinmora-login-preview.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-right-from-bracket w-4 text-center"></i> <span class="nav-label">Logout</span>
+      </a>
+    </nav>
+  </aside>
+
+
+  <!-- =========================================================
+       MAIN CONTENT
+  ========================================================== -->
+  <main class="flex-1 min-w-0 px-4 md:px-6 py-6">
+
+    <nav aria-label="Breadcrumb" class="text-xs text-black/40 mb-2">
+      <span>Admin</span> <i class="fa-solid fa-chevron-right text-[8px] mx-1.5"></i> <span class="text-ink font-medium">Media Manager</span>
+    </nav>
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+      <div>
+        <h1 class="text-xl md:text-2xl font-bold">Media Manager</h1>
+        <p class="text-black/45 text-sm mt-1">Organize images, videos, and files used across your store.</p>
+      </div>
+      <button id="uploadFilesBtn" class="inline-flex items-center gap-2 bg-primary text-ink rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-primary-dark transition">
+        <i class="fa-solid fa-cloud-arrow-up text-[10px]"></i> Upload Files
+      </button>
+      <input id="fileUploadInput" type="file" multiple accept="image/*,video/*,.pdf,.doc,.docx" class="hidden">
+    </div>
+
+    <div class="grid lg:grid-cols-[220px_1fr_300px] gap-5">
+
+      <!-- ============ FOLDERS + STORAGE ============ -->
+      <div class="space-y-4">
+        <div class="bg-white rounded-3xl shadow-card p-4">
+          <p class="text-[11px] font-semibold uppercase tracking-wider text-black/35 px-2 pb-2">Folders</p>
+          <nav id="folderNav" class="space-y-1 text-sm">
+            <a href="#" data-folder="all" class="folder-link active-folder flex items-center justify-between px-3 py-2 rounded-xl bg-primary/15 text-ink font-semibold"><span><i class="fa-regular fa-folder-open w-4 mr-2 text-primary-dark"></i>All Media</span><span class="text-xs text-black/40">482</span></a>
+            <a href="#" data-folder="images" class="folder-link flex items-center justify-between px-3 py-2 rounded-xl text-black/60 hover:bg-black/5 transition"><span><i class="fa-regular fa-image w-4 mr-2 text-black/35"></i>Images</span><span class="text-xs text-black/40">316</span></a>
+            <a href="#" data-folder="videos" class="folder-link flex items-center justify-between px-3 py-2 rounded-xl text-black/60 hover:bg-black/5 transition"><span><i class="fa-regular fa-circle-play w-4 mr-2 text-black/35"></i>Videos</span><span class="text-xs text-black/40">24</span></a>
+            <a href="#" data-folder="documents" class="folder-link flex items-center justify-between px-3 py-2 rounded-xl text-black/60 hover:bg-black/5 transition"><span><i class="fa-regular fa-file-lines w-4 mr-2 text-black/35"></i>Documents</span><span class="text-xs text-black/40">18</span></a>
+            <a href="#" data-folder="products" class="folder-link flex items-center justify-between px-3 py-2 rounded-xl text-black/60 hover:bg-black/5 transition"><span><i class="fa-solid fa-bag-shopping w-4 mr-2 text-black/35"></i>Products</span><span class="text-xs text-black/40">98</span></a>
+            <a href="#" data-folder="banners" class="folder-link flex items-center justify-between px-3 py-2 rounded-xl text-black/60 hover:bg-black/5 transition"><span><i class="fa-regular fa-rectangle-list w-4 mr-2 text-black/35"></i>Banners</span><span class="text-xs text-black/40">26</span></a>
+          </nav>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-card p-4">
+          <p class="text-[11px] font-semibold uppercase tracking-wider text-black/35 px-2 pb-3">Storage</p>
+          <div class="px-2">
+            <div class="flex items-baseline justify-between mb-2">
+              <span class="text-sm font-bold">4.2 GB</span>
+              <span class="text-xs text-black/40">of 10 GB</span>
+            </div>
+            <div class="h-2 rounded-full bg-black/5 overflow-hidden mb-3">
+              <div class="h-full rounded-full bg-primary-dark" style="width: 42%"></div>
+            </div>
+            <ul class="space-y-1.5 text-xs text-black/55">
+              <li class="flex items-center justify-between"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-primary-dark"></span> Images</span><span>2.6 GB</span></li>
+              <li class="flex items-center justify-between"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-info"></span> Videos</span><span>1.4 GB</span></li>
+              <li class="flex items-center justify-between"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-black/20"></span> Documents</span><span>0.2 GB</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ MEDIA GRID ============ -->
+      <div class="bg-white rounded-3xl shadow-card p-4 md:p-5">
+        <div class="flex flex-wrap items-center gap-3 mb-4">
+          <div class="relative flex-1 min-w-[180px]">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-black/30 text-xs"></i>
+            <label for="mediaSearch" class="sr-only">Search media</label>
+            <input id="mediaSearch" type="text" placeholder="Search files..." class="w-full pl-10 pr-4 py-2.5 rounded-full bg-black/[0.03] text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition">
+          </div>
+          <div class="relative">
+            <select id="mediaTypeFilter" aria-label="Filter by type" class="appearance-none border border-black/10 rounded-full pl-4 pr-8 py-2.5 text-xs font-medium bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary">
+              <option value="all">All Types</option>
+              <option value="image">Images</option>
+              <option value="video">Videos</option>
+              <option value="document">Documents</option>
+            </select>
+            <i class="fa-solid fa-chevron-down text-[9px] absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-black/40"></i>
+          </div>
+          <div class="flex items-center gap-1 border border-black/10 rounded-full p-1">
+            <button id="gridViewBtn" aria-label="Grid view" class="w-8 h-8 rounded-full bg-ink text-white grid place-items-center"><i class="fa-solid fa-grip text-xs"></i></button>
+            <button id="listViewBtn" aria-label="List view" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-list text-xs text-black/40"></i></button>
+          </div>
+        </div>
+
+        <!-- Drag & drop upload zone -->
+        <div id="dropzone" class="border-2 border-dashed border-black/10 rounded-2xl p-6 text-center mb-5 hover:border-primary-dark transition cursor-pointer">
+          <i class="fa-solid fa-cloud-arrow-up text-2xl text-black/25 mb-2"></i>
+          <p class="text-sm font-medium">Drag &amp; drop files here, or <span class="text-primary-dark underline underline-offset-2">browse</span></p>
+          <p class="text-black/40 text-xs mt-1">Supports JPG, PNG, MP4, PDF up to 25MB</p>
+        </div>
+
+        <!-- Bulk actions -->
+        <div id="bulkActionsBar" class="hidden items-center justify-between gap-3 px-4 py-3 bg-ink text-white text-sm rounded-2xl mb-4">
+          <span><span id="bulkSelectedCount">0</span> selected</span>
+          <div class="flex items-center gap-2">
+            <button id="bulkMoveBtn" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 transition">Move</button>
+            <button id="bulkDeleteBtn" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-danger hover:bg-danger/85 transition">Delete</button>
+          </div>
+        </div>
+
+        <!-- Grid View -->
+        <div id="mediaGrid" class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3">
+
+          <div class="media-tile selected rounded-2xl overflow-hidden bg-canvas aspect-square cursor-pointer" data-name="milano-tote-01.jpg" data-meta="1600 × 2000px &middot; 842 KB &middot; Uploaded Jul 3, 2026" data-img="https://picsum.photos/seed/media-1/500/500" data-type="image" data-folder="images products">
+            <img src="https://picsum.photos/seed/media-1/300/300" alt="milano-tote-01.jpg" class="w-full h-full object-cover">
+            <input type="checkbox" checked class="media-checkbox absolute top-2 left-2 w-4 h-4 rounded z-10">
+            <div class="tile-overlay absolute inset-0 bg-black/40 flex items-center justify-center gap-2">
+              <button aria-label="Preview" class="preview-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-regular fa-eye text-xs"></i></button>
+              <button aria-label="Copy URL" class="copy-url-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-solid fa-link text-xs"></i></button>
+              <button aria-label="Delete" class="delete-tile-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-solid fa-trash-can text-xs text-danger"></i></button>
+            </div>
+          </div>
+
+          <div class="media-tile rounded-2xl overflow-hidden bg-canvas aspect-square cursor-pointer" data-name="luna-crossbody-02.jpg" data-meta="1600 × 2000px &middot; 764 KB &middot; Uploaded Jul 2, 2026" data-img="https://picsum.photos/seed/media-2/500/500" data-type="image" data-folder="images products">
+            <img src="https://picsum.photos/seed/media-2/300/300" alt="luna-crossbody-02.jpg" class="w-full h-full object-cover">
+            <input type="checkbox" class="media-checkbox absolute top-2 left-2 w-4 h-4 rounded z-10">
+            <div class="tile-overlay absolute inset-0 bg-black/40 flex items-center justify-center gap-2">
+              <button aria-label="Preview" class="preview-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-regular fa-eye text-xs"></i></button>
+              <button aria-label="Copy URL" class="copy-url-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-solid fa-link text-xs"></i></button>
+              <button aria-label="Delete" class="delete-tile-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-solid fa-trash-can text-xs text-danger"></i></button>
+            </div>
+          </div>
+
+          <div class="media-tile rounded-2xl overflow-hidden bg-canvas aspect-square cursor-pointer" data-name="brand-campaign-reel.mp4" data-meta="1080p &middot; 00:32 &middot; 18.4 MB" data-img="https://picsum.photos/seed/media-3/500/500" data-type="video" data-folder="videos banners">
+            <img src="https://picsum.photos/seed/media-3/300/300" alt="brand-campaign-reel.mp4" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/25 flex items-center justify-center"><i class="fa-solid fa-circle-play text-white text-2xl"></i></div>
+            <input type="checkbox" class="media-checkbox absolute top-2 left-2 w-4 h-4 rounded z-10">
+            <div class="tile-overlay absolute inset-0 bg-black/40 flex items-center justify-center gap-2">
+              <button aria-label="Preview" class="preview-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-regular fa-eye text-xs"></i></button>
+              <button aria-label="Download" class="download-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-solid fa-download text-xs"></i></button>
+              <button aria-label="Delete" class="delete-tile-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-solid fa-trash-can text-xs text-danger"></i></button>
+            </div>
+          </div>
+
+          <div class="media-tile rounded-2xl overflow-hidden bg-canvas aspect-square cursor-pointer flex flex-col items-center justify-center gap-2" data-name="size-guide.pdf" data-meta="PDF Document &middot; 2 pages &middot; 340 KB" data-img="" data-type="document" data-folder="documents">
+            <i class="fa-regular fa-file-pdf text-3xl text-danger/70"></i>
+            <span class="text-[11px] text-black/50 px-2 text-center truncate w-full">size-guide.pdf</span>
+            <input type="checkbox" class="media-checkbox absolute top-2 left-2 w-4 h-4 rounded z-10">
+            <div class="tile-overlay absolute inset-0 bg-black/40 flex items-center justify-center gap-2">
+              <button aria-label="Download" class="download-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-solid fa-download text-xs"></i></button>
+              <button aria-label="Delete" class="delete-tile-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-solid fa-trash-can text-xs text-danger"></i></button>
+            </div>
+          </div>
+
+          <div class="media-tile rounded-2xl overflow-hidden bg-canvas aspect-square cursor-pointer" data-name="aurora-mini-bag-03.jpg" data-meta="1600 × 2000px &middot; 691 KB &middot; Uploaded Jun 30, 2026" data-img="https://picsum.photos/seed/media-5/500/500" data-type="image" data-folder="images products">
+            <img src="https://picsum.photos/seed/media-5/300/300" alt="aurora-mini-bag-03.jpg" class="w-full h-full object-cover">
+            <input type="checkbox" class="media-checkbox absolute top-2 left-2 w-4 h-4 rounded z-10">
+            <div class="tile-overlay absolute inset-0 bg-black/40 flex items-center justify-center gap-2">
+              <button aria-label="Preview" class="preview-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-regular fa-eye text-xs"></i></button>
+              <button aria-label="Copy URL" class="copy-url-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-solid fa-link text-xs"></i></button>
+              <button aria-label="Delete" class="delete-tile-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-solid fa-trash-can text-xs text-danger"></i></button>
+            </div>
+          </div>
+
+          <div class="media-tile rounded-2xl overflow-hidden bg-canvas aspect-square cursor-pointer" data-name="homepage-banner.jpg" data-meta="2400 × 1200px &middot; 1.2 MB &middot; Uploaded Jun 28, 2026" data-img="https://picsum.photos/seed/media-6/500/500" data-type="image" data-folder="images banners">
+            <img src="https://picsum.photos/seed/media-6/300/300" alt="homepage-banner.jpg" class="w-full h-full object-cover">
+            <input type="checkbox" class="media-checkbox absolute top-2 left-2 w-4 h-4 rounded z-10">
+            <div class="tile-overlay absolute inset-0 bg-black/40 flex items-center justify-center gap-2">
+              <button aria-label="Preview" class="preview-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-regular fa-eye text-xs"></i></button>
+              <button aria-label="Copy URL" class="copy-url-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-solid fa-link text-xs"></i></button>
+              <button aria-label="Delete" class="delete-tile-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-solid fa-trash-can text-xs text-danger"></i></button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-4 pt-5 mt-5 border-t border-black/5">
+          <p class="text-xs text-black/45">Showing 1–6 of 482 files</p>
+          <nav aria-label="Pagination" class="flex items-center gap-1.5">
+            <button aria-label="Previous page" class="w-8 h-8 rounded-full border border-black/10 grid place-items-center hover:bg-black/5 transition text-xs"><i class="fa-solid fa-chevron-left"></i></button>
+            <button aria-current="page" class="w-8 h-8 rounded-full bg-ink text-white grid place-items-center text-xs font-semibold">1</button>
+            <button class="w-8 h-8 rounded-full border border-black/10 grid place-items-center hover:bg-black/5 transition text-xs font-medium">2</button>
+            <button aria-label="Next page" class="w-8 h-8 rounded-full border border-black/10 grid place-items-center hover:bg-black/5 transition text-xs"><i class="fa-solid fa-chevron-right"></i></button>
+          </nav>
+        </div>
+      </div>
+
+      <!-- ============ DETAILS PANEL ============ -->
+      <div class="bg-white rounded-3xl shadow-card p-5 h-fit lg:sticky lg:top-24">
+        <h2 class="font-bold text-sm mb-4">File Details</h2>
+        <div id="detailsPreview" class="rounded-2xl overflow-hidden aspect-square bg-canvas mb-4">
+          <img src="https://picsum.photos/seed/media-1/500/500" alt="" class="w-full h-full object-cover">
+        </div>
+        <p id="detailsName" class="text-sm font-semibold truncate mb-1">milano-tote-01.jpg</p>
+        <p id="detailsMeta" class="text-black/45 text-xs mb-5">1600 × 2000px &middot; 842 KB &middot; Uploaded Jul 3, 2026</p>
+
+        <label for="altText" class="block text-xs font-medium text-black/50 mb-2">Alt Text</label>
+        <input id="altText" type="text" placeholder="Describe this image..." class="w-full px-4 py-2.5 rounded-xl border border-black/10 text-sm mb-5 focus:outline-none focus:ring-2 focus:ring-primary">
+
+        <div class="grid grid-cols-2 gap-2 mb-2">
+          <button id="detailsCopyUrlBtn" class="inline-flex items-center justify-center gap-2 border border-black/10 rounded-xl py-2.5 text-xs font-semibold hover:bg-black/5 transition"><i class="fa-solid fa-link text-black/40"></i> Copy URL</button>
+          <button id="detailsDownloadBtn" class="inline-flex items-center justify-center gap-2 border border-black/10 rounded-xl py-2.5 text-xs font-semibold hover:bg-black/5 transition"><i class="fa-solid fa-download text-black/40"></i> Download</button>
+          <button id="detailsRenameBtn" class="inline-flex items-center justify-center gap-2 border border-black/10 rounded-xl py-2.5 text-xs font-semibold hover:bg-black/5 transition"><i class="fa-solid fa-pen text-black/40"></i> Rename</button>
+          <button id="detailsMoveBtn" class="inline-flex items-center justify-center gap-2 border border-black/10 rounded-xl py-2.5 text-xs font-semibold hover:bg-black/5 transition"><i class="fa-solid fa-folder-tree text-black/40"></i> Move</button>
+        </div>
+        <button id="detailsDeleteBtn" class="w-full inline-flex items-center justify-center gap-2 text-danger text-xs font-semibold py-2.5 hover:bg-danger/5 rounded-xl transition mt-1">
+          <i class="fa-solid fa-trash-can"></i> Delete File
+        </button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- =========================================================
+     MOVE TO FOLDER MODAL
+========================================================== -->
+<div id="moveModalOverlay" class="hidden fixed inset-0 z-50 bg-black/40 items-center justify-center p-4">
+  <div class="bg-white rounded-3xl shadow-soft w-full max-w-xs">
+    <div class="flex items-center justify-between px-5 pt-5">
+      <h2 class="font-bold text-base">Move to Folder</h2>
+      <button id="moveModalCloseBtn" aria-label="Close" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-xmark text-black/50"></i></button>
+    </div>
+    <div class="px-5 py-4 space-y-1.5">
+      <button type="button" class="move-target-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-black/70 hover:bg-black/5 transition" data-folder="images"><i class="fa-regular fa-image w-4 text-black/35"></i> Images</button>
+      <button type="button" class="move-target-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-black/70 hover:bg-black/5 transition" data-folder="videos"><i class="fa-regular fa-circle-play w-4 text-black/35"></i> Videos</button>
+      <button type="button" class="move-target-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-black/70 hover:bg-black/5 transition" data-folder="documents"><i class="fa-regular fa-file-lines w-4 text-black/35"></i> Documents</button>
+      <button type="button" class="move-target-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-black/70 hover:bg-black/5 transition" data-folder="products"><i class="fa-solid fa-bag-shopping w-4 text-black/35"></i> Products</button>
+      <button type="button" class="move-target-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-black/70 hover:bg-black/5 transition" data-folder="banners"><i class="fa-regular fa-rectangle-list w-4 text-black/35"></i> Banners</button>
+    </div>
+    <div class="px-5 pb-5 pt-1">
+      <button id="moveModalCancelBtn" type="button" class="w-full border border-black/10 rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-black/[0.03] transition">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="mediaToast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-ink text-white text-xs font-semibold px-4 py-2.5 rounded-full shadow-soft"></div>
+
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+  const mobileSidebarBtn = document.getElementById('mobileSidebarBtn');
+  const collapseSidebarBtn = document.getElementById('collapseSidebarBtn');
+  function openMobileSidebar() {
+    sidebar.classList.remove('-translate-x-full');
+    sidebarOverlay.classList.remove('invisible', 'pointer-events-none');
+    requestAnimationFrame(() => sidebarOverlay.classList.add('bg-black/40'));
+  }
+  function closeMobileSidebar() {
+    sidebar.classList.add('-translate-x-full');
+    sidebarOverlay.classList.remove('bg-black/40');
+    sidebarOverlay.classList.add('pointer-events-none');
+    setTimeout(() => sidebarOverlay.classList.add('invisible'), 300);
+  }
+  mobileSidebarBtn.addEventListener('click', openMobileSidebar);
+  sidebarOverlay.addEventListener('click', closeMobileSidebar);
+  collapseSidebarBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('sidebar-collapsed');
+    sidebar.classList.toggle('w-72');
+    sidebar.classList.toggle('w-20');
+  });
+
+  const dropdowns = [['quickActionsBtn','quickActionsMenu'],['notifBtn','notifMenu'],['msgBtn','msgMenu'],['profileBtn','profileMenu']];
+  dropdowns.forEach(([btnId, menuId]) => {
+    const btn = document.getElementById(btnId);
+    const menu = document.getElementById(menuId);
+    if (!btn || !menu) return;
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = !menu.classList.contains('hidden');
+      dropdowns.forEach(([, mId]) => document.getElementById(mId)?.classList.add('hidden'));
+      menu.classList.toggle('hidden', isOpen);
+    });
+  });
+  document.addEventListener('click', () => dropdowns.forEach(([, mId]) => document.getElementById(mId)?.classList.add('hidden')));
+
+  document.getElementById('themeToggleBtn').addEventListener('click', function () {
+    const icon = this.querySelector('i');
+    icon.classList.toggle('fa-moon');
+    icon.classList.toggle('fa-sun');
+  });
+
+  const detailsName = document.getElementById('detailsName');
+  const detailsMeta = document.getElementById('detailsMeta');
+  const detailsPreview = document.getElementById('detailsPreview');
+  const detailsAltText = document.getElementById('altText');
+
+  function showToast(message) {
+    const toast = document.getElementById('mediaToast');
+    toast.textContent = message;
+    toast.classList.remove('hidden');
+    clearTimeout(toast._hideTimer);
+    toast._hideTimer = setTimeout(() => toast.classList.add('hidden'), 1800);
+  }
+
+  function selectTile(tile) {
+    document.querySelectorAll('.media-tile').forEach(t => t.classList.remove('selected'));
+    tile.classList.add('selected');
+    renderDetails(tile);
+  }
+
+  function renderDetails(tile) {
+    const img = tile.dataset.img;
+    detailsName.textContent = tile.dataset.name;
+    detailsMeta.innerHTML = tile.dataset.meta;
+    detailsAltText.value = '';
+    detailsPreview.innerHTML = img
+      ? '<img src="' + img + '" alt="" class="w-full h-full object-cover">'
+      : '<div class="w-full h-full grid place-items-center"><i class="fa-regular fa-file-pdf text-4xl text-danger/60"></i></div>';
+  }
+
+  function clearDetails() {
+    detailsName.textContent = 'No file selected';
+    detailsMeta.textContent = 'Select a file to see its details.';
+    detailsAltText.value = '';
+    detailsPreview.innerHTML = '<div class="w-full h-full grid place-items-center"><i class="fa-regular fa-image text-4xl text-black/20"></i></div>';
+  }
+
+  function isSelectedInDetails(tile) {
+    return detailsName.textContent === tile.dataset.name && tile.classList.contains('selected');
+  }
+
+  function removeTile(tile) {
+    const wasSelected = tile.classList.contains('selected');
+    tile.remove();
+    if (wasSelected) {
+      const next = document.querySelector('.media-tile');
+      if (next) selectTile(next); else clearDetails();
+    }
+    updateBulkBar();
+  }
+
+  function downloadFile(name, url) {
+    const a = document.createElement('a');
+    a.href = url || '#';
+    a.download = name || '';
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  // Bind interactions for a single tile (works for existing + newly uploaded tiles)
+  function bindTileEvents(tile) {
+    tile.addEventListener('click', function (e) {
+      if (e.target.closest('.tile-overlay') || e.target.classList.contains('media-checkbox')) return;
+      selectTile(this);
+    });
+
+    tile.querySelector('.preview-btn')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const img = tile.dataset.img;
+      if (img) window.open(img, '_blank', 'noopener,noreferrer');
+    });
+
+    tile.querySelector('.copy-url-btn')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navigator.clipboard?.writeText(tile.dataset.img || '').then(() => showToast('URL copied to clipboard'));
+    });
+
+    tile.querySelector('.download-btn')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      downloadFile(tile.dataset.name, tile.dataset.img);
+    });
+
+    tile.querySelector('.delete-tile-btn')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      removeTile(tile);
+    });
+
+    const cb = tile.querySelector('.media-checkbox');
+    cb?.addEventListener('click', e => e.stopPropagation());
+    cb?.addEventListener('change', updateBulkBar);
+  }
+
+  document.querySelectorAll('.media-tile').forEach(bindTileEvents);
+  if (document.querySelector('.media-tile.selected')) {
+    renderDetails(document.querySelector('.media-tile.selected'));
+  }
+
+  // Bulk selection
+  const bulkActionsBar = document.getElementById('bulkActionsBar');
+  const bulkSelectedCount = document.getElementById('bulkSelectedCount');
+  function updateBulkBar() {
+    const checked = document.querySelectorAll('.media-checkbox:checked').length;
+    bulkSelectedCount.textContent = checked;
+    bulkActionsBar.classList.toggle('hidden', checked === 0);
+    bulkActionsBar.classList.toggle('flex', checked > 0);
+  }
+  updateBulkBar();
+
+  document.getElementById('bulkDeleteBtn').addEventListener('click', () => {
+    document.querySelectorAll('.media-checkbox:checked').forEach(cb => removeTile(cb.closest('.media-tile')));
+    showToast('Selected files deleted');
+  });
+
+  // =========================================================
+  // FOLDER / TYPE / SEARCH FILTERING
+  // =========================================================
+  const mediaSearch = document.getElementById('mediaSearch');
+  const mediaTypeFilter = document.getElementById('mediaTypeFilter');
+  let activeFolder = 'all';
+
+  function applyFilters() {
+    const query = mediaSearch.value.trim().toLowerCase();
+    const type = mediaTypeFilter.value;
+    document.querySelectorAll('.media-tile').forEach(tile => {
+      const matchesFolder = activeFolder === 'all' || (tile.dataset.folder || '').split(' ').includes(activeFolder);
+      const matchesType = type === 'all' || tile.dataset.type === type;
+      const matchesSearch = !query || (tile.dataset.name || '').toLowerCase().includes(query);
+      tile.classList.toggle('hidden', !(matchesFolder && matchesType && matchesSearch));
+    });
+  }
+
+  document.querySelectorAll('.folder-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      activeFolder = link.dataset.folder;
+      document.querySelectorAll('.folder-link').forEach(l => {
+        l.classList.remove('active-folder', 'bg-primary/15', 'text-ink', 'font-semibold');
+        l.classList.add('text-black/60');
+      });
+      link.classList.add('active-folder', 'bg-primary/15', 'text-ink', 'font-semibold');
+      link.classList.remove('text-black/60');
+      applyFilters();
+    });
+  });
+
+  mediaTypeFilter.addEventListener('change', applyFilters);
+  mediaSearch.addEventListener('input', applyFilters);
+
+  // =========================================================
+  // UPLOAD (button + dropzone click + drag & drop)
+  // =========================================================
+  const uploadFilesBtn = document.getElementById('uploadFilesBtn');
+  const fileUploadInput = document.getElementById('fileUploadInput');
+  const dropzone = document.getElementById('dropzone');
+
+  function fileTypeOf(file) {
+    if (file.type.startsWith('image/')) return 'image';
+    if (file.type.startsWith('video/')) return 'video';
+    return 'document';
+  }
+
+  function addUploadedFile(file) {
+    const type = fileTypeOf(file);
+    const url = URL.createObjectURL(file);
+    const sizeKb = Math.max(1, Math.round(file.size / 1024));
+    const li = document.createElement('div');
+    li.className = 'media-tile rounded-2xl overflow-hidden bg-canvas aspect-square cursor-pointer';
+    li.dataset.name = file.name;
+    li.dataset.meta = 'Uploaded just now &middot; ' + sizeKb + ' KB';
+    li.dataset.img = type === 'document' ? '' : url;
+    li.dataset.type = type;
+    li.dataset.folder = type === 'image' ? 'images' : type === 'video' ? 'videos' : 'documents';
+
+    if (type === 'document') {
+      li.classList.add('flex', 'flex-col', 'items-center', 'justify-center', 'gap-2');
+      li.innerHTML = `
+        <i class="fa-regular fa-file-lines text-3xl text-info/70"></i>
+        <span class="text-[11px] text-black/50 px-2 text-center truncate w-full">${file.name}</span>
+        <input type="checkbox" class="media-checkbox absolute top-2 left-2 w-4 h-4 rounded z-10">
+        <div class="tile-overlay absolute inset-0 bg-black/40 flex items-center justify-center gap-2">
+          <button aria-label="Download" class="download-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-solid fa-download text-xs"></i></button>
+          <button aria-label="Delete" class="delete-tile-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-solid fa-trash-can text-xs text-danger"></i></button>
+        </div>`;
+    } else {
+      li.innerHTML = `
+        <img src="${url}" alt="${file.name}" class="w-full h-full object-cover">
+        ${type === 'video' ? '<div class="absolute inset-0 bg-black/25 flex items-center justify-center"><i class="fa-solid fa-circle-play text-white text-2xl"></i></div>' : ''}
+        <input type="checkbox" class="media-checkbox absolute top-2 left-2 w-4 h-4 rounded z-10">
+        <div class="tile-overlay absolute inset-0 bg-black/40 flex items-center justify-center gap-2">
+          <button aria-label="Preview" class="preview-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-regular fa-eye text-xs"></i></button>
+          ${type === 'image'
+            ? '<button aria-label="Copy URL" class="copy-url-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-solid fa-link text-xs"></i></button>'
+            : '<button aria-label="Download" class="download-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-solid fa-download text-xs"></i></button>'}
+          <button aria-label="Delete" class="delete-tile-btn w-8 h-8 rounded-full bg-white/90 grid place-items-center"><i class="fa-solid fa-trash-can text-xs text-danger"></i></button>
+        </div>`;
+    }
+
+    mediaGrid.prepend(li);
+    bindTileEvents(li);
+    applyFilters();
+    return li;
+  }
+
+  function handleFiles(fileList) {
+    const files = Array.from(fileList || []);
+    if (!files.length) return;
+    let lastTile = null;
+    files.forEach(file => { lastTile = addUploadedFile(file); });
+    if (lastTile) selectTile(lastTile);
+    showToast(files.length === 1 ? '1 file uploaded' : files.length + ' files uploaded');
+  }
+
+  uploadFilesBtn.addEventListener('click', () => fileUploadInput.click());
+  dropzone.addEventListener('click', () => fileUploadInput.click());
+  fileUploadInput.addEventListener('change', () => { handleFiles(fileUploadInput.files); fileUploadInput.value = ''; });
+
+  ['dragenter', 'dragover'].forEach(evt => {
+    dropzone.addEventListener(evt, (e) => {
+      e.preventDefault();
+      dropzone.classList.add('border-primary-dark', 'bg-primary/5');
+    });
+  });
+  ['dragleave', 'drop'].forEach(evt => {
+    dropzone.addEventListener(evt, (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('border-primary-dark', 'bg-primary/5');
+    });
+  });
+  dropzone.addEventListener('drop', (e) => handleFiles(e.dataTransfer?.files));
+
+  // =========================================================
+  // DETAILS PANEL ACTIONS
+  // =========================================================
+  document.getElementById('detailsCopyUrlBtn').addEventListener('click', () => {
+    const tile = document.querySelector('.media-tile.selected');
+    if (!tile) return;
+    navigator.clipboard?.writeText(tile.dataset.img || '').then(() => showToast('URL copied to clipboard'));
+  });
+
+  document.getElementById('detailsDownloadBtn').addEventListener('click', () => {
+    const tile = document.querySelector('.media-tile.selected');
+    if (!tile) return;
+    downloadFile(tile.dataset.name, tile.dataset.img);
+  });
+
+  document.getElementById('detailsRenameBtn').addEventListener('click', () => {
+    const tile = document.querySelector('.media-tile.selected');
+    if (!tile) return;
+    const newName = window.prompt('Rename file', tile.dataset.name);
+    if (!newName || !newName.trim()) return;
+    tile.dataset.name = newName.trim();
+    const img = tile.querySelector('img');
+    if (img) img.alt = newName.trim();
+    const label = tile.querySelector('span.truncate');
+    if (label) label.textContent = newName.trim();
+    renderDetails(tile);
+    showToast('File renamed');
+  });
+
+  document.getElementById('detailsDeleteBtn').addEventListener('click', () => {
+    const tile = document.querySelector('.media-tile.selected');
+    if (!tile) return;
+    removeTile(tile);
+    showToast('File deleted');
+  });
+
+  // =========================================================
+  // MOVE TO FOLDER MODAL (details panel + bulk bar)
+  // =========================================================
+  const moveModalOverlay = document.getElementById('moveModalOverlay');
+  let moveTargetTiles = [];
+
+  function openMoveModal(tiles) {
+    moveTargetTiles = tiles;
+    moveModalOverlay.classList.remove('hidden');
+    moveModalOverlay.classList.add('flex');
+  }
+  function closeMoveModal() {
+    moveModalOverlay.classList.add('hidden');
+    moveModalOverlay.classList.remove('flex');
+    moveTargetTiles = [];
+  }
+
+  document.getElementById('detailsMoveBtn').addEventListener('click', () => {
+    const tile = document.querySelector('.media-tile.selected');
+    if (tile) openMoveModal([tile]);
+  });
+  document.getElementById('bulkMoveBtn').addEventListener('click', () => {
+    const tiles = Array.from(document.querySelectorAll('.media-checkbox:checked')).map(cb => cb.closest('.media-tile'));
+    if (tiles.length) openMoveModal(tiles);
+  });
+
+  document.querySelectorAll('.move-target-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const folder = btn.dataset.folder;
+      moveTargetTiles.forEach(tile => { tile.dataset.folder = folder; });
+      applyFilters();
+      showToast(moveTargetTiles.length === 1 ? 'File moved to ' + folder : moveTargetTiles.length + ' files moved to ' + folder);
+      closeMoveModal();
+    });
+  });
+
+  document.getElementById('moveModalCloseBtn').addEventListener('click', closeMoveModal);
+  document.getElementById('moveModalCancelBtn').addEventListener('click', closeMoveModal);
+  moveModalOverlay.addEventListener('click', (e) => { if (e.target === moveModalOverlay) closeMoveModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMoveModal(); });
+
+  // Grid/List view toggle
+  const gridViewBtn = document.getElementById('gridViewBtn');
+  const listViewBtn = document.getElementById('listViewBtn');
+  const mediaGrid = document.getElementById('mediaGrid');
+  gridViewBtn.addEventListener('click', () => {
+    mediaGrid.classList.remove('grid-cols-1');
+    mediaGrid.classList.add('grid-cols-2', 'sm:grid-cols-3', 'xl:grid-cols-4');
+    gridViewBtn.classList.add('bg-ink', 'text-white');
+    listViewBtn.classList.remove('bg-ink', 'text-white');
+  });
+  listViewBtn.addEventListener('click', () => {
+    mediaGrid.classList.add('grid-cols-1');
+    mediaGrid.classList.remove('grid-cols-2', 'sm:grid-cols-3', 'xl:grid-cols-4');
+    listViewBtn.classList.add('bg-ink', 'text-white');
+    gridViewBtn.classList.remove('bg-ink', 'text-white');
+  });
+</script>
+
+</body>
+</html>

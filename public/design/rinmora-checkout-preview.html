@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Checkout — Rinmora</title>
+<meta name="description" content="Complete your Rinmora order securely in just a few simple steps.">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: '#CFBAA5',
+          'primary-dark': '#b89e84',
+          ink: '#000000',
+        },
+        fontFamily: {
+          sans: ['Poppins', 'sans-serif'],
+          body: ['Manrope', 'sans-serif'],
+        },
+        borderRadius: {
+          '4xl': '2rem',
+          '5xl': '2.5rem',
+        },
+        boxShadow: {
+          soft: '0 20px 60px -15px rgba(0,0,0,0.15)',
+          card: '0 10px 40px -12px rgba(0,0,0,0.12)',
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Manrope', sans-serif; }
+  .font-display { font-family: 'Poppins', sans-serif; }
+
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+
+  .snap-row { scroll-snap-type: x mandatory; }
+  .snap-item { scroll-snap-align: start; }
+
+  .img-zoom { overflow: hidden; }
+  .img-zoom img { transition: transform .6s cubic-bezier(.16,1,.3,1); }
+  .img-zoom:hover img { transform: scale(1.06); }
+
+  .btn-ripple { position: relative; overflow: hidden; }
+  .btn-ripple span.ripple {
+    position: absolute; border-radius: 9999px; transform: scale(0);
+    animation: ripple .6s linear; background: rgba(0,0,0,0.15);
+    pointer-events: none;
+  }
+  @keyframes ripple { to { transform: scale(3); opacity: 0; } }
+
+  .fade-up { animation: fadeUp .6s cubic-bezier(.16,1,.3,1) both; }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(16px);} to {opacity:1; transform:translateY(0);} }
+
+  summary::-webkit-details-marker { display: none; }
+
+  @media (min-width: 1024px) {
+    .order-summary-details .os-content { display: block !important; }
+  }
+</style>
+</head>
+
+<body class="bg-white text-ink antialiased">
+
+<!-- =========================================================
+     HEADER (minimal, distraction-free)
+========================================================== -->
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-black/5">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10">
+    <div class="flex items-center justify-between h-16 md:h-20">
+      <a href="rinmora-home-preview.html" class="select-none">
+        <img src="../logo-01.png" alt="Rinmora" class="h-10 md:h-12 w-auto">
+      </a>
+
+      <div class="hidden sm:flex items-center gap-2 text-xs font-display font-medium text-black/60">
+        <i class="fa-solid fa-lock text-primary-dark"></i>
+        Secure Checkout
+      </div>
+
+      <button aria-label="Shopping bag" class="relative w-10 h-10 grid place-items-center rounded-full hover:bg-black/5 transition">
+        <i class="fa-solid fa-bag-shopping text-[15px]"></i>
+        <span class="absolute top-1 right-1 bg-ink text-white text-[10px] font-bold w-4 h-4 rounded-full grid place-items-center">3</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10 py-10 md:py-14">
+
+  <!-- =========================================================
+       CHECKOUT PROGRESS
+  ========================================================== -->
+  <div class="flex items-center justify-center gap-2 md:gap-4 mb-10 md:mb-14 fade-up">
+    <div class="flex items-center gap-2 text-black/35">
+      <span class="w-7 h-7 rounded-full border border-black/15 grid place-items-center text-[11px] font-display font-medium">1</span>
+      <span class="hidden sm:inline text-xs md:text-sm font-display font-medium">Shopping Cart</span>
+    </div>
+    <i class="fa-solid fa-chevron-right text-[10px] text-black/20"></i>
+    <div class="flex items-center gap-2 text-ink">
+      <span class="w-7 h-7 rounded-full bg-primary grid place-items-center text-[11px] font-display font-semibold">2</span>
+      <span class="text-xs md:text-sm font-display font-semibold">Checkout</span>
+    </div>
+    <i class="fa-solid fa-chevron-right text-[10px] text-black/20"></i>
+    <div class="flex items-center gap-2 text-black/35">
+      <span class="w-7 h-7 rounded-full border border-black/15 grid place-items-center text-[11px] font-display font-medium">3</span>
+      <span class="hidden sm:inline text-xs md:text-sm font-display font-medium">Order Confirmation</span>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       CHECKOUT TITLE
+  ========================================================== -->
+  <div class="text-center max-w-lg mx-auto mb-10 md:mb-14">
+    <h1 class="font-display text-3xl md:text-4xl font-semibold">Secure Checkout</h1>
+    <p class="text-black/50 text-sm md:text-base mt-2">Complete your order in just a few simple steps.</p>
+  </div>
+
+  <div class="lg:grid lg:grid-cols-[1fr_400px] lg:gap-10 lg:items-start">
+
+    <!-- ============ MOBILE ORDER SUMMARY (collapsible) / DESKTOP SIDEBAR ============ -->
+    <details class="order-summary-details group lg:order-2 bg-white rounded-3xl shadow-card overflow-hidden mb-8 lg:mb-0 lg:sticky lg:top-28">
+      <summary class="lg:hidden flex items-center justify-between px-6 py-5 cursor-pointer select-none">
+        <span class="font-display font-semibold text-sm">Order Summary <span class="text-black/40 font-normal">(3 items)</span></span>
+        <span class="flex items-center gap-3">
+          <span class="font-display font-semibold text-sm">$282.50</span>
+          <i class="fa-solid fa-chevron-down text-xs transition-transform group-open:rotate-180"></i>
+        </span>
+      </summary>
+
+      <div class="os-content px-6 pb-7 lg:p-7">
+        <h2 class="hidden lg:block font-display text-lg font-semibold mb-6">Order Summary</h2>
+
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="w-16 h-16 rounded-xl overflow-hidden shrink-0">
+              <img src="https://picsum.photos/seed/cart-milano/200/200" alt="Milano Leather Tote" class="w-full h-full object-cover">
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-display text-sm font-medium truncate">Milano Leather Tote</p>
+              <p class="text-black/45 text-xs mt-0.5">Black · Qty 1</p>
+            </div>
+            <p class="font-display text-sm font-semibold shrink-0">$118.00</p>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <div class="w-16 h-16 rounded-xl overflow-hidden shrink-0">
+              <img src="https://picsum.photos/seed/cart-luna/200/200" alt="Luna Crossbody" class="w-full h-full object-cover">
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-display text-sm font-medium truncate">Luna Crossbody</p>
+              <p class="text-black/45 text-xs mt-0.5">Brown · Qty 1</p>
+            </div>
+            <p class="font-display text-sm font-semibold shrink-0">$74.00</p>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <div class="w-16 h-16 rounded-xl overflow-hidden shrink-0">
+              <img src="https://picsum.photos/seed/cart-aurora/200/200" alt="Aurora Mini Bag" class="w-full h-full object-cover">
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-display text-sm font-medium truncate">Aurora Mini Bag</p>
+              <p class="text-black/45 text-xs mt-0.5">Pink · Qty 1</p>
+            </div>
+            <p class="font-display text-sm font-semibold shrink-0">$58.00</p>
+          </div>
+        </div>
+
+        <!-- Coupon -->
+        <div class="flex items-center gap-2 mt-6">
+          <label for="checkoutCoupon" class="sr-only">Coupon code</label>
+          <input id="checkoutCoupon" type="text" placeholder="Coupon code" class="w-full px-4 py-3 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+          <button class="btn-ripple shrink-0 bg-ink text-white font-display font-semibold text-xs uppercase tracking-wide px-5 py-3 rounded-xl hover:bg-black/80 transition">
+            Apply
+          </button>
+        </div>
+
+        <div class="border-t border-black/10 my-6"></div>
+
+        <dl class="space-y-3 text-sm">
+          <div class="flex justify-between"><dt class="text-black/55">Subtotal</dt><dd class="font-medium">$308.00</dd></div>
+          <div class="flex justify-between"><dt class="text-black/55">Discount</dt><dd class="font-medium text-primary-dark">-$38.00</dd></div>
+          <div class="flex justify-between"><dt class="text-black/55">Shipping</dt><dd class="font-medium">Free</dd></div>
+          <div class="flex justify-between"><dt class="text-black/55">Estimated Tax</dt><dd class="font-medium">$12.50</dd></div>
+        </dl>
+
+        <div class="border-t border-black/10 my-6"></div>
+
+        <div class="flex justify-between items-baseline mb-7">
+          <span class="font-display font-semibold text-base">Grand Total</span>
+          <span class="font-display font-semibold text-2xl">$282.50</span>
+        </div>
+
+        <!-- Trust Section -->
+        <div class="grid grid-cols-2 gap-3 text-xs text-black/60 mb-7">
+          <div class="flex items-center gap-2"><i class="fa-solid fa-shield-halved text-primary-dark"></i> 100% Secure</div>
+          <div class="flex items-center gap-2"><i class="fa-solid fa-lock text-primary-dark"></i> SSL Encrypted</div>
+          <div class="flex items-center gap-2"><i class="fa-solid fa-rotate-left text-primary-dark"></i> Easy Returns</div>
+          <div class="flex items-center gap-2"><i class="fa-solid fa-gem text-primary-dark"></i> Premium Quality</div>
+          <div class="flex items-center gap-2"><i class="fa-solid fa-truck-fast text-primary-dark"></i> Fast Delivery</div>
+          <div class="flex items-center gap-2"><i class="fa-solid fa-money-bill-wave text-primary-dark"></i> Cash on Delivery</div>
+        </div>
+
+        <button class="btn-ripple w-full bg-primary text-ink font-display font-semibold text-sm uppercase tracking-wide py-4 rounded-full hover:bg-primary-dark transition">
+          Place Order Securely
+        </button>
+
+        <p class="flex items-center justify-center gap-2 text-[11px] text-black/45 mt-4">
+          <i class="fa-solid fa-lock"></i>
+          Your payment information is encrypted and securely processed.
+        </p>
+      </div>
+    </details>
+
+    <!-- ============ CHECKOUT FORM ============ -->
+    <form class="lg:order-1 space-y-6" onsubmit="return false;">
+
+      <!-- Contact Information -->
+      <section class="bg-white rounded-3xl shadow-card p-6 md:p-8">
+        <h2 class="font-display text-lg font-semibold mb-6">Contact Information</h2>
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div>
+            <label for="email" class="block text-xs font-display font-medium text-black/50 mb-2">Email Address</label>
+            <input id="email" type="email" placeholder="you@example.com" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+          </div>
+          <div>
+            <label for="contactPhone" class="block text-xs font-display font-medium text-black/50 mb-2">Phone Number</label>
+            <input id="contactPhone" type="tel" placeholder="+1 (555) 000-0000" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+          </div>
+        </div>
+        <label class="flex items-center gap-3 mt-5 text-sm text-black/60 cursor-pointer">
+          <input type="checkbox" checked class="w-4 h-4 rounded">
+          Email me about new arrivals and exclusive offers.
+        </label>
+      </section>
+
+      <!-- Shipping Address -->
+      <section class="bg-white rounded-3xl shadow-card p-6 md:p-8">
+        <h2 class="font-display text-lg font-semibold mb-6">Shipping Address</h2>
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div>
+            <label for="firstName" class="block text-xs font-display font-medium text-black/50 mb-2">First Name</label>
+            <input id="firstName" type="text" placeholder="Sana" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+          </div>
+          <div>
+            <label for="lastName" class="block text-xs font-display font-medium text-black/50 mb-2">Last Name</label>
+            <input id="lastName" type="text" placeholder="Khan" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+          </div>
+          <div class="sm:col-span-2">
+            <label for="company" class="block text-xs font-display font-medium text-black/50 mb-2">Company <span class="text-black/30">(Optional)</span></label>
+            <input id="company" type="text" placeholder="Company name" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+          </div>
+
+          <div class="relative">
+            <label for="country" class="block text-xs font-display font-medium text-black/50 mb-2">Country</label>
+            <select id="country" class="w-full appearance-none px-5 py-3.5 rounded-xl border border-black/10 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary transition cursor-pointer">
+              <option>United States</option>
+              <option>United Kingdom</option>
+              <option>Pakistan</option>
+              <option>United Arab Emirates</option>
+              <option>Canada</option>
+            </select>
+            <i class="fa-solid fa-chevron-down text-[10px] absolute right-5 bottom-4 pointer-events-none text-black/40"></i>
+          </div>
+          <div class="relative">
+            <label for="state" class="block text-xs font-display font-medium text-black/50 mb-2">State / Province</label>
+            <select id="state" class="w-full appearance-none px-5 py-3.5 rounded-xl border border-black/10 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary transition cursor-pointer">
+              <option>California</option>
+              <option>New York</option>
+              <option>Texas</option>
+              <option>Punjab</option>
+              <option>Sindh</option>
+            </select>
+            <i class="fa-solid fa-chevron-down text-[10px] absolute right-5 bottom-4 pointer-events-none text-black/40"></i>
+          </div>
+
+          <div>
+            <label for="city" class="block text-xs font-display font-medium text-black/50 mb-2">City</label>
+            <input id="city" type="text" placeholder="Los Angeles" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+          </div>
+          <div>
+            <label for="zip" class="block text-xs font-display font-medium text-black/50 mb-2">ZIP / Postal Code</label>
+            <input id="zip" type="text" placeholder="90001" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="street" class="block text-xs font-display font-medium text-black/50 mb-2">Street Address</label>
+            <input id="street" type="text" placeholder="123 Rodeo Drive" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+          </div>
+          <div class="sm:col-span-2">
+            <label for="apartment" class="block text-xs font-display font-medium text-black/50 mb-2">Apartment / Suite <span class="text-black/30">(Optional)</span></label>
+            <input id="apartment" type="text" placeholder="Apt, suite, unit" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="shippingPhone" class="block text-xs font-display font-medium text-black/50 mb-2">Phone Number</label>
+            <input id="shippingPhone" type="tel" placeholder="+1 (555) 000-0000" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+          </div>
+        </div>
+      </section>
+
+      <!-- Shipping Method -->
+      <section class="bg-white rounded-3xl shadow-card p-6 md:p-8">
+        <h2 class="font-display text-lg font-semibold mb-6">Shipping Method</h2>
+        <div class="space-y-3">
+
+          <label class="flex items-center gap-4 rounded-2xl border border-black/10 has-[:checked]:border-primary-dark has-[:checked]:bg-primary/10 px-5 py-4 cursor-pointer transition">
+            <input type="radio" name="shippingMethod" class="peer sr-only" checked>
+            <span class="w-4 h-4 rounded-full border-2 border-black/20 peer-checked:border-primary-dark peer-checked:bg-primary-dark shrink-0 transition"></span>
+            <div class="flex-1 flex items-center justify-between gap-4">
+              <div>
+                <p class="font-display text-sm font-semibold">Standard Shipping</p>
+                <p class="text-black/45 text-xs mt-0.5">3–5 Business Days</p>
+              </div>
+              <span class="font-display text-sm font-semibold shrink-0">Free</span>
+            </div>
+          </label>
+
+          <label class="flex items-center gap-4 rounded-2xl border border-black/10 has-[:checked]:border-primary-dark has-[:checked]:bg-primary/10 px-5 py-4 cursor-pointer transition">
+            <input type="radio" name="shippingMethod" class="peer sr-only">
+            <span class="w-4 h-4 rounded-full border-2 border-black/20 peer-checked:border-primary-dark peer-checked:bg-primary-dark shrink-0 transition"></span>
+            <div class="flex-1 flex items-center justify-between gap-4">
+              <div>
+                <p class="font-display text-sm font-semibold">Express Shipping</p>
+                <p class="text-black/45 text-xs mt-0.5">1–2 Business Days</p>
+              </div>
+              <span class="font-display text-sm font-semibold shrink-0">+$15.00</span>
+            </div>
+          </label>
+
+          <label class="flex items-center gap-4 rounded-2xl border border-black/10 has-[:checked]:border-primary-dark has-[:checked]:bg-primary/10 px-5 py-4 cursor-pointer transition">
+            <input type="radio" name="shippingMethod" class="peer sr-only">
+            <span class="w-4 h-4 rounded-full border-2 border-black/20 peer-checked:border-primary-dark peer-checked:bg-primary-dark shrink-0 transition"></span>
+            <div class="flex-1 flex items-center justify-between gap-4">
+              <div>
+                <p class="font-display text-sm font-semibold">Same Day Delivery</p>
+                <p class="text-black/45 text-xs mt-0.5">Where Available</p>
+              </div>
+              <span class="font-display text-sm font-semibold shrink-0">+$25.00</span>
+            </div>
+          </label>
+
+        </div>
+      </section>
+
+      <!-- Payment Method -->
+      <section class="bg-white rounded-3xl shadow-card p-6 md:p-8">
+        <h2 class="font-display text-lg font-semibold mb-6">Payment Method</h2>
+        <div id="paymentMethodGroup" class="space-y-3">
+
+          <label class="flex items-center gap-4 rounded-2xl border border-black/10 has-[:checked]:border-primary-dark has-[:checked]:bg-primary/10 px-5 py-4 cursor-pointer transition">
+            <input type="radio" name="paymentMethod" value="card" class="payment-radio peer sr-only" checked>
+            <span class="w-4 h-4 rounded-full border-2 border-black/20 peer-checked:border-primary-dark peer-checked:bg-primary-dark shrink-0 transition"></span>
+            <div class="flex-1 flex items-center justify-between gap-4">
+              <p class="font-display text-sm font-semibold">Credit / Debit Card</p>
+              <div class="flex items-center gap-2 text-lg text-black/40 shrink-0">
+                <i class="fa-brands fa-cc-visa"></i>
+                <i class="fa-brands fa-cc-mastercard"></i>
+              </div>
+            </div>
+          </label>
+
+          <label class="flex items-center gap-4 rounded-2xl border border-black/10 has-[:checked]:border-primary-dark has-[:checked]:bg-primary/10 px-5 py-4 cursor-pointer transition">
+            <input type="radio" name="paymentMethod" value="paypal" class="payment-radio peer sr-only">
+            <span class="w-4 h-4 rounded-full border-2 border-black/20 peer-checked:border-primary-dark peer-checked:bg-primary-dark shrink-0 transition"></span>
+            <div class="flex-1 flex items-center justify-between gap-4">
+              <p class="font-display text-sm font-semibold">PayPal</p>
+              <i class="fa-brands fa-cc-paypal text-lg text-black/40 shrink-0"></i>
+            </div>
+          </label>
+
+          <label class="flex items-center gap-4 rounded-2xl border border-black/10 has-[:checked]:border-primary-dark has-[:checked]:bg-primary/10 px-5 py-4 cursor-pointer transition">
+            <input type="radio" name="paymentMethod" value="cod" class="payment-radio peer sr-only">
+            <span class="w-4 h-4 rounded-full border-2 border-black/20 peer-checked:border-primary-dark peer-checked:bg-primary-dark shrink-0 transition"></span>
+            <div class="flex-1 flex items-center justify-between gap-4">
+              <p class="font-display text-sm font-semibold">Cash on Delivery</p>
+              <i class="fa-solid fa-money-bill-wave text-lg text-black/40 shrink-0"></i>
+            </div>
+          </label>
+
+          <label class="flex items-center gap-4 rounded-2xl border border-black/10 has-[:checked]:border-primary-dark has-[:checked]:bg-primary/10 px-5 py-4 cursor-pointer transition">
+            <input type="radio" name="paymentMethod" value="apple" class="payment-radio peer sr-only">
+            <span class="w-4 h-4 rounded-full border-2 border-black/20 peer-checked:border-primary-dark peer-checked:bg-primary-dark shrink-0 transition"></span>
+            <div class="flex-1 flex items-center justify-between gap-4">
+              <p class="font-display text-sm font-semibold">Apple Pay</p>
+              <i class="fa-brands fa-apple-pay text-2xl text-black/40 shrink-0"></i>
+            </div>
+          </label>
+
+          <label class="flex items-center gap-4 rounded-2xl border border-black/10 has-[:checked]:border-primary-dark has-[:checked]:bg-primary/10 px-5 py-4 cursor-pointer transition">
+            <input type="radio" name="paymentMethod" value="google" class="payment-radio peer sr-only">
+            <span class="w-4 h-4 rounded-full border-2 border-black/20 peer-checked:border-primary-dark peer-checked:bg-primary-dark shrink-0 transition"></span>
+            <div class="flex-1 flex items-center justify-between gap-4">
+              <p class="font-display text-sm font-semibold">Google Pay</p>
+              <i class="fa-brands fa-google-pay text-2xl text-black/40 shrink-0"></i>
+            </div>
+          </label>
+
+        </div>
+
+        <!-- Credit Card Form (shown only when Card is selected) -->
+        <div id="creditCardForm" class="grid sm:grid-cols-2 gap-5 mt-6 pt-6 border-t border-black/5">
+          <div class="sm:col-span-2">
+            <label for="cardNumber" class="block text-xs font-display font-medium text-black/50 mb-2">Card Number</label>
+            <div class="relative">
+              <input id="cardNumber" type="text" placeholder="1234 5678 9012 3456" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+              <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 text-black/30 text-base">
+                <i class="fa-brands fa-cc-visa"></i>
+                <i class="fa-brands fa-cc-mastercard"></i>
+                <i class="fa-brands fa-cc-amex"></i>
+              </div>
+            </div>
+          </div>
+          <div class="sm:col-span-2">
+            <label for="cardName" class="block text-xs font-display font-medium text-black/50 mb-2">Cardholder Name</label>
+            <input id="cardName" type="text" placeholder="Name as shown on card" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+          </div>
+          <div>
+            <label for="cardExpiry" class="block text-xs font-display font-medium text-black/50 mb-2">Expiry Date</label>
+            <input id="cardExpiry" type="text" placeholder="MM / YY" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+          </div>
+          <div>
+            <label for="cardCvv" class="block text-xs font-display font-medium text-black/50 mb-2">CVV</label>
+            <input id="cardCvv" type="text" placeholder="•••" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+          </div>
+        </div>
+      </section>
+
+      <!-- Billing Address -->
+      <section class="bg-white rounded-3xl shadow-card p-6 md:p-8">
+        <h2 class="font-display text-lg font-semibold mb-5">Billing Address</h2>
+        <label class="flex items-center gap-3 text-sm text-black/60 cursor-pointer">
+          <input id="billingSameCheckbox" type="checkbox" checked class="w-4 h-4 rounded">
+          Billing address is same as shipping address.
+        </label>
+
+        <div id="billingAddressForm" class="hidden grid sm:grid-cols-2 gap-5 mt-6 pt-6 border-t border-black/5">
+          <div>
+            <label for="billFirstName" class="block text-xs font-display font-medium text-black/50 mb-2">First Name</label>
+            <input id="billFirstName" type="text" placeholder="Sana" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+          </div>
+          <div>
+            <label for="billLastName" class="block text-xs font-display font-medium text-black/50 mb-2">Last Name</label>
+            <input id="billLastName" type="text" placeholder="Khan" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+          </div>
+          <div class="sm:col-span-2">
+            <label for="billStreet" class="block text-xs font-display font-medium text-black/50 mb-2">Street Address</label>
+            <input id="billStreet" type="text" placeholder="123 Rodeo Drive" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+          </div>
+          <div>
+            <label for="billCity" class="block text-xs font-display font-medium text-black/50 mb-2">City</label>
+            <input id="billCity" type="text" placeholder="Los Angeles" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+          </div>
+          <div>
+            <label for="billZip" class="block text-xs font-display font-medium text-black/50 mb-2">ZIP / Postal Code</label>
+            <input id="billZip" type="text" placeholder="90001" class="w-full px-5 py-3.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+          </div>
+        </div>
+      </section>
+
+      <!-- Order Notes -->
+      <section class="bg-white rounded-3xl shadow-card p-6 md:p-8">
+        <h2 class="font-display text-lg font-semibold mb-5">Order Notes <span class="text-black/35 font-normal text-sm">(Optional)</span></h2>
+        <label for="orderNotes" class="sr-only">Order notes</label>
+        <textarea id="orderNotes" rows="4" placeholder="Add delivery instructions..." class="w-full px-5 py-4 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition resize-none"></textarea>
+      </section>
+
+      <!-- Place Order (mobile/tablet — desktop uses the sticky sidebar button) -->
+      <div class="lg:hidden">
+        <button class="btn-ripple w-full bg-primary text-ink font-display font-semibold text-sm uppercase tracking-wide py-4 rounded-full hover:bg-primary-dark transition">
+          Place Order Securely
+        </button>
+        <p class="flex items-center justify-center gap-2 text-[11px] text-black/45 mt-4">
+          <i class="fa-solid fa-lock"></i>
+          Your payment information is encrypted and securely processed.
+        </p>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- =========================================================
+       RECENTLY VIEWED
+  ========================================================== -->
+  <section class="pt-16 md:pt-20">
+    <div class="mb-8 md:mb-10">
+      <span class="font-display text-xs tracking-[0.25em] uppercase text-primary-dark font-semibold">History</span>
+      <h2 class="font-display text-2xl md:text-3xl font-semibold mt-2">Recently Viewed</h2>
+    </div>
+
+    <div class="flex gap-4 md:gap-6 overflow-x-auto snap-row -mx-5 px-5 md:mx-0 md:px-0">
+      <div class="snap-item shrink-0 w-40 md:w-48">
+        <div class="img-zoom aspect-square rounded-2xl overflow-hidden shadow-card">
+          <img src="https://picsum.photos/seed/co-recent-chloe/300/300" alt="Chloe Shoulder Bag" class="w-full h-full object-cover">
+        </div>
+        <p class="font-display text-xs font-medium mt-3 truncate">Chloe Shoulder Bag</p>
+        <p class="text-black/50 text-xs">$89.00</p>
+      </div>
+      <div class="snap-item shrink-0 w-40 md:w-48">
+        <div class="img-zoom aspect-square rounded-2xl overflow-hidden shadow-card">
+          <img src="https://picsum.photos/seed/co-recent-ivy/300/300" alt="Ivy Mini Tote" class="w-full h-full object-cover">
+        </div>
+        <p class="font-display text-xs font-medium mt-3 truncate">Ivy Mini Tote</p>
+        <p class="text-black/50 text-xs">$68.00</p>
+      </div>
+      <div class="snap-item shrink-0 w-40 md:w-48">
+        <div class="img-zoom aspect-square rounded-2xl overflow-hidden shadow-card">
+          <img src="https://picsum.photos/seed/co-recent-willow/300/300" alt="Willow Crossbody" class="w-full h-full object-cover">
+        </div>
+        <p class="font-display text-xs font-medium mt-3 truncate">Willow Crossbody</p>
+        <p class="text-black/50 text-xs">$79.00</p>
+      </div>
+      <div class="snap-item shrink-0 w-40 md:w-48">
+        <div class="img-zoom aspect-square rounded-2xl overflow-hidden shadow-card">
+          <img src="https://picsum.photos/seed/co-recent-noor/300/300" alt="Noor Evening Clutch" class="w-full h-full object-cover">
+        </div>
+        <p class="font-display text-xs font-medium mt-3 truncate">Noor Evening Clutch</p>
+        <p class="text-black/50 text-xs">$58.00</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       CUSTOMER SUPPORT BANNER
+  ========================================================== -->
+  <section class="mt-16 md:mt-20">
+    <div class="bg-black/[0.02] rounded-3xl px-6 md:px-10 py-8 md:py-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+      <div>
+        <h2 class="font-display text-lg md:text-xl font-semibold">Need Help?</h2>
+        <p class="text-black/50 text-sm mt-1">Our team is here for you before, during, and after checkout.</p>
+      </div>
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <button class="inline-flex items-center gap-2 bg-white rounded-full px-5 py-3 text-xs font-display font-semibold uppercase tracking-wide shadow-card hover:bg-black/5 transition">
+          <i class="fa-solid fa-comment-dots text-primary-dark"></i> Chat with Us
+        </button>
+        <button class="inline-flex items-center gap-2 bg-white rounded-full px-5 py-3 text-xs font-display font-semibold uppercase tracking-wide shadow-card hover:bg-black/5 transition">
+          <i class="fa-solid fa-phone text-primary-dark"></i> Call Us
+        </button>
+        <button class="inline-flex items-center gap-2 bg-white rounded-full px-5 py-3 text-xs font-display font-semibold uppercase tracking-wide shadow-card hover:bg-black/5 transition">
+          <i class="fa-solid fa-envelope text-primary-dark"></i> Email Support
+        </button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- =========================================================
+     FOOTER (minimal)
+========================================================== -->
+<footer class="border-t border-black/5 mt-16 md:mt-20">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10 py-12 md:py-14">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+      <img src="../logo-01.png" alt="Rinmora" class="h-9 w-auto">
+
+      <ul class="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-black/55">
+        <li><a href="rinmora-home-preview.html" class="hover:text-ink transition">About</a></li>
+        <li><a href="#" class="hover:text-ink transition">Privacy Policy</a></li>
+        <li><a href="#" class="hover:text-ink transition">Return Policy</a></li>
+        <li><a href="#" class="hover:text-ink transition">Terms &amp; Conditions</a></li>
+        <li><a href="#" class="hover:text-ink transition">Customer Support</a></li>
+      </ul>
+
+      <div class="flex items-center gap-3">
+        <a href="#" aria-label="Instagram" class="w-9 h-9 rounded-full bg-black/[0.04] grid place-items-center hover:bg-primary transition"><i class="fa-brands fa-instagram text-sm"></i></a>
+        <a href="#" aria-label="Facebook" class="w-9 h-9 rounded-full bg-black/[0.04] grid place-items-center hover:bg-primary transition"><i class="fa-brands fa-facebook-f text-sm"></i></a>
+        <a href="#" aria-label="TikTok" class="w-9 h-9 rounded-full bg-black/[0.04] grid place-items-center hover:bg-primary transition"><i class="fa-brands fa-tiktok text-sm"></i></a>
+      </div>
+    </div>
+
+    <div class="border-t border-black/5 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-black/40">
+      <p>&copy; 2026 Rinmora. All rights reserved.</p>
+      <div class="flex items-center gap-3 text-base text-black/30">
+        <i class="fa-brands fa-cc-visa"></i>
+        <i class="fa-brands fa-cc-mastercard"></i>
+        <i class="fa-brands fa-cc-paypal"></i>
+        <i class="fa-brands fa-cc-apple-pay"></i>
+        <i class="fa-brands fa-google-pay"></i>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const creditCardForm = document.getElementById('creditCardForm');
+  document.querySelectorAll('.payment-radio').forEach(radio => {
+    radio.addEventListener('change', function () {
+      creditCardForm.classList.toggle('hidden', this.value !== 'card');
+    });
+  });
+
+  const billingSameCheckbox = document.getElementById('billingSameCheckbox');
+  const billingAddressForm = document.getElementById('billingAddressForm');
+  billingSameCheckbox.addEventListener('change', function () {
+    billingAddressForm.classList.toggle('hidden', this.checked);
+  });
+
+  document.querySelectorAll('.btn-ripple').forEach(btn => {
+    btn.addEventListener('click', function (e) {
+      const rect = this.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      const size = Math.max(rect.width, rect.height);
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+      ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+      this.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 650);
+    });
+  });
+</script>
+
+</body>
+</html>

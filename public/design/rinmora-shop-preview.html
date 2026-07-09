@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop — Rinmora</title>
+<meta name="description" content="Shop the full Rinmora handbag collection — premium totes, crossbody, shoulder bags, clutches and more.">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: '#CFBAA5',
+          'primary-dark': '#b89e84',
+          ink: '#000000',
+        },
+        fontFamily: {
+          sans: ['Poppins', 'sans-serif'],
+          body: ['Manrope', 'sans-serif'],
+        },
+        borderRadius: {
+          '4xl': '2rem',
+          '5xl': '2.5rem',
+        },
+        boxShadow: {
+          soft: '0 20px 60px -15px rgba(0,0,0,0.15)',
+          card: '0 10px 40px -12px rgba(0,0,0,0.12)',
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Manrope', sans-serif; }
+  .font-display { font-family: 'Poppins', sans-serif; }
+
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+
+  .snap-row { scroll-snap-type: x mandatory; }
+  .snap-item { scroll-snap-align: start; }
+
+  .img-zoom { overflow: hidden; }
+  .img-zoom img { transition: transform .7s cubic-bezier(.16,1,.3,1); }
+  .img-zoom:hover img { transform: scale(1.08); }
+
+  .btn-ripple { position: relative; overflow: hidden; }
+  .btn-ripple span.ripple {
+    position: absolute; border-radius: 9999px; transform: scale(0);
+    animation: ripple .6s linear; background: rgba(0,0,0,0.15);
+    pointer-events: none;
+  }
+  @keyframes ripple { to { transform: scale(3); opacity: 0; } }
+
+  .fade-up { animation: fadeUp .8s cubic-bezier(.16,1,.3,1) both; }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(24px);} to {opacity:1; transform:translateY(0);} }
+
+  input[type="checkbox"], input[type="radio"] { accent-color: #b89e84; }
+  input[type="range"] { accent-color: #b89e84; }
+</style>
+</head>
+
+<body class="bg-white text-ink antialiased">
+
+<main>
+
+  <!-- =========================================================
+       BREADCRUMB
+  ========================================================== -->
+  <nav aria-label="Breadcrumb" class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10 pt-6 pb-2 flex items-center gap-2 text-xs md:text-sm text-black/45">
+    <a href="rinmora-home-preview.html" class="hover:text-ink transition">Home</a>
+    <i class="fa-solid fa-chevron-right text-[9px]"></i>
+    <span class="text-ink font-medium">Shop</span>
+  </nav>
+
+  <!-- =========================================================
+       CATEGORY CHIPS
+  ========================================================== -->
+  <section class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10 pb-6">
+    <div class="flex gap-3 overflow-x-auto snap-row -mx-5 px-5 md:mx-0 md:px-0 md:flex-wrap">
+      <button class="snap-item shrink-0 font-display text-xs md:text-sm font-semibold uppercase tracking-wide px-5 py-2.5 rounded-full bg-ink text-white transition">All Bags</button>
+      <button class="snap-item shrink-0 font-display text-xs md:text-sm font-medium uppercase tracking-wide px-5 py-2.5 rounded-full border border-black/10 hover:bg-black/5 transition">Tote</button>
+      <button class="snap-item shrink-0 font-display text-xs md:text-sm font-medium uppercase tracking-wide px-5 py-2.5 rounded-full border border-black/10 hover:bg-black/5 transition">Shoulder</button>
+      <button class="snap-item shrink-0 font-display text-xs md:text-sm font-medium uppercase tracking-wide px-5 py-2.5 rounded-full border border-black/10 hover:bg-black/5 transition">Crossbody</button>
+      <button class="snap-item shrink-0 font-display text-xs md:text-sm font-medium uppercase tracking-wide px-5 py-2.5 rounded-full border border-black/10 hover:bg-black/5 transition">Mini</button>
+      <button class="snap-item shrink-0 font-display text-xs md:text-sm font-medium uppercase tracking-wide px-5 py-2.5 rounded-full border border-black/10 hover:bg-black/5 transition">Clutch</button>
+      <button class="snap-item shrink-0 font-display text-xs md:text-sm font-medium uppercase tracking-wide px-5 py-2.5 rounded-full border border-black/10 hover:bg-black/5 transition">Backpack</button>
+      <button class="snap-item shrink-0 font-display text-xs md:text-sm font-medium uppercase tracking-wide px-5 py-2.5 rounded-full border border-black/10 hover:bg-black/5 transition">New Arrivals</button>
+      <button class="snap-item shrink-0 font-display text-xs md:text-sm font-medium uppercase tracking-wide px-5 py-2.5 rounded-full border border-black/10 hover:bg-black/5 transition">Best Sellers</button>
+      <button class="snap-item shrink-0 font-display text-xs md:text-sm font-medium uppercase tracking-wide px-5 py-2.5 rounded-full border border-primary-dark/40 text-primary-dark hover:bg-primary/10 transition">Sale</button>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       SHOP BODY: TOP FILTER BAR + GRID
+  ========================================================== -->
+  <section class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10 pb-16 md:pb-24">
+
+        <!-- Inline Filters (always visible, no overlay) -->
+        <div class="mb-8 space-y-5">
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="relative">
+              <select aria-label="Filter by category" class="appearance-none border border-black/10 rounded-full pl-5 pr-9 py-2.5 text-xs font-display font-medium uppercase tracking-wide bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary">
+                <option>Category: All</option>
+                <option>Tote</option>
+                <option>Shoulder</option>
+                <option>Crossbody</option>
+                <option>Mini</option>
+                <option>Clutch</option>
+                <option>Backpack</option>
+              </select>
+              <i class="fa-solid fa-chevron-down text-[10px] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
+
+            <div class="relative">
+              <select aria-label="Filter by price" class="appearance-none border border-black/10 rounded-full pl-5 pr-9 py-2.5 text-xs font-display font-medium uppercase tracking-wide bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary">
+                <option>Price: Any</option>
+                <option>Under $50</option>
+                <option>$50 – $100</option>
+                <option>$100 – $200</option>
+                <option>$200+</option>
+              </select>
+              <i class="fa-solid fa-chevron-down text-[10px] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
+
+            <div class="relative">
+              <select aria-label="Filter by material" class="appearance-none border border-black/10 rounded-full pl-5 pr-9 py-2.5 text-xs font-display font-medium uppercase tracking-wide bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary">
+                <option>Material: Any</option>
+                <option>Leather</option>
+                <option>PU Leather</option>
+                <option>Canvas</option>
+              </select>
+              <i class="fa-solid fa-chevron-down text-[10px] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
+
+            <div class="relative">
+              <select aria-label="Filter by size" class="appearance-none border border-black/10 rounded-full pl-5 pr-9 py-2.5 text-xs font-display font-medium uppercase tracking-wide bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary">
+                <option>Size: Any</option>
+                <option>Mini</option>
+                <option>Medium</option>
+                <option>Large</option>
+              </select>
+              <i class="fa-solid fa-chevron-down text-[10px] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
+
+            <div class="relative">
+              <select aria-label="Filter by availability" class="appearance-none border border-black/10 rounded-full pl-5 pr-9 py-2.5 text-xs font-display font-medium uppercase tracking-wide bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary">
+                <option>Availability: Any</option>
+                <option>In Stock</option>
+                <option>Out of Stock</option>
+              </select>
+              <i class="fa-solid fa-chevron-down text-[10px] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
+
+            <div class="relative">
+              <select aria-label="Filter by rating" class="appearance-none border border-black/10 rounded-full pl-5 pr-9 py-2.5 text-xs font-display font-medium uppercase tracking-wide bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary">
+                <option>Rating: Any</option>
+                <option>★★★★★ &amp; up</option>
+                <option>★★★★ &amp; up</option>
+                <option>★★★ &amp; up</option>
+              </select>
+              <i class="fa-solid fa-chevron-down text-[10px] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </div>
+
+            <div class="flex items-center gap-2 pl-1">
+              <button aria-label="Black" class="w-6 h-6 rounded-full bg-black ring-2 ring-offset-2 ring-transparent hover:ring-black/30 transition"></button>
+              <button aria-label="Beige" class="w-6 h-6 rounded-full bg-[#E8DCC8] ring-2 ring-offset-2 ring-transparent hover:ring-black/20 transition"></button>
+              <button aria-label="Brown" class="w-6 h-6 rounded-full bg-[#6B4A32] ring-2 ring-offset-2 ring-transparent hover:ring-black/20 transition"></button>
+              <button aria-label="Cream" class="w-6 h-6 rounded-full bg-[#F5F0E6] border border-black/10 ring-2 ring-offset-2 ring-transparent hover:ring-black/20 transition"></button>
+              <button aria-label="White" class="w-6 h-6 rounded-full bg-white border border-black/10 ring-2 ring-offset-2 ring-transparent hover:ring-black/20 transition"></button>
+              <button aria-label="Pink" class="w-6 h-6 rounded-full bg-[#E7C7C2] ring-2 ring-offset-2 ring-transparent hover:ring-black/20 transition"></button>
+            </div>
+
+            <button class="font-display text-xs font-semibold uppercase tracking-wide text-black/50 hover:text-ink underline underline-offset-4 transition ml-1">
+              Reset
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between gap-4 flex-wrap">
+            <p class="text-xs md:text-sm text-black/50">Showing 1–12 of 48 Products</p>
+
+            <div class="flex items-center gap-3">
+              <div class="relative">
+                <select aria-label="Sort products" class="appearance-none border border-black/10 rounded-full pl-5 pr-9 py-2.5 text-xs font-display font-medium uppercase tracking-wide bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary">
+                  <option>Sort: Featured</option>
+                  <option>Price: Low to High</option>
+                  <option>Price: High to Low</option>
+                  <option>Newest</option>
+                  <option>Best Rating</option>
+                </select>
+                <i class="fa-solid fa-chevron-down text-[10px] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+              </div>
+
+              <div class="hidden sm:flex items-center gap-1 border border-black/10 rounded-full p-1">
+                <button aria-label="Grid view" class="w-8 h-8 rounded-full bg-ink text-white grid place-items-center">
+                  <i class="fa-solid fa-grip text-xs"></i>
+                </button>
+                <button aria-label="List view" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition">
+                  <i class="fa-solid fa-list text-xs"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Grid Row 1 -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-7">
+
+          <article class="group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col">
+            <div class="relative aspect-[4/5] overflow-hidden">
+              <img src="https://picsum.photos/seed/shop-milano-a/500/620" alt="Milano Leather Tote" class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:opacity-0 group-hover:scale-105">
+              <img src="https://picsum.photos/seed/shop-milano-b/500/620" alt="" class="absolute inset-0 w-full h-full object-cover opacity-0 scale-105 transition-all duration-500 group-hover:opacity-100 group-hover:scale-100">
+              <span class="absolute top-3 left-3 z-10 bg-ink text-white text-[10px] font-display font-semibold tracking-wide uppercase px-3 py-1 rounded-full">-20%</span>
+              <button aria-label="Add to wishlist" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 grid place-items-center hover:bg-primary transition">
+                <i class="fa-regular fa-heart text-xs"></i>
+              </button>
+              <button class="absolute bottom-0 inset-x-0 z-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/95 backdrop-blur text-center text-xs font-display font-semibold tracking-wide uppercase py-2.5">
+                Quick View
+              </button>
+            </div>
+            <div class="p-4 md:p-5 flex flex-col gap-1">
+              <p class="text-[11px] uppercase tracking-wide text-black/40 font-medium">Tote Bag</p>
+              <h3 class="font-display text-sm md:text-base font-medium">Milano Leather Tote</h3>
+              <div class="text-primary-dark text-xs">★★★★★</div>
+              <div class="flex items-baseline gap-2 mt-1">
+                <span class="font-display font-semibold text-sm md:text-base">$118.00</span>
+                <span class="text-black/40 text-xs line-through">$148.00</span>
+              </div>
+              <button class="btn-ripple mt-2 w-full bg-ink text-white text-xs font-display font-semibold tracking-wide uppercase py-3 rounded-full hover:bg-black/80 transition">Add to Cart</button>
+            </div>
+          </article>
+
+          <article class="group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col">
+            <div class="relative aspect-[4/5] overflow-hidden">
+              <img src="https://picsum.photos/seed/shop-luna-a/500/620" alt="Luna Crossbody" class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:opacity-0 group-hover:scale-105">
+              <img src="https://picsum.photos/seed/shop-luna-b/500/620" alt="" class="absolute inset-0 w-full h-full object-cover opacity-0 scale-105 transition-all duration-500 group-hover:opacity-100 group-hover:scale-100">
+              <span class="absolute top-3 left-3 z-10 bg-primary text-ink text-[10px] font-display font-semibold tracking-wide uppercase px-3 py-1 rounded-full">New</span>
+              <button aria-label="Add to wishlist" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 grid place-items-center hover:bg-primary transition">
+                <i class="fa-regular fa-heart text-xs"></i>
+              </button>
+              <button class="absolute bottom-0 inset-x-0 z-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/95 backdrop-blur text-center text-xs font-display font-semibold tracking-wide uppercase py-2.5">
+                Quick View
+              </button>
+            </div>
+            <div class="p-4 md:p-5 flex flex-col gap-1">
+              <p class="text-[11px] uppercase tracking-wide text-black/40 font-medium">Crossbody</p>
+              <h3 class="font-display text-sm md:text-base font-medium">Luna Crossbody</h3>
+              <div class="text-primary-dark text-xs">★★★★★</div>
+              <div class="flex items-baseline gap-2 mt-1">
+                <span class="font-display font-semibold text-sm md:text-base">$74.00</span>
+              </div>
+              <button class="btn-ripple mt-2 w-full bg-ink text-white text-xs font-display font-semibold tracking-wide uppercase py-3 rounded-full hover:bg-black/80 transition">Add to Cart</button>
+            </div>
+          </article>
+
+          <article class="group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col">
+            <div class="relative aspect-[4/5] overflow-hidden">
+              <img src="https://picsum.photos/seed/shop-bella-a/500/620" alt="Bella Shoulder Bag" class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:opacity-0 group-hover:scale-105">
+              <img src="https://picsum.photos/seed/shop-bella-b/500/620" alt="" class="absolute inset-0 w-full h-full object-cover opacity-0 scale-105 transition-all duration-500 group-hover:opacity-100 group-hover:scale-100">
+              <button aria-label="Add to wishlist" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 grid place-items-center hover:bg-primary transition">
+                <i class="fa-regular fa-heart text-xs"></i>
+              </button>
+              <button class="absolute bottom-0 inset-x-0 z-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/95 backdrop-blur text-center text-xs font-display font-semibold tracking-wide uppercase py-2.5">
+                Quick View
+              </button>
+            </div>
+            <div class="p-4 md:p-5 flex flex-col gap-1">
+              <p class="text-[11px] uppercase tracking-wide text-black/40 font-medium">Shoulder Bag</p>
+              <h3 class="font-display text-sm md:text-base font-medium">Bella Shoulder Bag</h3>
+              <div class="text-primary-dark text-xs">★★★★☆</div>
+              <div class="flex items-baseline gap-2 mt-1">
+                <span class="font-display font-semibold text-sm md:text-base">$132.00</span>
+              </div>
+              <button class="btn-ripple mt-2 w-full bg-ink text-white text-xs font-display font-semibold tracking-wide uppercase py-3 rounded-full hover:bg-black/80 transition">Add to Cart</button>
+            </div>
+          </article>
+
+          <article class="group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col">
+            <div class="relative aspect-[4/5] overflow-hidden">
+              <img src="https://picsum.photos/seed/shop-aurora-a/500/620" alt="Aurora Mini Bag" class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:opacity-0 group-hover:scale-105">
+              <img src="https://picsum.photos/seed/shop-aurora-b/500/620" alt="" class="absolute inset-0 w-full h-full object-cover opacity-0 scale-105 transition-all duration-500 group-hover:opacity-100 group-hover:scale-100">
+              <span class="absolute top-3 left-3 z-10 bg-ink text-white text-[10px] font-display font-semibold tracking-wide uppercase px-3 py-1 rounded-full">-30%</span>
+              <button aria-label="Add to wishlist" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 grid place-items-center hover:bg-primary transition">
+                <i class="fa-regular fa-heart text-xs"></i>
+              </button>
+              <button class="absolute bottom-0 inset-x-0 z-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/95 backdrop-blur text-center text-xs font-display font-semibold tracking-wide uppercase py-2.5">
+                Quick View
+              </button>
+            </div>
+            <div class="p-4 md:p-5 flex flex-col gap-1">
+              <p class="text-[11px] uppercase tracking-wide text-black/40 font-medium">Mini Bag</p>
+              <h3 class="font-display text-sm md:text-base font-medium">Aurora Mini Bag</h3>
+              <div class="text-primary-dark text-xs">★★★★★</div>
+              <div class="flex items-baseline gap-2 mt-1">
+                <span class="font-display font-semibold text-sm md:text-base">$58.00</span>
+                <span class="text-black/40 text-xs line-through">$82.00</span>
+              </div>
+              <button class="btn-ripple mt-2 w-full bg-ink text-white text-xs font-display font-semibold tracking-wide uppercase py-3 rounded-full hover:bg-black/80 transition">Add to Cart</button>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- =========================================================
+             PROMOTIONAL BANNER (between product rows)
+        ========================================================== -->
+        <div class="my-10 md:my-14 relative overflow-hidden rounded-4xl shadow-soft">
+          <img src="https://picsum.photos/seed/shop-promo/1400/500" alt="Luxury handbag styling" class="absolute inset-0 w-full h-full object-cover">
+          <div class="absolute inset-0 bg-ink/50"></div>
+          <div class="relative px-6 py-14 md:py-20 text-center text-white max-w-lg mx-auto">
+            <h2 class="font-display text-2xl md:text-4xl font-semibold mb-4 leading-tight">Luxury That Completes Every Outfit</h2>
+            <a href="#" class="btn-ripple inline-block bg-primary text-ink font-display font-semibold text-sm tracking-wide uppercase px-9 py-4 rounded-full hover:bg-primary-dark transition">
+              Explore New Collection
+            </a>
+          </div>
+        </div>
+
+        <!-- Product Grid Row 2 -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-7">
+
+          <article class="group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col">
+            <div class="relative aspect-[4/5] overflow-hidden">
+              <img src="https://picsum.photos/seed/shop-olivia-a/500/620" alt="Olivia Satchel" class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:opacity-0 group-hover:scale-105">
+              <img src="https://picsum.photos/seed/shop-olivia-b/500/620" alt="" class="absolute inset-0 w-full h-full object-cover opacity-0 scale-105 transition-all duration-500 group-hover:opacity-100 group-hover:scale-100">
+              <button aria-label="Add to wishlist" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 grid place-items-center hover:bg-primary transition">
+                <i class="fa-regular fa-heart text-xs"></i>
+              </button>
+              <button class="absolute bottom-0 inset-x-0 z-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/95 backdrop-blur text-center text-xs font-display font-semibold tracking-wide uppercase py-2.5">
+                Quick View
+              </button>
+            </div>
+            <div class="p-4 md:p-5 flex flex-col gap-1">
+              <p class="text-[11px] uppercase tracking-wide text-black/40 font-medium">Satchel</p>
+              <h3 class="font-display text-sm md:text-base font-medium">Olivia Satchel</h3>
+              <div class="text-primary-dark text-xs">★★★★☆</div>
+              <div class="flex items-baseline gap-2 mt-1">
+                <span class="font-display font-semibold text-sm md:text-base">$146.00</span>
+              </div>
+              <button class="btn-ripple mt-2 w-full bg-ink text-white text-xs font-display font-semibold tracking-wide uppercase py-3 rounded-full hover:bg-black/80 transition">Add to Cart</button>
+            </div>
+          </article>
+
+          <article class="group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col">
+            <div class="relative aspect-[4/5] overflow-hidden">
+              <img src="https://picsum.photos/seed/shop-emma-a/500/620" alt="Emma Bucket Bag" class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:opacity-0 group-hover:scale-105">
+              <img src="https://picsum.photos/seed/shop-emma-b/500/620" alt="" class="absolute inset-0 w-full h-full object-cover opacity-0 scale-105 transition-all duration-500 group-hover:opacity-100 group-hover:scale-100">
+              <span class="absolute top-3 left-3 z-10 bg-ink text-white text-[10px] font-display font-semibold tracking-wide uppercase px-3 py-1 rounded-full">-15%</span>
+              <button aria-label="Add to wishlist" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 grid place-items-center hover:bg-primary transition">
+                <i class="fa-regular fa-heart text-xs"></i>
+              </button>
+              <button class="absolute bottom-0 inset-x-0 z-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/95 backdrop-blur text-center text-xs font-display font-semibold tracking-wide uppercase py-2.5">
+                Quick View
+              </button>
+            </div>
+            <div class="p-4 md:p-5 flex flex-col gap-1">
+              <p class="text-[11px] uppercase tracking-wide text-black/40 font-medium">Bucket Bag</p>
+              <h3 class="font-display text-sm md:text-base font-medium">Emma Bucket Bag</h3>
+              <div class="text-primary-dark text-xs">★★★★★</div>
+              <div class="flex items-baseline gap-2 mt-1">
+                <span class="font-display font-semibold text-sm md:text-base">$98.00</span>
+                <span class="text-black/40 text-xs line-through">$115.00</span>
+              </div>
+              <button class="btn-ripple mt-2 w-full bg-ink text-white text-xs font-display font-semibold tracking-wide uppercase py-3 rounded-full hover:bg-black/80 transition">Add to Cart</button>
+            </div>
+          </article>
+
+          <article class="group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col">
+            <div class="relative aspect-[4/5] overflow-hidden">
+              <img src="https://picsum.photos/seed/shop-sofia-a/500/620" alt="Sofia Clutch" class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:opacity-0 group-hover:scale-105">
+              <img src="https://picsum.photos/seed/shop-sofia-b/500/620" alt="" class="absolute inset-0 w-full h-full object-cover opacity-0 scale-105 transition-all duration-500 group-hover:opacity-100 group-hover:scale-100">
+              <span class="absolute top-3 left-3 z-10 bg-primary text-ink text-[10px] font-display font-semibold tracking-wide uppercase px-3 py-1 rounded-full">New</span>
+              <button aria-label="Add to wishlist" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 grid place-items-center hover:bg-primary transition">
+                <i class="fa-regular fa-heart text-xs"></i>
+              </button>
+              <button class="absolute bottom-0 inset-x-0 z-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/95 backdrop-blur text-center text-xs font-display font-semibold tracking-wide uppercase py-2.5">
+                Quick View
+              </button>
+            </div>
+            <div class="p-4 md:p-5 flex flex-col gap-1">
+              <p class="text-[11px] uppercase tracking-wide text-black/40 font-medium">Clutch</p>
+              <h3 class="font-display text-sm md:text-base font-medium">Sofia Clutch</h3>
+              <div class="text-primary-dark text-xs">★★★★☆</div>
+              <div class="flex items-baseline gap-2 mt-1">
+                <span class="font-display font-semibold text-sm md:text-base">$62.00</span>
+              </div>
+              <button class="btn-ripple mt-2 w-full bg-ink text-white text-xs font-display font-semibold tracking-wide uppercase py-3 rounded-full hover:bg-black/80 transition">Add to Cart</button>
+            </div>
+          </article>
+
+          <article class="group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col">
+            <div class="relative aspect-[4/5] overflow-hidden">
+              <img src="https://picsum.photos/seed/shop-grace-a/500/620" alt="Grace Everyday Tote" class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:opacity-0 group-hover:scale-105">
+              <img src="https://picsum.photos/seed/shop-grace-b/500/620" alt="" class="absolute inset-0 w-full h-full object-cover opacity-0 scale-105 transition-all duration-500 group-hover:opacity-100 group-hover:scale-100">
+              <button aria-label="Add to wishlist" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 grid place-items-center hover:bg-primary transition">
+                <i class="fa-regular fa-heart text-xs"></i>
+              </button>
+              <button class="absolute bottom-0 inset-x-0 z-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/95 backdrop-blur text-center text-xs font-display font-semibold tracking-wide uppercase py-2.5">
+                Quick View
+              </button>
+            </div>
+            <div class="p-4 md:p-5 flex flex-col gap-1">
+              <p class="text-[11px] uppercase tracking-wide text-black/40 font-medium">Tote Bag</p>
+              <h3 class="font-display text-sm md:text-base font-medium">Grace Everyday Tote</h3>
+              <div class="text-primary-dark text-xs">★★★★★</div>
+              <div class="flex items-baseline gap-2 mt-1">
+                <span class="font-display font-semibold text-sm md:text-base">$104.00</span>
+              </div>
+              <button class="btn-ripple mt-2 w-full bg-ink text-white text-xs font-display font-semibold tracking-wide uppercase py-3 rounded-full hover:bg-black/80 transition">Add to Cart</button>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- Product Grid Row 3 -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-7 mt-4 md:mt-7">
+
+          <article class="group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col">
+            <div class="relative aspect-[4/5] overflow-hidden">
+              <img src="https://picsum.photos/seed/shop-chloe-a/500/620" alt="Chloe Shoulder Bag" class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:opacity-0 group-hover:scale-105">
+              <img src="https://picsum.photos/seed/shop-chloe-b/500/620" alt="" class="absolute inset-0 w-full h-full object-cover opacity-0 scale-105 transition-all duration-500 group-hover:opacity-100 group-hover:scale-100">
+              <span class="absolute top-3 left-3 z-10 bg-ink text-white text-[10px] font-display font-semibold tracking-wide uppercase px-3 py-1 rounded-full">-25%</span>
+              <button aria-label="Add to wishlist" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 grid place-items-center hover:bg-primary transition">
+                <i class="fa-regular fa-heart text-xs"></i>
+              </button>
+              <button class="absolute bottom-0 inset-x-0 z-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/95 backdrop-blur text-center text-xs font-display font-semibold tracking-wide uppercase py-2.5">
+                Quick View
+              </button>
+            </div>
+            <div class="p-4 md:p-5 flex flex-col gap-1">
+              <p class="text-[11px] uppercase tracking-wide text-black/40 font-medium">Shoulder Bag</p>
+              <h3 class="font-display text-sm md:text-base font-medium">Chloe Shoulder Bag</h3>
+              <div class="text-primary-dark text-xs">★★★★☆</div>
+              <div class="flex items-baseline gap-2 mt-1">
+                <span class="font-display font-semibold text-sm md:text-base">$89.00</span>
+                <span class="text-black/40 text-xs line-through">$119.00</span>
+              </div>
+              <button class="btn-ripple mt-2 w-full bg-ink text-white text-xs font-display font-semibold tracking-wide uppercase py-3 rounded-full hover:bg-black/80 transition">Add to Cart</button>
+            </div>
+          </article>
+
+          <article class="group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col">
+            <div class="relative aspect-[4/5] overflow-hidden">
+              <img src="https://picsum.photos/seed/shop-ivy-a/500/620" alt="Ivy Mini Tote" class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:opacity-0 group-hover:scale-105">
+              <img src="https://picsum.photos/seed/shop-ivy-b/500/620" alt="" class="absolute inset-0 w-full h-full object-cover opacity-0 scale-105 transition-all duration-500 group-hover:opacity-100 group-hover:scale-100">
+              <span class="absolute top-3 left-3 z-10 bg-primary text-ink text-[10px] font-display font-semibold tracking-wide uppercase px-3 py-1 rounded-full">New</span>
+              <button aria-label="Add to wishlist" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 grid place-items-center hover:bg-primary transition">
+                <i class="fa-regular fa-heart text-xs"></i>
+              </button>
+              <button class="absolute bottom-0 inset-x-0 z-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/95 backdrop-blur text-center text-xs font-display font-semibold tracking-wide uppercase py-2.5">
+                Quick View
+              </button>
+            </div>
+            <div class="p-4 md:p-5 flex flex-col gap-1">
+              <p class="text-[11px] uppercase tracking-wide text-black/40 font-medium">Mini Bag</p>
+              <h3 class="font-display text-sm md:text-base font-medium">Ivy Mini Tote</h3>
+              <div class="text-primary-dark text-xs">★★★★★</div>
+              <div class="flex items-baseline gap-2 mt-1">
+                <span class="font-display font-semibold text-sm md:text-base">$68.00</span>
+              </div>
+              <button class="btn-ripple mt-2 w-full bg-ink text-white text-xs font-display font-semibold tracking-wide uppercase py-3 rounded-full hover:bg-black/80 transition">Add to Cart</button>
+            </div>
+          </article>
+
+          <article class="group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col">
+            <div class="relative aspect-[4/5] overflow-hidden">
+              <img src="https://picsum.photos/seed/shop-willow-a/500/620" alt="Willow Crossbody" class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:opacity-0 group-hover:scale-105">
+              <img src="https://picsum.photos/seed/shop-willow-b/500/620" alt="" class="absolute inset-0 w-full h-full object-cover opacity-0 scale-105 transition-all duration-500 group-hover:opacity-100 group-hover:scale-100">
+              <button aria-label="Add to wishlist" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 grid place-items-center hover:bg-primary transition">
+                <i class="fa-regular fa-heart text-xs"></i>
+              </button>
+              <button class="absolute bottom-0 inset-x-0 z-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/95 backdrop-blur text-center text-xs font-display font-semibold tracking-wide uppercase py-2.5">
+                Quick View
+              </button>
+            </div>
+            <div class="p-4 md:p-5 flex flex-col gap-1">
+              <p class="text-[11px] uppercase tracking-wide text-black/40 font-medium">Crossbody</p>
+              <h3 class="font-display text-sm md:text-base font-medium">Willow Crossbody</h3>
+              <div class="text-primary-dark text-xs">★★★★☆</div>
+              <div class="flex items-baseline gap-2 mt-1">
+                <span class="font-display font-semibold text-sm md:text-base">$79.00</span>
+              </div>
+              <button class="btn-ripple mt-2 w-full bg-ink text-white text-xs font-display font-semibold tracking-wide uppercase py-3 rounded-full hover:bg-black/80 transition">Add to Cart</button>
+            </div>
+          </article>
+
+          <article class="group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col">
+            <div class="relative aspect-[4/5] overflow-hidden">
+              <img src="https://picsum.photos/seed/shop-noor-a/500/620" alt="Noor Evening Clutch" class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:opacity-0 group-hover:scale-105">
+              <img src="https://picsum.photos/seed/shop-noor-b/500/620" alt="" class="absolute inset-0 w-full h-full object-cover opacity-0 scale-105 transition-all duration-500 group-hover:opacity-100 group-hover:scale-100">
+              <span class="absolute top-3 left-3 z-10 bg-ink text-white text-[10px] font-display font-semibold tracking-wide uppercase px-3 py-1 rounded-full">-30%</span>
+              <button aria-label="Add to wishlist" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 grid place-items-center hover:bg-primary transition">
+                <i class="fa-regular fa-heart text-xs"></i>
+              </button>
+              <button class="absolute bottom-0 inset-x-0 z-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/95 backdrop-blur text-center text-xs font-display font-semibold tracking-wide uppercase py-2.5">
+                Quick View
+              </button>
+            </div>
+            <div class="p-4 md:p-5 flex flex-col gap-1">
+              <p class="text-[11px] uppercase tracking-wide text-black/40 font-medium">Clutch</p>
+              <h3 class="font-display text-sm md:text-base font-medium">Noor Evening Clutch</h3>
+              <div class="text-primary-dark text-xs">★★★★★</div>
+              <div class="flex items-baseline gap-2 mt-1">
+                <span class="font-display font-semibold text-sm md:text-base">$58.00</span>
+                <span class="text-black/40 text-xs line-through">$82.00</span>
+              </div>
+              <button class="btn-ripple mt-2 w-full bg-ink text-white text-xs font-display font-semibold tracking-wide uppercase py-3 rounded-full hover:bg-black/80 transition">Add to Cart</button>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- =========================================================
+             PAGINATION
+        ========================================================== -->
+        <nav aria-label="Pagination" class="flex items-center justify-center gap-2 mt-14">
+          <button aria-label="Previous page" class="w-10 h-10 rounded-full border border-black/10 grid place-items-center hover:bg-black/5 transition text-xs">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <button aria-current="page" class="w-10 h-10 rounded-full bg-ink text-white grid place-items-center text-sm font-display font-semibold">1</button>
+          <button class="w-10 h-10 rounded-full border border-black/10 grid place-items-center hover:bg-black/5 transition text-sm font-display font-medium">2</button>
+          <button class="w-10 h-10 rounded-full border border-black/10 grid place-items-center hover:bg-black/5 transition text-sm font-display font-medium">3</button>
+          <button class="w-10 h-10 rounded-full border border-black/10 grid place-items-center hover:bg-black/5 transition text-sm font-display font-medium">4</button>
+          <button aria-label="Next page" class="w-10 h-10 rounded-full border border-black/10 grid place-items-center hover:bg-black/5 transition text-xs">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </nav>
+  </section>
+
+  <!-- =========================================================
+       WHY SHOP WITH RINMORA
+  ========================================================== -->
+  <section class="bg-black/[0.02] py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10">
+      <div class="text-center mb-12 md:mb-16">
+        <span class="font-display text-xs tracking-[0.25em] uppercase text-primary-dark font-semibold">The Rinmora Promise</span>
+        <h2 class="font-display text-2xl md:text-4xl font-semibold mt-2">Why Shop With Rinmora</h2>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5 md:gap-6">
+        <div class="bg-white rounded-3xl shadow-card p-6 flex flex-col items-center text-center gap-3">
+          <div class="w-14 h-14 rounded-full bg-primary/25 grid place-items-center">
+            <i class="fa-solid fa-gem text-primary-dark text-lg"></i>
+          </div>
+          <h3 class="font-display font-semibold text-sm">Premium Quality</h3>
+        </div>
+        <div class="bg-white rounded-3xl shadow-card p-6 flex flex-col items-center text-center gap-3">
+          <div class="w-14 h-14 rounded-full bg-primary/25 grid place-items-center">
+            <i class="fa-solid fa-lock text-primary-dark text-lg"></i>
+          </div>
+          <h3 class="font-display font-semibold text-sm">Secure Checkout</h3>
+        </div>
+        <div class="bg-white rounded-3xl shadow-card p-6 flex flex-col items-center text-center gap-3">
+          <div class="w-14 h-14 rounded-full bg-primary/25 grid place-items-center">
+            <i class="fa-solid fa-truck-fast text-primary-dark text-lg"></i>
+          </div>
+          <h3 class="font-display font-semibold text-sm">Fast Delivery</h3>
+        </div>
+        <div class="bg-white rounded-3xl shadow-card p-6 flex flex-col items-center text-center gap-3">
+          <div class="w-14 h-14 rounded-full bg-primary/25 grid place-items-center">
+            <i class="fa-solid fa-rotate-left text-primary-dark text-lg"></i>
+          </div>
+          <h3 class="font-display font-semibold text-sm">Easy Returns</h3>
+        </div>
+        <div class="bg-white rounded-3xl shadow-card p-6 flex flex-col items-center text-center gap-3 col-span-2 sm:col-span-1">
+          <div class="w-14 h-14 rounded-full bg-primary/25 grid place-items-center">
+            <i class="fa-solid fa-heart-circle-check text-primary-dark text-lg"></i>
+          </div>
+          <h3 class="font-display font-semibold text-sm">Customer Satisfaction</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       INSTAGRAM GALLERY
+  ========================================================== -->
+  <section class="py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10">
+      <div class="text-center mb-10 md:mb-12">
+        <span class="font-display text-xs tracking-[0.25em] uppercase text-primary-dark font-semibold">Follow The Story</span>
+        <h2 class="font-display text-2xl md:text-4xl font-semibold mt-2">@Rinmora on Instagram</h2>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2 md:gap-4 mb-10">
+        <div class="img-zoom aspect-square rounded-2xl overflow-hidden"><img src="https://picsum.photos/seed/shop-insta-1/400/400" alt="Instagram post" class="w-full h-full object-cover"></div>
+        <div class="img-zoom aspect-square rounded-2xl overflow-hidden"><img src="https://picsum.photos/seed/shop-insta-2/400/400" alt="Instagram post" class="w-full h-full object-cover"></div>
+        <div class="img-zoom aspect-square rounded-2xl overflow-hidden"><img src="https://picsum.photos/seed/shop-insta-3/400/400" alt="Instagram post" class="w-full h-full object-cover"></div>
+        <div class="img-zoom aspect-square rounded-2xl overflow-hidden"><img src="https://picsum.photos/seed/shop-insta-4/400/400" alt="Instagram post" class="w-full h-full object-cover"></div>
+        <div class="img-zoom aspect-square rounded-2xl overflow-hidden"><img src="https://picsum.photos/seed/shop-insta-5/400/400" alt="Instagram post" class="w-full h-full object-cover"></div>
+        <div class="img-zoom aspect-square rounded-2xl overflow-hidden"><img src="https://picsum.photos/seed/shop-insta-6/400/400" alt="Instagram post" class="w-full h-full object-cover"></div>
+      </div>
+
+      <div class="text-center">
+        <a href="#" class="btn-ripple inline-block bg-ink text-white font-display font-semibold text-sm tracking-wide uppercase px-9 py-4 rounded-full hover:bg-black/80 transition">
+          Follow @Rinmora
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       NEWSLETTER
+  ========================================================== -->
+  <section class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10 pb-16 md:pb-24">
+    <div class="relative rounded-4xl bg-ink text-white overflow-hidden">
+      <div class="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-primary/20 blur-2xl"></div>
+      <div class="relative px-8 py-14 md:py-20 text-center max-w-xl mx-auto">
+        <h2 class="font-display text-2xl md:text-4xl font-semibold mb-3">Stay in Style</h2>
+        <p class="text-white/60 mb-8 text-sm md:text-base">
+          Subscribe for exclusive offers, early access to new arrivals, and styling edits from Rinmora.
+        </p>
+        <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onsubmit="return false;">
+          <label for="newsletter-email" class="sr-only">Email address</label>
+          <input id="newsletter-email" type="email" required placeholder="Enter your email"
+            class="w-full px-6 py-4 rounded-full text-ink text-sm outline-none focus:ring-2 focus:ring-primary bg-white">
+          <button type="submit" class="btn-ripple shrink-0 bg-primary text-ink font-display font-semibold text-sm tracking-wide uppercase px-8 py-4 rounded-full hover:bg-primary-dark transition">
+            Subscribe
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- =========================================================
+     FOOTER
+========================================================== -->
+<footer class="border-t border-black/5">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10 py-14 md:py-16">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
+      <div class="col-span-2 md:col-span-1">
+        <img src="../logo-01.png" alt="Rinmora" class="h-10 w-auto mb-4">
+        <p class="text-black/50 text-sm max-w-xs">
+          Premium handbags designed for confident women. Elegance you can carry, every day.
+        </p>
+        <div class="flex items-center gap-3 mt-6">
+          <a href="#" aria-label="Instagram" class="w-10 h-10 rounded-full bg-black/[0.04] grid place-items-center hover:bg-primary transition"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-full bg-black/[0.04] grid place-items-center hover:bg-primary transition"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" aria-label="TikTok" class="w-10 h-10 rounded-full bg-black/[0.04] grid place-items-center hover:bg-primary transition"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="font-display font-semibold text-sm mb-4 uppercase tracking-wide">Quick Links</h3>
+        <ul class="space-y-3 text-sm text-black/55">
+          <li><a href="#" class="hover:text-ink transition">Shop All</a></li>
+          <li><a href="#" class="hover:text-ink transition">Best Sellers</a></li>
+          <li><a href="#" class="hover:text-ink transition">New Arrivals</a></li>
+          <li><a href="rinmora-home-preview.html" class="hover:text-ink transition">About Us</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="font-display font-semibold text-sm mb-4 uppercase tracking-wide">Customer Support</h3>
+        <ul class="space-y-3 text-sm text-black/55">
+          <li><a href="#" class="hover:text-ink transition">Contact Us</a></li>
+          <li><a href="#" class="hover:text-ink transition">FAQs</a></li>
+          <li><a href="#" class="hover:text-ink transition">Track Order</a></li>
+          <li><a href="#" class="hover:text-ink transition">Shipping Info</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="font-display font-semibold text-sm mb-4 uppercase tracking-wide">Policies</h3>
+        <ul class="space-y-3 text-sm text-black/55">
+          <li><a href="#" class="hover:text-ink transition">Privacy Policy</a></li>
+          <li><a href="#" class="hover:text-ink transition">Terms of Service</a></li>
+          <li><a href="#" class="hover:text-ink transition">Return Policy</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-black/5 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-black/40">
+      <p>&copy; 2026 Rinmora. All rights reserved.</p>
+      <div class="flex items-center gap-3 text-base text-black/30">
+        <i class="fa-brands fa-cc-visa"></i>
+        <i class="fa-brands fa-cc-mastercard"></i>
+        <i class="fa-brands fa-cc-paypal"></i>
+        <i class="fa-solid fa-money-bill-wave"></i>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+
+  document.querySelectorAll('.btn-ripple').forEach(btn => {
+    btn.addEventListener('click', function (e) {
+      const rect = this.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      const size = Math.max(rect.width, rect.height);
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+      ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+      this.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 650);
+    });
+  });
+
+  document.querySelectorAll('[aria-label="Add to wishlist"], [aria-label="Wishlist"]').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const icon = this.querySelector('i');
+      icon.classList.toggle('fa-regular');
+      icon.classList.toggle('fa-solid');
+      icon.classList.toggle('text-primary-dark');
+    });
+  });
+</script>
+
+</body>
+</html>

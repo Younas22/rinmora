@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Account — Rinmora</title>
+<meta name="description" content="Manage your Rinmora account, orders, wishlist, and preferences.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: { primary: '#CFBAA5', 'primary-dark': '#b89e84', ink: '#000000' },
+        fontFamily: { sans: ['Poppins', 'sans-serif'], body: ['Manrope', 'sans-serif'] },
+        borderRadius: { '4xl': '2rem', '5xl': '2.5rem' },
+        boxShadow: { soft: '0 20px 60px -15px rgba(0,0,0,0.15)', card: '0 10px 40px -12px rgba(0,0,0,0.12)' },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Manrope', sans-serif; }
+  .font-display { font-family: 'Poppins', sans-serif; }
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+  .snap-row { scroll-snap-type: x mandatory; }
+  .snap-item { scroll-snap-align: start; }
+  .img-zoom { overflow: hidden; }
+  .img-zoom img { transition: transform .6s cubic-bezier(.16,1,.3,1); }
+  .img-zoom:hover img { transform: scale(1.06); }
+  .hover-lift { transition: transform .3s ease, box-shadow .3s ease; }
+  .hover-lift:hover { transform: translateY(-4px); }
+  .fade-up { animation: fadeUp .6s cubic-bezier(.16,1,.3,1) both; }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(16px);} to {opacity:1; transform:translateY(0);} }
+  .btn-ripple { position: relative; overflow: hidden; }
+  .btn-ripple span.ripple { position: absolute; border-radius: 9999px; transform: scale(0); animation: ripple .6s linear; background: rgba(0,0,0,0.15); pointer-events: none; }
+  @keyframes ripple { to { transform: scale(3); opacity: 0; } }
+</style>
+</head>
+
+<body class="bg-white text-ink antialiased">
+
+<!-- =========================================================
+     HEADER
+========================================================== -->
+<header id="site-header" class="fixed top-0 inset-x-0 z-50 bg-primary border-b border-black/10 lg:bg-white/95 lg:backdrop-blur-md lg:border-black/5">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10">
+    <div class="flex items-center justify-between h-16 md:h-20">
+      <div class="flex items-center gap-2">
+        <button id="menuBtn" aria-label="Open menu" class="lg:hidden w-10 h-10 grid place-items-center rounded-full hover:bg-black/10 transition">
+          <i class="fa-solid fa-bars text-lg"></i>
+        </button>
+        <nav class="hidden lg:flex items-center gap-8 font-display text-[13px] tracking-wide uppercase font-medium">
+          <a href="rinmora-shop-preview.html" class="hover:text-primary-dark transition">Shop</a>
+          <a href="rinmora-home-preview.html#bestsellers" class="hover:text-primary-dark transition">Best Sellers</a>
+          <a href="rinmora-home-preview.html#promo" class="hover:text-primary-dark transition">New Arrivals</a>
+          <a href="rinmora-orders-preview.html" class="hover:text-primary-dark transition">My Orders</a>
+        </nav>
+      </div>
+
+      <a href="rinmora-home-preview.html" class="absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 select-none">
+        <img src="../logo-01.png" alt="Rinmora" class="h-12 md:h-16 w-auto">
+      </a>
+
+      <div class="flex items-center gap-1 md:gap-2">
+        <button aria-label="Search" class="w-10 h-10 grid place-items-center rounded-full hover:bg-black/10 transition">
+          <i class="fa-solid fa-magnifying-glass text-[15px]"></i>
+        </button>
+        <button aria-label="Wishlist" class="hidden sm:grid w-10 h-10 place-items-center rounded-full hover:bg-black/10 transition">
+          <i class="fa-regular fa-heart text-[15px]"></i>
+        </button>
+        <button aria-label="Shopping bag" class="relative w-10 h-10 grid place-items-center rounded-full hover:bg-black/10 transition">
+          <i class="fa-solid fa-bag-shopping text-[15px]"></i>
+          <span class="absolute top-1 right-1 bg-ink text-white text-[10px] font-bold w-4 h-4 rounded-full grid place-items-center">0</span>
+        </button>
+        <a href="rinmora-account-dashboard-preview.html" aria-label="My account (current page)" aria-current="page" class="w-9 h-9 rounded-full bg-ink text-white font-display font-semibold text-xs grid place-items-center ring-2 ring-ink ring-offset-2">S</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu drawer -->
+  <div id="mobileMenu" class="lg:hidden fixed inset-0 z-[60] invisible pointer-events-none">
+    <div id="menuOverlay" class="absolute inset-0 z-0 bg-black/0 transition-colors duration-300"></div>
+    <div id="menuPanel" class="absolute top-0 left-0 z-10 h-full w-[80%] max-w-xs bg-primary shadow-soft px-7 pt-7 pb-10 flex flex-col gap-1 -translate-x-full transition-transform duration-300 ease-out">
+      <div class="flex items-center justify-between mb-8">
+        <img src="../logo-01.png" alt="Rinmora" class="h-10 w-auto">
+        <button id="closeMenuBtn" aria-label="Close menu" class="w-10 h-10 grid place-items-center rounded-full hover:bg-black/10 transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div class="flex flex-col gap-3">
+        <a href="rinmora-home-preview.html" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">Home</a>
+        <a href="rinmora-shop-preview.html" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">Shop</a>
+        <a href="rinmora-orders-preview.html" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">My Orders</a>
+        <a href="rinmora-account-dashboard-preview.html" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">My Account</a>
+        <a href="#" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">Contact Us</a>
+      </div>
+      <div class="mt-auto flex items-center gap-4 pt-6">
+        <i class="fa-brands fa-instagram text-xl"></i>
+        <i class="fa-brands fa-facebook text-xl"></i>
+        <i class="fa-brands fa-tiktok text-xl"></i>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="pt-16 md:pt-20 pb-24 lg:pb-0">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10 py-8 md:py-10">
+
+    <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs md:text-sm text-black/45 mb-8">
+      <a href="rinmora-home-preview.html" class="hover:text-ink transition">Home</a>
+      <i class="fa-solid fa-chevron-right text-[9px]"></i>
+      <span class="text-ink font-medium">My Account</span>
+    </nav>
+
+    <div class="lg:grid lg:grid-cols-[240px_1fr] lg:gap-10 lg:items-start">
+
+      <!-- ============ DESKTOP SIDEBAR ============ -->
+      <aside class="hidden lg:block lg:sticky lg:top-28">
+        <div class="bg-white rounded-3xl shadow-card p-4 space-y-1">
+          <a href="#dashboard-top" class="flex items-center gap-3 px-4 py-3 rounded-2xl bg-primary/20 text-ink font-display text-sm font-semibold">
+            <i class="fa-solid fa-gauge w-4 text-center"></i> Dashboard
+          </a>
+          <a href="rinmora-orders-preview.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-black/60 hover:bg-black/5 font-display text-sm font-medium transition">
+            <i class="fa-solid fa-bag-shopping w-4 text-center"></i> My Orders
+          </a>
+          <a href="#wishlist" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-black/60 hover:bg-black/5 font-display text-sm font-medium transition">
+            <i class="fa-regular fa-heart w-4 text-center"></i> Wishlist
+          </a>
+          <a href="#addresses" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-black/60 hover:bg-black/5 font-display text-sm font-medium transition">
+            <i class="fa-solid fa-location-dot w-4 text-center"></i> Addresses
+          </a>
+          <a href="#profile" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-black/60 hover:bg-black/5 font-display text-sm font-medium transition">
+            <i class="fa-regular fa-user w-4 text-center"></i> Profile
+          </a>
+          <a href="#settings" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-black/60 hover:bg-black/5 font-display text-sm font-medium transition">
+            <i class="fa-solid fa-lock w-4 text-center"></i> Change Password
+          </a>
+          <a href="#settings" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-black/60 hover:bg-black/5 font-display text-sm font-medium transition">
+            <i class="fa-regular fa-bell w-4 text-center"></i> Notifications
+          </a>
+          <div class="border-t border-black/5 my-2"></div>
+          <a href="rinmora-login-preview.html" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-black/60 hover:bg-black/5 font-display text-sm font-medium transition">
+            <i class="fa-solid fa-right-from-bracket w-4 text-center"></i> Logout
+          </a>
+        </div>
+      </aside>
+
+      <!-- ============ MAIN CONTENT ============ -->
+      <div class="space-y-8 md:space-y-10 mt-8 lg:mt-0">
+
+        <!-- Greeting -->
+        <div id="dashboard-top" class="fade-up">
+          <h1 class="font-display text-2xl md:text-3xl font-semibold">Hello, Sarah 👋</h1>
+          <p class="text-black/50 text-sm md:text-base mt-1">Welcome back to Rinmora.</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
+          <div class="bg-white rounded-3xl shadow-card p-5 hover-lift">
+            <div class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center mb-3">
+              <i class="fa-solid fa-bag-shopping text-primary-dark text-sm"></i>
+            </div>
+            <p class="font-display text-2xl font-semibold">12</p>
+            <p class="text-black/45 text-xs mt-0.5">Total Orders</p>
+          </div>
+          <div class="bg-white rounded-3xl shadow-card p-5 hover-lift">
+            <div class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center mb-3">
+              <i class="fa-regular fa-heart text-primary-dark text-sm"></i>
+            </div>
+            <p class="font-display text-2xl font-semibold">8</p>
+            <p class="text-black/45 text-xs mt-0.5">Wishlist Items</p>
+          </div>
+          <div class="bg-white rounded-3xl shadow-card p-5 hover-lift">
+            <div class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center mb-3">
+              <i class="fa-solid fa-gem text-primary-dark text-sm"></i>
+            </div>
+            <p class="font-display text-2xl font-semibold">1,240</p>
+            <p class="text-black/45 text-xs mt-0.5">Reward Points</p>
+          </div>
+          <div class="bg-white rounded-3xl shadow-card p-5 hover-lift">
+            <div class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center mb-3">
+              <i class="fa-solid fa-location-dot text-primary-dark text-sm"></i>
+            </div>
+            <p class="font-display text-2xl font-semibold">2</p>
+            <p class="text-black/45 text-xs mt-0.5">Saved Addresses</p>
+          </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <section>
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="font-display text-lg font-semibold">Recent Orders</h2>
+            <a href="rinmora-orders-preview.html" class="font-display text-xs font-semibold uppercase tracking-wide text-black/50 hover:text-ink transition">View All</a>
+          </div>
+          <div class="space-y-4">
+            <div class="bg-white rounded-3xl shadow-card p-5 flex flex-col sm:flex-row sm:items-center gap-4">
+              <img src="https://picsum.photos/seed/dash-order1/160/160" alt="Milano Leather Tote" class="w-16 h-16 rounded-xl object-cover shrink-0">
+              <div class="flex-1 min-w-0">
+                <p class="font-display text-sm font-semibold">#RIN-20583 <span class="bg-primary/25 text-ink text-[10px] font-display font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full ml-2">Shipped</span></p>
+                <p class="text-black/45 text-xs mt-1">2 items · $192.00 · Jul 08, 2026</p>
+              </div>
+              <button class="shrink-0 font-display text-xs font-semibold uppercase tracking-wide border border-black/10 rounded-full px-4 py-2.5 hover:bg-black/5 transition">Track</button>
+            </div>
+            <div class="bg-white rounded-3xl shadow-card p-5 flex flex-col sm:flex-row sm:items-center gap-4">
+              <img src="https://picsum.photos/seed/dash-order2/160/160" alt="Aurora Mini Bag" class="w-16 h-16 rounded-xl object-cover shrink-0">
+              <div class="flex-1 min-w-0">
+                <p class="font-display text-sm font-semibold">#RIN-20447 <span class="bg-ink text-white text-[10px] font-display font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full ml-2">Delivered</span></p>
+                <p class="text-black/45 text-xs mt-1">1 item · $58.00 · Jun 22, 2026</p>
+              </div>
+              <button class="shrink-0 font-display text-xs font-semibold uppercase tracking-wide border border-black/10 rounded-full px-4 py-2.5 hover:bg-black/5 transition">Track</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Wishlist Preview -->
+        <section id="wishlist">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="font-display text-lg font-semibold">Wishlist</h2>
+            <a href="rinmora-shop-preview.html" class="font-display text-xs font-semibold uppercase tracking-wide text-black/50 hover:text-ink transition">View All</a>
+          </div>
+          <div class="flex gap-4 md:gap-5 overflow-x-auto snap-row -mx-5 px-5 md:mx-0 md:px-0">
+            <article class="group snap-item shrink-0 w-44 md:w-48 bg-white rounded-3xl shadow-card overflow-hidden hover-lift">
+              <div class="relative aspect-square overflow-hidden">
+                <img src="https://picsum.photos/seed/wish-1/300/300" alt="Chloe Shoulder Bag" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                <button aria-label="Remove from wishlist" class="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white/90 grid place-items-center hover:bg-primary transition">
+                  <i class="fa-solid fa-heart text-primary-dark text-xs"></i>
+                </button>
+              </div>
+              <div class="p-3.5">
+                <p class="font-display text-xs font-medium truncate">Chloe Shoulder Bag</p>
+                <p class="text-black/50 text-xs mt-0.5">$89.00</p>
+              </div>
+            </article>
+            <article class="group snap-item shrink-0 w-44 md:w-48 bg-white rounded-3xl shadow-card overflow-hidden hover-lift">
+              <div class="relative aspect-square overflow-hidden">
+                <img src="https://picsum.photos/seed/wish-2/300/300" alt="Ivy Mini Tote" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                <button aria-label="Remove from wishlist" class="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white/90 grid place-items-center hover:bg-primary transition">
+                  <i class="fa-solid fa-heart text-primary-dark text-xs"></i>
+                </button>
+              </div>
+              <div class="p-3.5">
+                <p class="font-display text-xs font-medium truncate">Ivy Mini Tote</p>
+                <p class="text-black/50 text-xs mt-0.5">$68.00</p>
+              </div>
+            </article>
+            <article class="group snap-item shrink-0 w-44 md:w-48 bg-white rounded-3xl shadow-card overflow-hidden hover-lift">
+              <div class="relative aspect-square overflow-hidden">
+                <img src="https://picsum.photos/seed/wish-3/300/300" alt="Willow Crossbody" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                <button aria-label="Remove from wishlist" class="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white/90 grid place-items-center hover:bg-primary transition">
+                  <i class="fa-solid fa-heart text-primary-dark text-xs"></i>
+                </button>
+              </div>
+              <div class="p-3.5">
+                <p class="font-display text-xs font-medium truncate">Willow Crossbody</p>
+                <p class="text-black/50 text-xs mt-0.5">$79.00</p>
+              </div>
+            </article>
+            <article class="group snap-item shrink-0 w-44 md:w-48 bg-white rounded-3xl shadow-card overflow-hidden hover-lift">
+              <div class="relative aspect-square overflow-hidden">
+                <img src="https://picsum.photos/seed/wish-4/300/300" alt="Noor Evening Clutch" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                <button aria-label="Remove from wishlist" class="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white/90 grid place-items-center hover:bg-primary transition">
+                  <i class="fa-solid fa-heart text-primary-dark text-xs"></i>
+                </button>
+              </div>
+              <div class="p-3.5">
+                <p class="font-display text-xs font-medium truncate">Noor Evening Clutch</p>
+                <p class="text-black/50 text-xs mt-0.5">$58.00</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- Saved Addresses -->
+        <section id="addresses">
+          <h2 class="font-display text-lg font-semibold mb-4">Saved Addresses</h2>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div class="bg-white rounded-3xl shadow-card p-6">
+              <div class="flex items-center justify-between mb-3">
+                <span class="bg-primary/25 text-ink text-[10px] font-display font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full">Primary</span>
+                <button class="text-black/40 hover:text-ink transition text-sm" aria-label="Edit address"><i class="fa-solid fa-pen"></i></button>
+              </div>
+              <p class="font-display text-sm font-semibold">Sarah Ahmed</p>
+              <p class="text-black/55 text-sm mt-1 leading-relaxed">123 Rodeo Drive, Apt 4B<br>Los Angeles, CA 90001, United States</p>
+              <p class="text-black/45 text-xs mt-2">+1 (555) 000-0000</p>
+            </div>
+            <button class="bg-white rounded-3xl shadow-card p-6 flex flex-col items-center justify-center gap-3 text-black/50 hover:text-ink hover:bg-black/[0.02] transition min-h-[160px]">
+              <span class="w-10 h-10 rounded-full border border-black/15 grid place-items-center">
+                <i class="fa-solid fa-plus"></i>
+              </span>
+              <span class="font-display text-sm font-semibold">Add New Address</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Personal Information -->
+        <section id="profile">
+          <div class="bg-white rounded-3xl shadow-card p-6 md:p-7">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="font-display text-lg font-semibold">Personal Information</h2>
+              <button class="font-display text-xs font-semibold uppercase tracking-wide border border-black/10 rounded-full px-4 py-2 hover:bg-black/5 transition">Edit Profile</button>
+            </div>
+            <dl class="grid sm:grid-cols-3 gap-6 text-sm">
+              <div>
+                <dt class="text-black/40 text-xs uppercase tracking-wide font-display font-medium mb-1">Name</dt>
+                <dd class="font-medium">Sarah Ahmed</dd>
+              </div>
+              <div>
+                <dt class="text-black/40 text-xs uppercase tracking-wide font-display font-medium mb-1">Email</dt>
+                <dd class="font-medium">sarah.ahmed@example.com</dd>
+              </div>
+              <div>
+                <dt class="text-black/40 text-xs uppercase tracking-wide font-display font-medium mb-1">Phone</dt>
+                <dd class="font-medium">+1 (555) 000-0000</dd>
+              </div>
+            </dl>
+          </div>
+        </section>
+
+        <!-- Reward Banner -->
+        <section class="relative rounded-4xl overflow-hidden bg-ink text-white p-7 md:p-9">
+          <div class="absolute -top-10 -right-10 w-48 h-48 rounded-full bg-primary/25 blur-2xl"></div>
+          <div class="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div>
+              <span class="font-display text-xs tracking-[0.25em] uppercase text-primary font-semibold">Rinmora Rewards</span>
+              <h2 class="font-display text-xl md:text-2xl font-semibold mt-2">You're a Gold Member ✨</h2>
+              <p class="text-white/60 text-sm mt-1">260 points to your next reward — Free Express Shipping.</p>
+              <div class="h-2 rounded-full bg-white/15 overflow-hidden mt-4 max-w-xs">
+                <div class="h-full rounded-full bg-primary" style="width: 78%"></div>
+              </div>
+            </div>
+            <button class="shrink-0 bg-primary text-ink font-display font-semibold text-sm uppercase tracking-wide px-6 py-3.5 rounded-full hover:bg-primary-dark transition">
+              View Rewards
+            </button>
+          </div>
+        </section>
+
+        <!-- Recommended Products -->
+        <section>
+          <h2 class="font-display text-lg font-semibold mb-4">Recommended For You</h2>
+          <div class="flex gap-4 md:gap-5 overflow-x-auto snap-row -mx-5 px-5 md:mx-0 md:px-0">
+            <article class="group snap-item shrink-0 w-44 md:w-52 bg-white rounded-3xl shadow-card overflow-hidden hover-lift">
+              <div class="relative aspect-[4/5] overflow-hidden">
+                <img src="https://picsum.photos/seed/rec-1/320/400" alt="Olivia Satchel" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+              </div>
+              <div class="p-3.5">
+                <p class="font-display text-xs font-medium truncate">Olivia Satchel</p>
+                <p class="text-black/50 text-xs mt-0.5">$146.00</p>
+              </div>
+            </article>
+            <article class="group snap-item shrink-0 w-44 md:w-52 bg-white rounded-3xl shadow-card overflow-hidden hover-lift">
+              <div class="relative aspect-[4/5] overflow-hidden">
+                <img src="https://picsum.photos/seed/rec-2/320/400" alt="Sofia Clutch" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+              </div>
+              <div class="p-3.5">
+                <p class="font-display text-xs font-medium truncate">Sofia Clutch</p>
+                <p class="text-black/50 text-xs mt-0.5">$62.00</p>
+              </div>
+            </article>
+            <article class="group snap-item shrink-0 w-44 md:w-52 bg-white rounded-3xl shadow-card overflow-hidden hover-lift">
+              <div class="relative aspect-[4/5] overflow-hidden">
+                <img src="https://picsum.photos/seed/rec-3/320/400" alt="Grace Everyday Tote" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+              </div>
+              <div class="p-3.5">
+                <p class="font-display text-xs font-medium truncate">Grace Everyday Tote</p>
+                <p class="text-black/50 text-xs mt-0.5">$104.00</p>
+              </div>
+            </article>
+            <article class="group snap-item shrink-0 w-44 md:w-52 bg-white rounded-3xl shadow-card overflow-hidden hover-lift">
+              <div class="relative aspect-[4/5] overflow-hidden">
+                <img src="https://picsum.photos/seed/rec-4/320/400" alt="Emma Bucket Bag" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+              </div>
+              <div class="p-3.5">
+                <p class="font-display text-xs font-medium truncate">Emma Bucket Bag</p>
+                <p class="text-black/50 text-xs mt-0.5">$98.00</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- Recently Viewed -->
+        <section>
+          <h2 class="font-display text-lg font-semibold mb-4">Recently Viewed</h2>
+          <div class="flex gap-4 overflow-x-auto snap-row -mx-5 px-5 md:mx-0 md:px-0">
+            <div class="snap-item shrink-0 w-32 md:w-36">
+              <div class="img-zoom aspect-square rounded-2xl overflow-hidden shadow-card">
+                <img src="https://picsum.photos/seed/dash-recent-1/260/260" alt="Milano Leather Tote" class="w-full h-full object-cover">
+              </div>
+              <p class="font-display text-xs font-medium mt-2 truncate">Milano Leather Tote</p>
+            </div>
+            <div class="snap-item shrink-0 w-32 md:w-36">
+              <div class="img-zoom aspect-square rounded-2xl overflow-hidden shadow-card">
+                <img src="https://picsum.photos/seed/dash-recent-2/260/260" alt="Luna Crossbody" class="w-full h-full object-cover">
+              </div>
+              <p class="font-display text-xs font-medium mt-2 truncate">Luna Crossbody</p>
+            </div>
+            <div class="snap-item shrink-0 w-32 md:w-36">
+              <div class="img-zoom aspect-square rounded-2xl overflow-hidden shadow-card">
+                <img src="https://picsum.photos/seed/dash-recent-3/260/260" alt="Aurora Mini Bag" class="w-full h-full object-cover">
+              </div>
+              <p class="font-display text-xs font-medium mt-2 truncate">Aurora Mini Bag</p>
+            </div>
+            <div class="snap-item shrink-0 w-32 md:w-36">
+              <div class="img-zoom aspect-square rounded-2xl overflow-hidden shadow-card">
+                <img src="https://picsum.photos/seed/dash-recent-4/260/260" alt="Bella Shoulder Bag" class="w-full h-full object-cover">
+              </div>
+              <p class="font-display text-xs font-medium mt-2 truncate">Bella Shoulder Bag</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Account Settings -->
+        <section id="settings">
+          <div class="bg-white rounded-3xl shadow-card p-6 md:p-7">
+            <h2 class="font-display text-lg font-semibold mb-6">Account Settings</h2>
+
+            <div class="space-y-5">
+              <div>
+                <p class="font-display text-sm font-semibold mb-3">Notification Preferences</p>
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-black/60">Email Notifications</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" class="peer sr-only" checked>
+                      <span class="w-11 h-6 bg-black/10 peer-checked:bg-primary-dark rounded-full transition"></span>
+                      <span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-5"></span>
+                    </label>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-black/60">SMS Notifications</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" class="peer sr-only">
+                      <span class="w-11 h-6 bg-black/10 peer-checked:bg-primary-dark rounded-full transition"></span>
+                      <span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-5"></span>
+                    </label>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-black/60">Promotional Offers</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" class="peer sr-only" checked>
+                      <span class="w-11 h-6 bg-black/10 peer-checked:bg-primary-dark rounded-full transition"></span>
+                      <span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-5"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="border-t border-black/5 pt-5 grid sm:grid-cols-2 gap-5">
+                <div class="relative">
+                  <label for="languageSelect" class="block text-xs font-display font-medium text-black/50 mb-2">Language</label>
+                  <select id="languageSelect" class="w-full appearance-none px-5 py-3 rounded-xl border border-black/10 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer">
+                    <option>English</option>
+                    <option>Urdu</option>
+                    <option>Arabic</option>
+                    <option>French</option>
+                  </select>
+                  <i class="fa-solid fa-chevron-down text-[10px] absolute right-5 bottom-4 pointer-events-none text-black/40"></i>
+                </div>
+                <div class="relative">
+                  <label for="currencySelect" class="block text-xs font-display font-medium text-black/50 mb-2">Currency</label>
+                  <select id="currencySelect" class="w-full appearance-none px-5 py-3 rounded-xl border border-black/10 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer">
+                    <option>USD ($)</option>
+                    <option>GBP (£)</option>
+                    <option>PKR (₨)</option>
+                    <option>AED (د.إ)</option>
+                  </select>
+                  <i class="fa-solid fa-chevron-down text-[10px] absolute right-5 bottom-4 pointer-events-none text-black/40"></i>
+                </div>
+              </div>
+
+              <div class="border-t border-black/5 pt-5 flex items-center justify-between">
+                <div>
+                  <p class="font-display text-sm font-semibold">Dark Mode</p>
+                  <p class="text-black/45 text-xs mt-0.5">UI preview only</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" class="peer sr-only">
+                  <span class="w-11 h-6 bg-black/10 peer-checked:bg-primary-dark rounded-full transition"></span>
+                  <span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-5"></span>
+                </label>
+              </div>
+
+              <div class="border-t border-black/5 pt-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <button class="text-sm font-display font-semibold text-red-500/80 hover:text-red-600 transition">
+                  <i class="fa-solid fa-trash-can mr-1.5"></i> Delete Account
+                </button>
+                <a href="rinmora-login-preview.html" class="w-full sm:w-auto text-center border border-ink/15 font-display font-semibold text-sm uppercase tracking-wide px-6 py-3 rounded-full hover:bg-black/5 transition">
+                  Logout
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- =========================================================
+     MOBILE BOTTOM NAVIGATION
+========================================================== -->
+<nav aria-label="Account navigation" class="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-black/5 grid grid-cols-5">
+  <a href="#dashboard-top" class="flex flex-col items-center justify-center gap-1 py-3 text-ink">
+    <i class="fa-solid fa-gauge text-base"></i>
+    <span class="text-[10px] font-display font-medium">Dashboard</span>
+  </a>
+  <a href="rinmora-orders-preview.html" class="flex flex-col items-center justify-center gap-1 py-3 text-black/45 hover:text-ink transition">
+    <i class="fa-solid fa-bag-shopping text-base"></i>
+    <span class="text-[10px] font-display font-medium">Orders</span>
+  </a>
+  <a href="#wishlist" class="flex flex-col items-center justify-center gap-1 py-3 text-black/45 hover:text-ink transition">
+    <i class="fa-regular fa-heart text-base"></i>
+    <span class="text-[10px] font-display font-medium">Wishlist</span>
+  </a>
+  <a href="#profile" class="flex flex-col items-center justify-center gap-1 py-3 text-black/45 hover:text-ink transition">
+    <i class="fa-regular fa-user text-base"></i>
+    <span class="text-[10px] font-display font-medium">Profile</span>
+  </a>
+  <a href="rinmora-login-preview.html" class="flex flex-col items-center justify-center gap-1 py-3 text-black/45 hover:text-ink transition">
+    <i class="fa-solid fa-right-from-bracket text-base"></i>
+    <span class="text-[10px] font-display font-medium">Logout</span>
+  </a>
+</nav>
+
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const closeMenuBtn = document.getElementById('closeMenuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const menuOverlay = document.getElementById('menuOverlay');
+  const menuPanel = document.getElementById('menuPanel');
+
+  function openMenu() {
+    mobileMenu.classList.remove('invisible', 'pointer-events-none');
+    requestAnimationFrame(() => {
+      menuPanel.classList.remove('-translate-x-full');
+      menuOverlay.classList.remove('bg-black/0');
+      menuOverlay.classList.add('bg-black/50');
+    });
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    menuPanel.classList.add('-translate-x-full');
+    menuOverlay.classList.remove('bg-black/50');
+    menuOverlay.classList.add('bg-black/0');
+    mobileMenu.classList.add('pointer-events-none');
+    document.body.style.overflow = '';
+    setTimeout(() => mobileMenu.classList.add('invisible'), 300);
+  }
+
+  menuBtn.addEventListener('click', openMenu);
+  closeMenuBtn.addEventListener('click', closeMenu);
+  menuOverlay.addEventListener('click', closeMenu);
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+  document.querySelectorAll('[aria-label="Remove from wishlist"]').forEach(btn => {
+    btn.addEventListener('click', function () {
+      this.closest('article').style.opacity = '0.3';
+    });
+  });
+
+  document.querySelectorAll('.btn-ripple').forEach(btn => {
+    btn.addEventListener('click', function (e) {
+      const rect = this.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      const size = Math.max(rect.width, rect.height);
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+      ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+      this.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 650);
+    });
+  });
+</script>
+
+</body>
+</html>

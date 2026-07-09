@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notifications — Rinmora Admin</title>
+<meta name="description" content="Rinmora Admin — system alerts, customer messaging campaigns, and email delivery logs.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: '#CFBAA5', 'primary-dark': '#b89e84', ink: '#000000',
+          canvas: '#F8F8F8',
+          success: '#22C55E', warning: '#F59E0B', danger: '#EF4444', info: '#3B82F6',
+        },
+        fontFamily: { sans: ['Inter', 'sans-serif'] },
+        borderRadius: { '4xl': '2rem' },
+        boxShadow: { soft: '0 20px 60px -15px rgba(0,0,0,0.12)', card: '0 4px 24px -8px rgba(0,0,0,0.08)' },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Inter', sans-serif; }
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+  .fade-up { animation: fadeUp .5s ease both; }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(10px);} to {opacity:1; transform:translateY(0);} }
+  .hover-lift { transition: transform .2s ease, box-shadow .2s ease; }
+  .hover-lift:hover { transform: translateY(-2px); }
+  .sidebar-collapsed .nav-label,
+  .sidebar-collapsed .nav-section-label,
+  .sidebar-collapsed .sidebar-brand-text,
+  .sidebar-collapsed .nav-chevron { display: none; }
+  .sidebar-collapsed .submenu { display: none !important; }
+</style>
+</head>
+
+<body class="bg-canvas text-ink antialiased">
+
+<!-- =========================================================
+     TOPBAR
+========================================================== -->
+<header class="sticky top-0 z-40 bg-white border-b border-black/5">
+  <div class="flex items-center gap-3 h-16 px-4 md:px-6">
+    <button id="mobileSidebarBtn" aria-label="Open sidebar" class="lg:hidden w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <button id="collapseSidebarBtn" aria-label="Collapse sidebar" class="hidden lg:grid w-9 h-9 place-items-center rounded-full hover:bg-black/5 transition">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <a href="rinmora-admin-dashboard.html" class="flex items-center gap-2 shrink-0">
+      <img src="../../logo-01.png" alt="Rinmora" class="h-7 w-auto">
+      <span class="hidden sm:inline text-[10px] font-semibold uppercase tracking-wider bg-ink text-white px-2 py-0.5 rounded-full">Admin</span>
+    </a>
+
+    <div class="flex-1 max-w-xl mx-auto hidden sm:block">
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-black/30 text-sm"></i>
+        <label for="globalSearch" class="sr-only">Global search</label>
+        <input id="globalSearch" type="text" placeholder="Search products, orders, customers..." class="w-full pl-11 pr-4 py-2.5 rounded-full bg-black/[0.03] border border-transparent text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition">
+      </div>
+    </div>
+
+    <div class="flex items-center gap-1 ml-auto sm:ml-0">
+      <button aria-label="Search" class="sm:hidden w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+        <i class="fa-solid fa-magnifying-glass text-sm"></i>
+      </button>
+
+      <div class="relative">
+        <button id="quickActionsBtn" class="hidden md:inline-flex items-center gap-2 bg-primary text-ink font-semibold text-xs uppercase tracking-wide px-4 py-2.5 rounded-full hover:bg-primary-dark transition">
+          <i class="fa-solid fa-plus text-[10px]"></i> Quick Actions
+        </button>
+        <div id="quickActionsMenu" class="hidden absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <a href="rinmora-admin-product-add.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-bag-shopping w-4 text-black/40"></i> New Product</a>
+          <a href="rinmora-admin-orders.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-receipt w-4 text-black/40"></i> New Order</a>
+          <a href="rinmora-admin-customers.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-user-plus w-4 text-black/40"></i> New Customer</a>
+        </div>
+      </div>
+
+      <div class="relative">
+        <button id="notifBtn" aria-label="Notifications" class="relative w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+          <i class="fa-regular fa-bell text-sm"></i>
+          <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-danger"></span>
+        </button>
+        <div id="notifMenu" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <p class="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black/40">Notifications</p>
+          <a href="#" class="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <span class="w-8 h-8 rounded-full bg-danger/15 grid place-items-center shrink-0"><i class="fa-solid fa-triangle-exclamation text-danger text-xs"></i></span>
+            <span class="text-sm"><span class="font-medium">Payment sync failed</span><br><span class="text-black/45 text-xs">Stripe webhook error, 5 minutes ago</span></span>
+          </a>
+          <a href="#" class="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <span class="w-8 h-8 rounded-full bg-warning/15 grid place-items-center shrink-0"><i class="fa-solid fa-box text-warning text-xs"></i></span>
+            <span class="text-sm"><span class="font-medium">Low stock alert</span><br><span class="text-black/45 text-xs">Aurora Mini Bag has 3 units left</span></span>
+          </a>
+          <a href="#" class="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <span class="w-8 h-8 rounded-full bg-success/15 grid place-items-center shrink-0"><i class="fa-solid fa-circle-check text-success text-xs"></i></span>
+            <span class="text-sm"><span class="font-medium">Order #RIN-20591 delivered</span><br><span class="text-black/45 text-xs">2 minutes ago</span></span>
+          </a>
+        </div>
+      </div>
+
+      <div class="relative">
+        <button id="msgBtn" aria-label="Messages" class="relative w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+          <i class="fa-regular fa-envelope text-sm"></i>
+          <span class="absolute top-1 right-1.5 w-4 h-4 rounded-full bg-ink text-white text-[9px] font-bold grid place-items-center">2</span>
+        </button>
+        <div id="msgMenu" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <p class="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black/40">Messages</p>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <img src="https://picsum.photos/seed/admin-msg-1/60/60" alt="" class="w-8 h-8 rounded-full object-cover">
+            <span class="text-sm"><span class="font-medium">Sana K.</span><br><span class="text-black/45 text-xs">Question about order #RIN-20583</span></span>
+          </a>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <img src="https://picsum.photos/seed/admin-msg-2/60/60" alt="" class="w-8 h-8 rounded-full object-cover">
+            <span class="text-sm"><span class="font-medium">Amina R.</span><br><span class="text-black/45 text-xs">Return request submitted</span></span>
+          </a>
+        </div>
+      </div>
+
+      <button id="themeToggleBtn" aria-label="Toggle theme" class="w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+        <i class="fa-regular fa-moon text-sm"></i>
+      </button>
+
+      <div class="relative pl-1">
+        <button id="profileBtn" class="flex items-center gap-2 pl-1.5 pr-2.5 py-1.5 rounded-full hover:bg-black/5 transition">
+          <img src="https://picsum.photos/seed/admin-avatar/80/80" alt="Admin" class="w-7 h-7 rounded-full object-cover">
+          <span class="hidden md:inline text-sm font-medium">Ayesha N.</span>
+          <i class="fa-solid fa-chevron-down text-[10px] text-black/40"></i>
+        </button>
+        <div id="profileMenu" class="hidden absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-regular fa-user w-4 text-black/40"></i> My Profile</a>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-gear w-4 text-black/40"></i> Settings</a>
+          <div class="border-t border-black/5 my-1"></div>
+          <a href="../rinmora-login-preview.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-danger hover:bg-danger/5 transition"><i class="fa-solid fa-right-from-bracket w-4"></i> Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="flex">
+
+  <!-- =========================================================
+       SIDEBAR
+  ========================================================== -->
+  <div id="sidebarOverlay" class="fixed inset-0 bg-black/0 z-30 lg:hidden invisible pointer-events-none transition-colors duration-300"></div>
+
+  <aside id="sidebar" class="fixed lg:sticky top-16 left-0 z-30 h-[calc(100vh-4rem)] w-72 bg-white border-r border-black/5 -translate-x-full lg:translate-x-0 transition-all duration-300 ease-out overflow-y-auto shrink-0">
+    <nav class="p-4 space-y-1">
+      <p class="nav-section-label px-3 pt-2 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Main</p>
+
+      <a href="rinmora-admin-dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-gauge w-4 text-center"></i> <span class="nav-label">Dashboard</span>
+      </a>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-bag-shopping w-4 text-center"></i> <span class="nav-label">Products</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-products.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Products</a>
+          <a href="rinmora-admin-product-add.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Add Product</a>
+          <a href="rinmora-admin-product-categories.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Categories</a>
+          <a href="rinmora-admin-product-brands.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Brands &amp; Collections</a>
+          <a href="rinmora-admin-product-attributes.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Attributes</a>
+          <a href="rinmora-admin-reviews.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Reviews</a>
+          <a href="rinmora-admin-inventory.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Inventory</a>
+        </div>
+      </div>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-receipt w-4 text-center"></i> <span class="nav-label">Orders</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Orders</a>
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Pending</a>
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Shipped</a>
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Returned / Refunded</a>
+        </div>
+      </div>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-users w-4 text-center"></i> <span class="nav-label">Customers</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-customers.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Customers</a>
+          <a href="rinmora-admin-customer-addresses.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Addresses</a>
+          <a href="rinmora-admin-wishlist-reports.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Wishlist Reports</a>
+          <a href="rinmora-admin-reward-points.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Reward Points</a>
+        </div>
+      </div>
+
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-bullhorn w-4 text-center"></i> <span class="nav-label">Marketing</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Content &amp; Store</p>
+
+      <a href="rinmora-admin-cms-homepage-builder.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-file-lines w-4 text-center"></i> <span class="nav-label">CMS</span>
+      </a>
+      <a href="rinmora-admin-media-manager.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-images w-4 text-center"></i> <span class="nav-label">Media Manager</span>
+      </a>
+      <a href="rinmora-admin-reviews.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-star w-4 text-center"></i> <span class="nav-label">Reviews</span>
+      </a>
+      <a href="rinmora-admin-inventory.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-warehouse w-4 text-center"></i> <span class="nav-label">Inventory</span>
+      </a>
+      <a href="rinmora-admin-shipping.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-truck-fast w-4 text-center"></i> <span class="nav-label">Shipping</span>
+      </a>
+      <a href="rinmora-admin-payments.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-credit-card w-4 text-center"></i> <span class="nav-label">Payments</span>
+      </a>
+      <a href="rinmora-admin-users.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-user-shield w-4 text-center"></i> <span class="nav-label">Users &amp; Roles</span>
+      </a>
+      <a href="rinmora-admin-reports.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-chart-line w-4 text-center"></i> <span class="nav-label">Reports</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">System</p>
+
+      <a href="rinmora-admin-seo.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-magnifying-glass-chart w-4 text-center"></i> <span class="nav-label">SEO</span>
+      </a>
+      <a href="rinmora-admin-contact-support.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-headset w-4 text-center"></i> <span class="nav-label">Contact &amp; Support</span>
+      </a>
+      <a href="rinmora-admin-notifications.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary/20 text-ink font-semibold text-sm">
+        <i class="fa-solid fa-bell w-4 text-center"></i> <span class="nav-label">Notifications</span>
+      </a>
+      <a href="rinmora-admin-activity-logs.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-clock-rotate-left w-4 text-center"></i> <span class="nav-label">Activity Logs</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Account</p>
+
+      <a href="rinmora-admin-profile.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-user w-4 text-center"></i> <span class="nav-label">My Profile</span>
+      </a>
+      <a href="rinmora-admin-settings.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-gear w-4 text-center"></i> <span class="nav-label">Settings</span>
+      </a>
+      <a href="../rinmora-login-preview.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-right-from-bracket w-4 text-center"></i> <span class="nav-label">Logout</span>
+      </a>
+    </nav>
+  </aside>
+
+
+  <!-- =========================================================
+       MAIN CONTENT
+  ========================================================== -->
+  <main class="flex-1 min-w-0 px-4 md:px-6 py-6">
+
+    <!-- Breadcrumb + Page Header -->
+    <nav aria-label="Breadcrumb" class="text-xs text-black/40 mb-2">
+      <span>Admin</span> <i class="fa-solid fa-chevron-right text-[8px] mx-1.5"></i> <span class="text-ink font-medium">Notifications</span>
+    </nav>
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+      <div>
+        <h1 class="text-xl md:text-2xl font-bold">Notifications</h1>
+        <p class="text-black/45 text-sm mt-1">System alerts, customer messaging campaigns, and email delivery logs.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button class="inline-flex items-center gap-2 bg-white border border-black/10 rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-black/[0.03] transition">
+          <i class="fa-solid fa-gear text-black/40"></i> Notification Settings
+        </button>
+      </div>
+    </div>
+
+    <!-- ===================== TAB LAYOUT ===================== -->
+    <div class="grid lg:grid-cols-[248px_1fr] gap-6 items-start">
+
+      <!-- Sub nav -->
+      <nav class="lg:sticky lg:top-[88px] bg-white rounded-3xl shadow-card p-3 flex lg:flex-col gap-1 overflow-x-auto lg:overflow-visible">
+        <button type="button" class="tab-btn active-tab w-full text-left flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold bg-primary/20 text-ink transition whitespace-nowrap shrink-0" data-tab="system">
+          <i class="fa-solid fa-bell w-4 text-center"></i> System
+          <span class="ml-auto bg-danger text-white text-[10px] font-bold rounded-full px-1.5 leading-4">5</span>
+        </button>
+        <button type="button" class="tab-btn w-full text-left flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-black/60 hover:bg-black/5 transition whitespace-nowrap shrink-0" data-tab="customer">
+          <i class="fa-solid fa-paper-plane w-4 text-center"></i> Customer Notifications
+        </button>
+        <button type="button" class="tab-btn w-full text-left flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-black/60 hover:bg-black/5 transition whitespace-nowrap shrink-0" data-tab="email-logs">
+          <i class="fa-solid fa-envelope-circle-check w-4 text-center"></i> Email Logs
+        </button>
+      </nav>
+
+      <!-- Panels -->
+      <div class="min-w-0">
+
+        <!-- =========================================================
+             SYSTEM PANEL
+        ========================================================== -->
+        <div id="panel-system" class="tab-panel space-y-6">
+
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+              <div>
+                <h2 class="font-bold text-sm">Notification Timeline</h2>
+                <p class="text-black/40 text-xs mt-0.5">Real-time system, order, inventory and security alerts.</p>
+              </div>
+              <button class="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2.5 rounded-full border border-black/10 hover:bg-black/[0.03] transition shrink-0">
+                <i class="fa-solid fa-check-double text-black/40"></i> Mark All as Read
+              </button>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+              <div class="pill-group flex flex-wrap items-center gap-2">
+                <button type="button" class="filter-pill active-filter-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-ink text-white transition" data-filter="all">All</button>
+                <button type="button" class="filter-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-black/5 text-black/60 hover:bg-black/10 transition" data-filter="unread">Unread</button>
+                <button type="button" class="filter-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-black/5 text-black/60 hover:bg-black/10 transition" data-filter="high">High Priority</button>
+              </div>
+              <div class="relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-black/30 text-xs"></i>
+                <label for="notifSearch" class="sr-only">Search notifications</label>
+                <input id="notifSearch" type="text" placeholder="Search notifications..." class="pl-9 pr-4 py-2 rounded-full bg-black/[0.03] border border-transparent text-xs focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition w-44 md:w-64">
+              </div>
+            </div>
+
+            <ul class="divide-y divide-black/5">
+
+              <li class="group flex items-start gap-4 py-4 px-3 rounded-2xl bg-primary/5">
+                <span class="w-10 h-10 rounded-full bg-danger/15 grid place-items-center shrink-0"><i class="fa-solid fa-triangle-exclamation text-danger text-sm"></i></span>
+                <div class="min-w-0 flex-1">
+                  <div class="flex flex-wrap items-center gap-2 mb-0.5">
+                    <p class="text-sm font-semibold">Payment gateway sync failed</p>
+                    <span class="w-1.5 h-1.5 rounded-full bg-primary-dark shrink-0" aria-label="Unread"></span>
+                  </div>
+                  <p class="text-black/50 text-xs mb-2">Stripe webhook returned a 500 error while confirming payment for order #RIN-20592.</p>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="bg-black/5 text-black/50 text-[11px] font-semibold px-2.5 py-1 rounded-full">System</span>
+                    <span class="bg-danger/10 text-danger text-[11px] font-semibold px-2.5 py-1 rounded-full">High Priority</span>
+                    <span class="text-black/35 text-xs">5 minutes ago</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition shrink-0">
+                  <button aria-label="Mark as read" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-check text-xs text-black/50"></i></button>
+                  <button aria-label="Delete notification" class="w-8 h-8 rounded-full grid place-items-center hover:bg-danger/10 transition"><i class="fa-solid fa-trash text-xs text-danger"></i></button>
+                </div>
+              </li>
+
+              <li class="group flex items-start gap-4 py-4 px-3 rounded-2xl bg-primary/5">
+                <span class="w-10 h-10 rounded-full bg-warning/15 grid place-items-center shrink-0"><i class="fa-solid fa-box text-warning text-sm"></i></span>
+                <div class="min-w-0 flex-1">
+                  <div class="flex flex-wrap items-center gap-2 mb-0.5">
+                    <p class="text-sm font-semibold">Low stock: Aurora Mini Bag</p>
+                    <span class="w-1.5 h-1.5 rounded-full bg-primary-dark shrink-0" aria-label="Unread"></span>
+                  </div>
+                  <p class="text-black/50 text-xs mb-2">Only 3 units remaining in Rose Gold — consider restocking before the weekend sale.</p>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="bg-black/5 text-black/50 text-[11px] font-semibold px-2.5 py-1 rounded-full">Inventory</span>
+                    <span class="bg-warning/10 text-warning text-[11px] font-semibold px-2.5 py-1 rounded-full">Medium Priority</span>
+                    <span class="text-black/35 text-xs">22 minutes ago</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition shrink-0">
+                  <button aria-label="Mark as read" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-check text-xs text-black/50"></i></button>
+                  <button aria-label="Delete notification" class="w-8 h-8 rounded-full grid place-items-center hover:bg-danger/10 transition"><i class="fa-solid fa-trash text-xs text-danger"></i></button>
+                </div>
+              </li>
+
+              <li class="group flex items-start gap-4 py-4 px-3 rounded-2xl">
+                <span class="w-10 h-10 rounded-full bg-info/15 grid place-items-center shrink-0"><i class="fa-solid fa-circle-info text-info text-sm"></i></span>
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm font-semibold mb-0.5">Scheduled maintenance tonight</p>
+                  <p class="text-black/50 text-xs mb-2">Platform maintenance window runs 12:00 AM–1:00 AM EST. Checkout may be briefly unavailable.</p>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="bg-black/5 text-black/50 text-[11px] font-semibold px-2.5 py-1 rounded-full">System</span>
+                    <span class="bg-info/10 text-info text-[11px] font-semibold px-2.5 py-1 rounded-full">Low Priority</span>
+                    <span class="text-black/35 text-xs">1 hour ago</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition shrink-0">
+                  <button aria-label="Mark as read" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-check text-xs text-black/50"></i></button>
+                  <button aria-label="Delete notification" class="w-8 h-8 rounded-full grid place-items-center hover:bg-danger/10 transition"><i class="fa-solid fa-trash text-xs text-danger"></i></button>
+                </div>
+              </li>
+
+              <li class="group flex items-start gap-4 py-4 px-3 rounded-2xl">
+                <span class="w-10 h-10 rounded-full bg-success/15 grid place-items-center shrink-0"><i class="fa-solid fa-circle-check text-success text-sm"></i></span>
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm font-semibold mb-0.5">Order #RIN-20591 delivered</p>
+                  <p class="text-black/50 text-xs mb-2">Package confirmed delivered to Sana Khan in Karachi.</p>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="bg-black/5 text-black/50 text-[11px] font-semibold px-2.5 py-1 rounded-full">Order</span>
+                    <span class="bg-info/10 text-info text-[11px] font-semibold px-2.5 py-1 rounded-full">Low Priority</span>
+                    <span class="text-black/35 text-xs">2 hours ago</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition shrink-0">
+                  <button aria-label="Mark as read" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-check text-xs text-black/50"></i></button>
+                  <button aria-label="Delete notification" class="w-8 h-8 rounded-full grid place-items-center hover:bg-danger/10 transition"><i class="fa-solid fa-trash text-xs text-danger"></i></button>
+                </div>
+              </li>
+
+              <li class="group flex items-start gap-4 py-4 px-3 rounded-2xl bg-primary/5">
+                <span class="w-10 h-10 rounded-full bg-danger/15 grid place-items-center shrink-0"><i class="fa-solid fa-shield-halved text-danger text-sm"></i></span>
+                <div class="min-w-0 flex-1">
+                  <div class="flex flex-wrap items-center gap-2 mb-0.5">
+                    <p class="text-sm font-semibold">Suspicious login attempt blocked</p>
+                    <span class="w-1.5 h-1.5 rounded-full bg-primary-dark shrink-0" aria-label="Unread"></span>
+                  </div>
+                  <p class="text-black/50 text-xs mb-2">3 failed admin login attempts detected from an unrecognized IP address (185.220.x.x).</p>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="bg-black/5 text-black/50 text-[11px] font-semibold px-2.5 py-1 rounded-full">Security</span>
+                    <span class="bg-danger/10 text-danger text-[11px] font-semibold px-2.5 py-1 rounded-full">High Priority</span>
+                    <span class="text-black/35 text-xs">3 hours ago</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition shrink-0">
+                  <button aria-label="Mark as read" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-check text-xs text-black/50"></i></button>
+                  <button aria-label="Delete notification" class="w-8 h-8 rounded-full grid place-items-center hover:bg-danger/10 transition"><i class="fa-solid fa-trash text-xs text-danger"></i></button>
+                </div>
+              </li>
+
+              <li class="group flex items-start gap-4 py-4 px-3 rounded-2xl bg-primary/5">
+                <span class="w-10 h-10 rounded-full bg-warning/15 grid place-items-center shrink-0"><i class="fa-solid fa-box text-warning text-sm"></i></span>
+                <div class="min-w-0 flex-1">
+                  <div class="flex flex-wrap items-center gap-2 mb-0.5">
+                    <p class="text-sm font-semibold">Low stock: Noor Evening Clutch</p>
+                    <span class="w-1.5 h-1.5 rounded-full bg-primary-dark shrink-0" aria-label="Unread"></span>
+                  </div>
+                  <p class="text-black/50 text-xs mb-2">6 units left in Onyx Black across all warehouses.</p>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="bg-black/5 text-black/50 text-[11px] font-semibold px-2.5 py-1 rounded-full">Inventory</span>
+                    <span class="bg-warning/10 text-warning text-[11px] font-semibold px-2.5 py-1 rounded-full">Medium Priority</span>
+                    <span class="text-black/35 text-xs">5 hours ago</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition shrink-0">
+                  <button aria-label="Mark as read" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-check text-xs text-black/50"></i></button>
+                  <button aria-label="Delete notification" class="w-8 h-8 rounded-full grid place-items-center hover:bg-danger/10 transition"><i class="fa-solid fa-trash text-xs text-danger"></i></button>
+                </div>
+              </li>
+
+              <li class="group flex items-start gap-4 py-4 px-3 rounded-2xl bg-primary/5">
+                <span class="w-10 h-10 rounded-full bg-info/15 grid place-items-center shrink-0"><i class="fa-solid fa-circle-info text-info text-sm"></i></span>
+                <div class="min-w-0 flex-1">
+                  <div class="flex flex-wrap items-center gap-2 mb-0.5">
+                    <p class="text-sm font-semibold">New admin panel version deployed</p>
+                    <span class="w-1.5 h-1.5 rounded-full bg-primary-dark shrink-0" aria-label="Unread"></span>
+                  </div>
+                  <p class="text-black/50 text-xs mb-2">Rinmora Admin updated to v2.4.1 — changelog available in Settings.</p>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="bg-black/5 text-black/50 text-[11px] font-semibold px-2.5 py-1 rounded-full">System</span>
+                    <span class="bg-info/10 text-info text-[11px] font-semibold px-2.5 py-1 rounded-full">Low Priority</span>
+                    <span class="text-black/35 text-xs">Yesterday</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition shrink-0">
+                  <button aria-label="Mark as read" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-check text-xs text-black/50"></i></button>
+                  <button aria-label="Delete notification" class="w-8 h-8 rounded-full grid place-items-center hover:bg-danger/10 transition"><i class="fa-solid fa-trash text-xs text-danger"></i></button>
+                </div>
+              </li>
+
+              <li class="group flex items-start gap-4 py-4 px-3 rounded-2xl">
+                <span class="w-10 h-10 rounded-full bg-success/15 grid place-items-center shrink-0"><i class="fa-solid fa-circle-check text-success text-sm"></i></span>
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm font-semibold mb-0.5">Refund processed successfully</p>
+                  <p class="text-black/50 text-xs mb-2">Order #RIN-20585 refunded $89.00 to Zoya Ahmed's original payment method.</p>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="bg-black/5 text-black/50 text-[11px] font-semibold px-2.5 py-1 rounded-full">Order</span>
+                    <span class="bg-info/10 text-info text-[11px] font-semibold px-2.5 py-1 rounded-full">Low Priority</span>
+                    <span class="text-black/35 text-xs">2 days ago</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition shrink-0">
+                  <button aria-label="Mark as read" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-check text-xs text-black/50"></i></button>
+                  <button aria-label="Delete notification" class="w-8 h-8 rounded-full grid place-items-center hover:bg-danger/10 transition"><i class="fa-solid fa-trash text-xs text-danger"></i></button>
+                </div>
+              </li>
+
+            </ul>
+
+            <div class="flex items-center justify-between mt-5 pt-4 border-t border-black/5 text-xs text-black/45">
+              <p>Showing 1–8 of 24</p>
+              <div class="flex items-center gap-1">
+                <button class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition" aria-label="Previous page"><i class="fa-solid fa-chevron-left text-[10px]"></i></button>
+                <button class="w-8 h-8 rounded-full grid place-items-center bg-ink text-white font-semibold">1</button>
+                <button class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition">2</button>
+                <button class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition">3</button>
+                <button class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition" aria-label="Next page"><i class="fa-solid fa-chevron-right text-[10px]"></i></button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- =========================================================
+             CUSTOMER PANEL
+        ========================================================== -->
+        <div id="panel-customer" class="tab-panel space-y-6 hidden">
+
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <div class="flex items-center gap-2 mb-6 flex-wrap">
+              <button type="button" class="builder-tab active-builder-tab text-xs font-semibold px-4 py-2 rounded-full bg-ink text-white transition" data-builder="push">
+                <i class="fa-solid fa-bell mr-1.5"></i> Push Notification
+              </button>
+              <button type="button" class="builder-tab text-xs font-semibold px-4 py-2 rounded-full text-black/50 hover:bg-black/5 transition" data-builder="email">
+                <i class="fa-solid fa-envelope mr-1.5"></i> Email Notification
+              </button>
+              <button type="button" class="builder-tab text-xs font-semibold px-4 py-2 rounded-full text-black/50 hover:bg-black/5 transition" data-builder="sms">
+                <i class="fa-solid fa-comment-sms mr-1.5"></i> SMS Notification
+              </button>
+            </div>
+
+            <!-- Push builder -->
+            <div id="builder-panel-push" class="builder-panel space-y-5">
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="pushTitle">Notification Title</label>
+                <input id="pushTitle" type="text" value="Your favorites just got restocked!" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="pushBody">Message Body</label>
+                <textarea id="pushBody" rows="4" class="w-full px-4 py-3 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition resize-none">The Noor Evening Clutch is back in stock in Onyx Black. Shop now before it sells out again.</textarea>
+                <p class="text-black/40 text-xs mt-1.5">Keep push copy under 120 characters for best delivery.</p>
+              </div>
+
+              <div>
+                <p class="block text-sm font-medium mb-1.5">Audience</p>
+                <div class="audience-group flex flex-wrap gap-2">
+                  <button type="button" class="audience-pill active-audience-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-ink text-white transition" data-audience="all">All Customers</button>
+                  <button type="button" class="audience-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-black/5 text-black/60 hover:bg-black/10 transition" data-audience="vip">VIP Customers</button>
+                  <button type="button" class="audience-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-black/5 text-black/60 hover:bg-black/10 transition" data-audience="recent">Recent Purchasers</button>
+                  <button type="button" class="audience-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-black/5 text-black/60 hover:bg-black/10 transition" data-audience="cart">Abandoned Cart</button>
+                  <button type="button" class="audience-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-black/5 text-black/60 hover:bg-black/10 transition" data-audience="custom">Custom Segment</button>
+                </div>
+                <p class="text-black/45 text-xs mt-2.5"><i class="fa-solid fa-users mr-1"></i> ≈ 8,940 recipients</p>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-3 pt-2 border-t border-black/5 mt-2">
+                <button class="inline-flex items-center gap-2 bg-primary-dark text-white font-semibold text-sm px-6 py-2.5 rounded-full hover:bg-ink transition">
+                  <i class="fa-solid fa-paper-plane text-xs"></i> Send Now
+                </button>
+                <button class="inline-flex items-center gap-2 border border-black/10 font-semibold text-sm px-6 py-2.5 rounded-full hover:bg-black/5 transition">
+                  <i class="fa-regular fa-clock text-xs"></i> Schedule
+                </button>
+              </div>
+            </div>
+
+            <!-- Email builder -->
+            <div id="builder-panel-email" class="builder-panel space-y-5 hidden">
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="emailSubject">Subject Line</label>
+                <input id="emailSubject" type="text" value="New Arrivals: The Milano Collection has landed" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="emailBody">Message Body</label>
+                <div class="flex items-center gap-1 border border-black/10 border-b-0 rounded-t-xl p-1.5 bg-black/[0.02]">
+                  <button type="button" aria-label="Bold" class="w-8 h-8 rounded-lg hover:bg-black/5 grid place-items-center transition"><i class="fa-solid fa-bold text-xs"></i></button>
+                  <button type="button" aria-label="Italic" class="w-8 h-8 rounded-lg hover:bg-black/5 grid place-items-center transition"><i class="fa-solid fa-italic text-xs"></i></button>
+                  <span class="w-px h-5 bg-black/10 mx-1"></span>
+                  <button type="button" aria-label="Bullet list" class="w-8 h-8 rounded-lg hover:bg-black/5 grid place-items-center transition"><i class="fa-solid fa-list-ul text-xs"></i></button>
+                  <span class="w-px h-5 bg-black/10 mx-1"></span>
+                  <button type="button" aria-label="Insert link" class="w-8 h-8 rounded-lg hover:bg-black/5 grid place-items-center transition"><i class="fa-solid fa-link text-xs"></i></button>
+                  <button type="button" aria-label="Insert image" class="w-8 h-8 rounded-lg hover:bg-black/5 grid place-items-center transition"><i class="fa-regular fa-image text-xs"></i></button>
+                </div>
+                <textarea id="emailBody" rows="6" class="w-full px-4 py-3 rounded-b-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition resize-none">Hi there — the Milano Collection is finally here. Crafted from full-grain Italian leather, each piece is limited to 200 units worldwide. Shop the collection before it's gone.</textarea>
+              </div>
+
+              <div>
+                <p class="block text-sm font-medium mb-1.5">Audience</p>
+                <div class="audience-group flex flex-wrap gap-2">
+                  <button type="button" class="audience-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-black/5 text-black/60 hover:bg-black/10 transition" data-audience="all">All Customers</button>
+                  <button type="button" class="audience-pill active-audience-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-ink text-white transition" data-audience="vip">VIP Customers</button>
+                  <button type="button" class="audience-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-black/5 text-black/60 hover:bg-black/10 transition" data-audience="recent">Recent Purchasers</button>
+                  <button type="button" class="audience-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-black/5 text-black/60 hover:bg-black/10 transition" data-audience="cart">Abandoned Cart</button>
+                  <button type="button" class="audience-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-black/5 text-black/60 hover:bg-black/10 transition" data-audience="custom">Custom Segment</button>
+                </div>
+                <p class="text-black/45 text-xs mt-2.5"><i class="fa-solid fa-users mr-1"></i> ≈ 2,140 recipients</p>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-3 pt-2 border-t border-black/5 mt-2">
+                <button class="inline-flex items-center gap-2 bg-primary-dark text-white font-semibold text-sm px-6 py-2.5 rounded-full hover:bg-ink transition">
+                  <i class="fa-solid fa-paper-plane text-xs"></i> Send Now
+                </button>
+                <button class="inline-flex items-center gap-2 border border-black/10 font-semibold text-sm px-6 py-2.5 rounded-full hover:bg-black/5 transition">
+                  <i class="fa-regular fa-clock text-xs"></i> Schedule
+                </button>
+              </div>
+            </div>
+
+            <!-- SMS builder -->
+            <div id="builder-panel-sms" class="builder-panel space-y-5 hidden">
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="smsTitle">Internal Campaign Name</label>
+                <input id="smsTitle" type="text" value="Weekend Cart Reminder" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="smsBody">Message Body</label>
+                <textarea id="smsBody" rows="3" maxlength="160" class="w-full px-4 py-3 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition resize-none">Rinmora: Items are still in your cart! Complete your order today and get free shipping. Shop now: rinmora.com/cart</textarea>
+                <p class="text-black/40 text-xs mt-1.5">118 / 160 characters</p>
+              </div>
+
+              <div>
+                <p class="block text-sm font-medium mb-1.5">Audience</p>
+                <div class="audience-group flex flex-wrap gap-2">
+                  <button type="button" class="audience-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-black/5 text-black/60 hover:bg-black/10 transition" data-audience="all">All Customers</button>
+                  <button type="button" class="audience-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-black/5 text-black/60 hover:bg-black/10 transition" data-audience="vip">VIP Customers</button>
+                  <button type="button" class="audience-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-black/5 text-black/60 hover:bg-black/10 transition" data-audience="recent">Recent Purchasers</button>
+                  <button type="button" class="audience-pill active-audience-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-ink text-white transition" data-audience="cart">Abandoned Cart</button>
+                  <button type="button" class="audience-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-black/5 text-black/60 hover:bg-black/10 transition" data-audience="custom">Custom Segment</button>
+                </div>
+                <p class="text-black/45 text-xs mt-2.5"><i class="fa-solid fa-users mr-1"></i> ≈ 1,204 recipients</p>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-3 pt-2 border-t border-black/5 mt-2">
+                <button class="inline-flex items-center gap-2 bg-primary-dark text-white font-semibold text-sm px-6 py-2.5 rounded-full hover:bg-ink transition">
+                  <i class="fa-solid fa-paper-plane text-xs"></i> Send Now
+                </button>
+                <button class="inline-flex items-center gap-2 border border-black/10 font-semibold text-sm px-6 py-2.5 rounded-full hover:bg-black/5 transition">
+                  <i class="fa-regular fa-clock text-xs"></i> Schedule
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- History table -->
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6 overflow-x-auto">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+              <h2 class="font-bold text-sm">Campaign History</h2>
+              <div class="flex items-center gap-2">
+                <div class="relative">
+                  <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-black/30 text-xs"></i>
+                  <input type="text" placeholder="Search campaigns..." class="pl-9 pr-4 py-2 rounded-full bg-black/[0.03] border border-transparent text-xs focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition w-40 md:w-56">
+                </div>
+                <button class="inline-flex items-center gap-2 border border-black/10 rounded-full px-3.5 py-2 text-xs font-semibold hover:bg-black/[0.03] transition">
+                  <i class="fa-solid fa-filter text-black/40 text-[10px]"></i> Filters
+                </button>
+              </div>
+            </div>
+            <table class="w-full text-sm min-w-[760px]">
+              <thead>
+                <tr class="text-left text-black/40 text-xs uppercase tracking-wide">
+                  <th class="pb-3 font-medium">Campaign</th>
+                  <th class="pb-3 font-medium">Channel</th>
+                  <th class="pb-3 font-medium">Audience</th>
+                  <th class="pb-3 font-medium">Sent</th>
+                  <th class="pb-3 font-medium">Status</th>
+                  <th class="pb-3 font-medium">Date</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-black/5">
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5 font-semibold">Summer Sale Launch</td>
+                  <td class="py-3.5"><span class="bg-info/10 text-info text-[11px] font-semibold px-2.5 py-1 rounded-full">Email</span></td>
+                  <td class="py-3.5 text-black/60">All Customers</td>
+                  <td class="py-3.5 text-black/60">12,480</td>
+                  <td class="py-3.5"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Sent</span></td>
+                  <td class="py-3.5 text-black/45">Jul 5, 2026</td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5 font-semibold">VIP Early Access</td>
+                  <td class="py-3.5"><span class="bg-primary/20 text-primary-dark text-[11px] font-semibold px-2.5 py-1 rounded-full">Push</span></td>
+                  <td class="py-3.5 text-black/60">VIP Customers</td>
+                  <td class="py-3.5 text-black/60">890</td>
+                  <td class="py-3.5"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Sent</span></td>
+                  <td class="py-3.5 text-black/45">Jul 3, 2026</td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5 font-semibold">Cart Reminder — Weekend</td>
+                  <td class="py-3.5"><span class="bg-warning/10 text-warning text-[11px] font-semibold px-2.5 py-1 rounded-full">SMS</span></td>
+                  <td class="py-3.5 text-black/60">Abandoned Cart</td>
+                  <td class="py-3.5 text-black/60">1,204</td>
+                  <td class="py-3.5"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Sent</span></td>
+                  <td class="py-3.5 text-black/45">Jul 1, 2026</td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5 font-semibold">New Arrivals: Milano Collection</td>
+                  <td class="py-3.5"><span class="bg-info/10 text-info text-[11px] font-semibold px-2.5 py-1 rounded-full">Email</span></td>
+                  <td class="py-3.5 text-black/60">Recent Purchasers</td>
+                  <td class="py-3.5 text-black/40">—</td>
+                  <td class="py-3.5"><span class="bg-warning/10 text-warning text-[11px] font-semibold px-2.5 py-1 rounded-full">Scheduled</span></td>
+                  <td class="py-3.5 text-black/45">Jul 12, 2026</td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5 font-semibold">Back to School Teaser</td>
+                  <td class="py-3.5"><span class="bg-primary/20 text-primary-dark text-[11px] font-semibold px-2.5 py-1 rounded-full">Push</span></td>
+                  <td class="py-3.5 text-black/60">Custom Segment</td>
+                  <td class="py-3.5 text-black/40">—</td>
+                  <td class="py-3.5"><span class="bg-black/5 text-black/50 text-[11px] font-semibold px-2.5 py-1 rounded-full">Draft</span></td>
+                  <td class="py-3.5 text-black/45">—</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="flex items-center justify-between mt-5 pt-4 border-t border-black/5 text-xs text-black/45">
+              <p>Showing 1–5 of 19</p>
+              <div class="flex items-center gap-1">
+                <button class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition" aria-label="Previous page"><i class="fa-solid fa-chevron-left text-[10px]"></i></button>
+                <button class="w-8 h-8 rounded-full grid place-items-center bg-ink text-white font-semibold">1</button>
+                <button class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition">2</button>
+                <button class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition">3</button>
+                <button class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition" aria-label="Next page"><i class="fa-solid fa-chevron-right text-[10px]"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Statistics row -->
+          <div class="grid sm:grid-cols-3 gap-3 md:gap-4">
+            <div class="hover-lift bg-white rounded-2xl shadow-card p-5">
+              <div class="flex items-center justify-between mb-3">
+                <span class="w-9 h-9 rounded-full bg-primary/20 grid place-items-center"><i class="fa-solid fa-truck-fast text-primary-dark text-xs"></i></span>
+                <span class="text-[11px] font-semibold text-success bg-success/10 px-2 py-1 rounded-full"><i class="fa-solid fa-arrow-up text-[9px] mr-0.5"></i>1.1%</span>
+              </div>
+              <p class="text-xl font-bold">98.4%</p>
+              <p class="text-black/45 text-xs mt-0.5">Delivery Rate</p>
+            </div>
+            <div class="hover-lift bg-white rounded-2xl shadow-card p-5">
+              <div class="flex items-center justify-between mb-3">
+                <span class="w-9 h-9 rounded-full bg-primary/20 grid place-items-center"><i class="fa-solid fa-envelope-open-text text-primary-dark text-xs"></i></span>
+                <span class="text-[11px] font-semibold text-success bg-success/10 px-2 py-1 rounded-full"><i class="fa-solid fa-arrow-up text-[9px] mr-0.5"></i>3.6%</span>
+              </div>
+              <p class="text-xl font-bold">42.7%</p>
+              <p class="text-black/45 text-xs mt-0.5">Open Rate</p>
+            </div>
+            <div class="hover-lift bg-white rounded-2xl shadow-card p-5">
+              <div class="flex items-center justify-between mb-3">
+                <span class="w-9 h-9 rounded-full bg-primary/20 grid place-items-center"><i class="fa-solid fa-arrow-pointer text-primary-dark text-xs"></i></span>
+                <span class="text-[11px] font-semibold text-danger bg-danger/10 px-2 py-1 rounded-full"><i class="fa-solid fa-arrow-down text-[9px] mr-0.5"></i>0.8%</span>
+              </div>
+              <p class="text-xl font-bold">11.3%</p>
+              <p class="text-black/45 text-xs mt-0.5">Click Rate</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- =========================================================
+             EMAIL LOGS PANEL
+        ========================================================== -->
+        <div id="panel-email-logs" class="tab-panel space-y-6 hidden">
+
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6 overflow-x-auto">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+              <h2 class="font-bold text-sm">Email Delivery Logs</h2>
+              <div class="flex items-center gap-2">
+                <div class="relative">
+                  <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-black/30 text-xs"></i>
+                  <input type="text" placeholder="Search recipient or subject..." class="pl-9 pr-4 py-2 rounded-full bg-black/[0.03] border border-transparent text-xs focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition w-48 md:w-64">
+                </div>
+                <button class="inline-flex items-center gap-2 border border-black/10 rounded-full px-3.5 py-2 text-xs font-semibold hover:bg-black/[0.03] transition">
+                  <i class="fa-regular fa-calendar text-black/40"></i> Last 30 Days
+                </button>
+              </div>
+            </div>
+
+            <div class="pill-group flex flex-wrap items-center gap-2 mb-5">
+              <button type="button" class="filter-pill active-filter-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-ink text-white transition" data-filter="all">All</button>
+              <button type="button" class="filter-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-black/5 text-black/60 hover:bg-black/10 transition" data-filter="delivered">Delivered</button>
+              <button type="button" class="filter-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-black/5 text-black/60 hover:bg-black/10 transition" data-filter="opened">Opened</button>
+              <button type="button" class="filter-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-black/5 text-black/60 hover:bg-black/10 transition" data-filter="bounced">Bounced</button>
+              <button type="button" class="filter-pill text-xs font-semibold px-3.5 py-2 rounded-full bg-black/5 text-black/60 hover:bg-black/10 transition" data-filter="failed">Failed</button>
+            </div>
+
+            <table class="w-full text-sm min-w-[860px]">
+              <thead>
+                <tr class="text-left text-black/40 text-xs uppercase tracking-wide">
+                  <th class="pb-3 font-medium">Recipient</th>
+                  <th class="pb-3 font-medium">Subject</th>
+                  <th class="pb-3 font-medium">Status</th>
+                  <th class="pb-3 font-medium">Date</th>
+                  <th class="pb-3 font-medium">Open Rate</th>
+                  <th class="pb-3 font-medium text-center">Delivery</th>
+                  <th class="pb-3 font-medium text-center">Preview</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-black/5">
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5">
+                    <div class="flex items-center gap-2.5">
+                      <img src="https://picsum.photos/seed/log-1/80/80" alt="" class="w-8 h-8 rounded-full object-cover">
+                      <div class="min-w-0">
+                        <p class="font-medium truncate">Sana Khan</p>
+                        <p class="text-black/40 text-xs truncate">sana.khan@gmail.com</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-3.5 text-black/70">Order Confirmation #RIN-20591</td>
+                  <td class="py-3.5"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Delivered</span></td>
+                  <td class="py-3.5 text-black/45">Jul 9, 9:14 AM</td>
+                  <td class="py-3.5 text-black/40">—</td>
+                  <td class="py-3.5 text-center"><i class="fa-solid fa-circle-check text-success"></i></td>
+                  <td class="py-3.5 text-center"><button aria-label="Preview email" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-regular fa-eye text-black/50 text-xs"></i></button></td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5">
+                    <div class="flex items-center gap-2.5">
+                      <img src="https://picsum.photos/seed/log-2/80/80" alt="" class="w-8 h-8 rounded-full object-cover">
+                      <div class="min-w-0">
+                        <p class="font-medium truncate">Amina Raza</p>
+                        <p class="text-black/40 text-xs truncate">amina.raza@outlook.com</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-3.5 text-black/70">Welcome to Rinmora</td>
+                  <td class="py-3.5"><span class="bg-info/10 text-info text-[11px] font-semibold px-2.5 py-1 rounded-full">Opened</span></td>
+                  <td class="py-3.5 text-black/45">Jul 9, 8:02 AM</td>
+                  <td class="py-3.5 text-black/60 font-medium">Opened 3x</td>
+                  <td class="py-3.5 text-center"><i class="fa-solid fa-circle-check text-success"></i></td>
+                  <td class="py-3.5 text-center"><button aria-label="Preview email" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-regular fa-eye text-black/50 text-xs"></i></button></td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5">
+                    <div class="flex items-center gap-2.5">
+                      <img src="https://picsum.photos/seed/log-3/80/80" alt="" class="w-8 h-8 rounded-full object-cover">
+                      <div class="min-w-0">
+                        <p class="font-medium truncate">Hira Malik</p>
+                        <p class="text-black/40 text-xs truncate">hira.malik@yahoo.com</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-3.5 text-black/70">Password Reset Request</td>
+                  <td class="py-3.5"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Delivered</span></td>
+                  <td class="py-3.5 text-black/45">Jul 8, 6:47 PM</td>
+                  <td class="py-3.5 text-black/40">—</td>
+                  <td class="py-3.5 text-center"><i class="fa-solid fa-circle-check text-success"></i></td>
+                  <td class="py-3.5 text-center"><button aria-label="Preview email" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-regular fa-eye text-black/50 text-xs"></i></button></td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5">
+                    <div class="flex items-center gap-2.5">
+                      <img src="https://picsum.photos/seed/log-4/80/80" alt="" class="w-8 h-8 rounded-full object-cover">
+                      <div class="min-w-0">
+                        <p class="font-medium truncate">Zoya Ahmed</p>
+                        <p class="text-black/40 text-xs truncate">zoya.ahmed@gmail.com</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-3.5 text-black/70">Abandoned Cart Reminder</td>
+                  <td class="py-3.5"><span class="bg-danger/10 text-danger text-[11px] font-semibold px-2.5 py-1 rounded-full">Bounced</span></td>
+                  <td class="py-3.5 text-black/45">Jul 8, 3:30 PM</td>
+                  <td class="py-3.5 text-black/40">—</td>
+                  <td class="py-3.5 text-center"><i class="fa-solid fa-circle-xmark text-danger"></i></td>
+                  <td class="py-3.5 text-center"><button aria-label="Preview email" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-regular fa-eye text-black/50 text-xs"></i></button></td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5">
+                    <div class="flex items-center gap-2.5">
+                      <img src="https://picsum.photos/seed/log-5/80/80" alt="" class="w-8 h-8 rounded-full object-cover">
+                      <div class="min-w-0">
+                        <p class="font-medium truncate">Noor Fatima</p>
+                        <p class="text-black/40 text-xs truncate">noor.fatima@icloud.com</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-3.5 text-black/70">Shipping Update</td>
+                  <td class="py-3.5"><span class="bg-info/10 text-info text-[11px] font-semibold px-2.5 py-1 rounded-full">Opened</span></td>
+                  <td class="py-3.5 text-black/45">Jul 7, 11:12 AM</td>
+                  <td class="py-3.5 text-black/60 font-medium">Opened 1x</td>
+                  <td class="py-3.5 text-center"><i class="fa-solid fa-circle-check text-success"></i></td>
+                  <td class="py-3.5 text-center"><button aria-label="Preview email" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-regular fa-eye text-black/50 text-xs"></i></button></td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5">
+                    <div class="flex items-center gap-2.5">
+                      <img src="https://picsum.photos/seed/log-6/80/80" alt="" class="w-8 h-8 rounded-full object-cover">
+                      <div class="min-w-0">
+                        <p class="font-medium truncate">Layla Hassan</p>
+                        <p class="text-black/40 text-xs truncate">layla.hassan@gmail.com</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-3.5 text-black/70">Newsletter — July Edition</td>
+                  <td class="py-3.5"><span class="bg-danger/10 text-danger text-[11px] font-semibold px-2.5 py-1 rounded-full">Failed</span></td>
+                  <td class="py-3.5 text-black/45">Jul 6, 9:00 AM</td>
+                  <td class="py-3.5 text-black/40">—</td>
+                  <td class="py-3.5 text-center"><i class="fa-solid fa-circle-xmark text-danger"></i></td>
+                  <td class="py-3.5 text-center"><button aria-label="Preview email" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-regular fa-eye text-black/50 text-xs"></i></button></td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5">
+                    <div class="flex items-center gap-2.5">
+                      <img src="https://picsum.photos/seed/log-7/80/80" alt="" class="w-8 h-8 rounded-full object-cover">
+                      <div class="min-w-0">
+                        <p class="font-medium truncate">Mariam Siddiqui</p>
+                        <p class="text-black/40 text-xs truncate">mariam.siddiqui@gmail.com</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-3.5 text-black/70">Review Request</td>
+                  <td class="py-3.5"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Delivered</span></td>
+                  <td class="py-3.5 text-black/45">Jul 5, 4:23 PM</td>
+                  <td class="py-3.5 text-black/40">—</td>
+                  <td class="py-3.5 text-center"><i class="fa-solid fa-circle-check text-success"></i></td>
+                  <td class="py-3.5 text-center"><button aria-label="Preview email" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-regular fa-eye text-black/50 text-xs"></i></button></td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5">
+                    <div class="flex items-center gap-2.5">
+                      <img src="https://picsum.photos/seed/log-8/80/80" alt="" class="w-8 h-8 rounded-full object-cover">
+                      <div class="min-w-0">
+                        <p class="font-medium truncate">Fatima Zahra</p>
+                        <p class="text-black/40 text-xs truncate">fatima.zahra@hotmail.com</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-3.5 text-black/70">Back in Stock Alert</td>
+                  <td class="py-3.5"><span class="bg-black/5 text-black/50 text-[11px] font-semibold px-2.5 py-1 rounded-full">Queued</span></td>
+                  <td class="py-3.5 text-black/45">Jul 9, 10:01 AM</td>
+                  <td class="py-3.5 text-black/40">—</td>
+                  <td class="py-3.5 text-center"><i class="fa-regular fa-clock text-black/30"></i></td>
+                  <td class="py-3.5 text-center"><button aria-label="Preview email" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-regular fa-eye text-black/50 text-xs"></i></button></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="flex items-center justify-between mt-5 pt-4 border-t border-black/5 text-xs text-black/45">
+              <p>Showing 1–8 of 3,286</p>
+              <div class="flex items-center gap-1">
+                <button class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition" aria-label="Previous page"><i class="fa-solid fa-chevron-left text-[10px]"></i></button>
+                <button class="w-8 h-8 rounded-full grid place-items-center bg-ink text-white font-semibold">1</button>
+                <button class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition">2</button>
+                <button class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition">3</button>
+                <button class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition" aria-label="Next page"><i class="fa-solid fa-chevron-right text-[10px]"></i></button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // Sidebar (mobile drawer + desktop collapse)
+  const sidebar = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+  const mobileSidebarBtn = document.getElementById('mobileSidebarBtn');
+  const collapseSidebarBtn = document.getElementById('collapseSidebarBtn');
+
+  function openMobileSidebar() {
+    sidebar.classList.remove('-translate-x-full');
+    sidebarOverlay.classList.remove('invisible', 'pointer-events-none');
+    requestAnimationFrame(() => sidebarOverlay.classList.add('bg-black/40'));
+  }
+  function closeMobileSidebar() {
+    sidebar.classList.add('-translate-x-full');
+    sidebarOverlay.classList.remove('bg-black/40');
+    sidebarOverlay.classList.add('pointer-events-none');
+    setTimeout(() => sidebarOverlay.classList.add('invisible'), 300);
+  }
+  mobileSidebarBtn.addEventListener('click', openMobileSidebar);
+  sidebarOverlay.addEventListener('click', closeMobileSidebar);
+
+  collapseSidebarBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('sidebar-collapsed');
+    sidebar.classList.toggle('w-72');
+    sidebar.classList.toggle('w-20');
+  });
+
+  document.querySelectorAll('.submenu-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const submenu = btn.nextElementSibling;
+      const chevron = btn.querySelector('.nav-chevron');
+      submenu.classList.toggle('hidden');
+      chevron.classList.toggle('rotate-180');
+    });
+  });
+
+  const dropdowns = [
+    ['quickActionsBtn', 'quickActionsMenu'],
+    ['notifBtn', 'notifMenu'],
+    ['msgBtn', 'msgMenu'],
+    ['profileBtn', 'profileMenu'],
+  ];
+  dropdowns.forEach(([btnId, menuId]) => {
+    const btn = document.getElementById(btnId);
+    const menu = document.getElementById(menuId);
+    if (!btn || !menu) return;
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = !menu.classList.contains('hidden');
+      dropdowns.forEach(([, mId]) => document.getElementById(mId)?.classList.add('hidden'));
+      menu.classList.toggle('hidden', isOpen);
+    });
+  });
+  document.addEventListener('click', () => {
+    dropdowns.forEach(([, mId]) => document.getElementById(mId)?.classList.add('hidden'));
+  });
+
+  document.getElementById('themeToggleBtn').addEventListener('click', function () {
+    const icon = this.querySelector('i');
+    icon.classList.toggle('fa-moon');
+    icon.classList.toggle('fa-sun');
+  });
+
+  // ==== PAGE-SPECIFIC SCRIPT BELOW ====
+
+  // Main section tabs (System / Customer Notifications / Email Logs)
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('active-tab', 'bg-primary/20', 'text-ink', 'font-semibold');
+        b.classList.add('text-black/60', 'font-medium');
+      });
+      btn.classList.add('active-tab', 'bg-primary/20', 'text-ink', 'font-semibold');
+      btn.classList.remove('text-black/60', 'font-medium');
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById('panel-' + btn.dataset.tab).classList.remove('hidden');
+    });
+  });
+
+  // Customer panel: Push / Email / SMS builder pill strip
+  document.querySelectorAll('.builder-tab').forEach(tab => {
+    tab.addEventListener('click', function () {
+      document.querySelectorAll('.builder-tab').forEach(t => {
+        t.classList.remove('active-builder-tab', 'bg-ink', 'text-white');
+        t.classList.add('text-black/50');
+      });
+      this.classList.add('active-builder-tab', 'bg-ink', 'text-white');
+      this.classList.remove('text-black/50');
+      document.querySelectorAll('.builder-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById('builder-panel-' + this.dataset.builder).classList.remove('hidden');
+    });
+  });
+
+  // Audience selector pills (scoped per builder panel, radio-style single select)
+  document.querySelectorAll('.audience-group').forEach(group => {
+    group.querySelectorAll('.audience-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        group.querySelectorAll('.audience-pill').forEach(p => {
+          p.classList.remove('active-audience-pill', 'bg-ink', 'text-white');
+          p.classList.add('bg-black/5', 'text-black/60');
+        });
+        pill.classList.add('active-audience-pill', 'bg-ink', 'text-white');
+        pill.classList.remove('bg-black/5', 'text-black/60');
+      });
+    });
+  });
+
+  // Filter pill groups (System timeline filters + Email Logs status filters)
+  document.querySelectorAll('.pill-group').forEach(group => {
+    group.querySelectorAll('.filter-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        group.querySelectorAll('.filter-pill').forEach(p => {
+          p.classList.remove('active-filter-pill', 'bg-ink', 'text-white');
+          p.classList.add('bg-black/5', 'text-black/60');
+        });
+        pill.classList.add('active-filter-pill', 'bg-ink', 'text-white');
+        pill.classList.remove('bg-black/5', 'text-black/60');
+      });
+    });
+  });
+</script>
+</body>
+</html>

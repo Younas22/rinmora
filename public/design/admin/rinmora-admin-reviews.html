@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reviews — Rinmora Admin</title>
+<meta name="description" content="Rinmora Admin — moderate and respond to customer reviews.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: '#CFBAA5', 'primary-dark': '#b89e84', ink: '#000000',
+          canvas: '#F8F8F8',
+          success: '#22C55E', warning: '#F59E0B', danger: '#EF4444', info: '#3B82F6',
+        },
+        fontFamily: { sans: ['Inter', 'sans-serif'] },
+        borderRadius: { '4xl': '2rem' },
+        boxShadow: { soft: '0 20px 60px -15px rgba(0,0,0,0.12)', card: '0 4px 24px -8px rgba(0,0,0,0.08)' },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Inter', sans-serif; }
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+  .sidebar-collapsed .nav-label,
+  .sidebar-collapsed .nav-section-label,
+  .sidebar-collapsed .sidebar-brand-text,
+  .sidebar-collapsed .nav-chevron { display: none; }
+  .sidebar-collapsed .submenu { display: none !important; }
+</style>
+</head>
+
+<body class="bg-canvas text-ink antialiased">
+
+<!-- =========================================================
+     TOPBAR
+========================================================== -->
+<header class="sticky top-0 z-40 bg-white border-b border-black/5">
+  <div class="flex items-center gap-3 h-16 px-4 md:px-6">
+    <button id="mobileSidebarBtn" aria-label="Open sidebar" class="lg:hidden w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition"><i class="fa-solid fa-bars"></i></button>
+    <button id="collapseSidebarBtn" aria-label="Collapse sidebar" class="hidden lg:grid w-9 h-9 place-items-center rounded-full hover:bg-black/5 transition"><i class="fa-solid fa-bars"></i></button>
+    <a href="rinmora-admin-dashboard.html" class="flex items-center gap-2 shrink-0">
+      <img src="../../logo-01.png" alt="Rinmora" class="h-7 w-auto">
+      <span class="hidden sm:inline text-[10px] font-semibold uppercase tracking-wider bg-ink text-white px-2 py-0.5 rounded-full">Admin</span>
+    </a>
+    <div class="flex-1 max-w-xl mx-auto hidden sm:block">
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-black/30 text-sm"></i>
+        <label for="globalSearch" class="sr-only">Global search</label>
+        <input id="globalSearch" type="text" placeholder="Search products, orders, customers..." class="w-full pl-11 pr-4 py-2.5 rounded-full bg-black/[0.03] border border-transparent text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition">
+      </div>
+    </div>
+    <div class="flex items-center gap-1 ml-auto sm:ml-0">
+      <button aria-label="Search" class="sm:hidden w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition"><i class="fa-solid fa-magnifying-glass text-sm"></i></button>
+      <div class="relative">
+        <button id="quickActionsBtn" class="hidden md:inline-flex items-center gap-2 bg-primary text-ink font-semibold text-xs uppercase tracking-wide px-4 py-2.5 rounded-full hover:bg-primary-dark transition"><i class="fa-solid fa-plus text-[10px]"></i> Quick Actions</button>
+        <div id="quickActionsMenu" class="hidden absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <a href="rinmora-admin-product-add.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-bag-shopping w-4 text-black/40"></i> New Product</a>
+          <a href="rinmora-admin-orders.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-receipt w-4 text-black/40"></i> New Order</a>
+          <a href="rinmora-admin-customers.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-user-plus w-4 text-black/40"></i> New Customer</a>
+        </div>
+      </div>
+      <div class="relative">
+        <button id="notifBtn" aria-label="Notifications" class="relative w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition"><i class="fa-regular fa-bell text-sm"></i><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-danger"></span></button>
+        <div id="notifMenu" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <p class="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black/40">Notifications</p>
+          <a href="#" class="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <span class="w-8 h-8 rounded-full bg-warning/15 grid place-items-center shrink-0"><i class="fa-solid fa-flag text-warning text-xs"></i></span>
+            <span class="text-sm"><span class="font-medium">Review reported</span><br><span class="text-black/45 text-xs">On Sofia Clutch — needs attention</span></span>
+          </a>
+        </div>
+      </div>
+      <div class="relative">
+        <button id="msgBtn" aria-label="Messages" class="relative w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition"><i class="fa-regular fa-envelope text-sm"></i><span class="absolute top-1 right-1.5 w-4 h-4 rounded-full bg-ink text-white text-[9px] font-bold grid place-items-center">2</span></button>
+        <div id="msgMenu" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <p class="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black/40">Messages</p>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <img src="https://picsum.photos/seed/admin-msg-1/60/60" alt="" class="w-8 h-8 rounded-full object-cover">
+            <span class="text-sm"><span class="font-medium">Sana K.</span><br><span class="text-black/45 text-xs">Question about order #RIN-20583</span></span>
+          </a>
+        </div>
+      </div>
+      <button id="themeToggleBtn" aria-label="Toggle theme" class="w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition"><i class="fa-regular fa-moon text-sm"></i></button>
+      <div class="relative pl-1">
+        <button id="profileBtn" class="flex items-center gap-2 pl-1.5 pr-2.5 py-1.5 rounded-full hover:bg-black/5 transition">
+          <img src="https://picsum.photos/seed/admin-avatar/80/80" alt="Admin" class="w-7 h-7 rounded-full object-cover">
+          <span class="hidden md:inline text-sm font-medium">Ayesha N.</span>
+          <i class="fa-solid fa-chevron-down text-[10px] text-black/40"></i>
+        </button>
+        <div id="profileMenu" class="hidden absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-regular fa-user w-4 text-black/40"></i> My Profile</a>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-gear w-4 text-black/40"></i> Settings</a>
+          <div class="border-t border-black/5 my-1"></div>
+          <a href="../rinmora-login-preview.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-danger hover:bg-danger/5 transition"><i class="fa-solid fa-right-from-bracket w-4"></i> Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="flex">
+  <div id="sidebarOverlay" class="fixed inset-0 bg-black/0 z-30 lg:hidden invisible pointer-events-none transition-colors duration-300"></div>
+
+  <aside id="sidebar" class="fixed lg:sticky top-16 left-0 z-30 h-[calc(100vh-4rem)] w-72 bg-white border-r border-black/5 -translate-x-full lg:translate-x-0 transition-all duration-300 ease-out overflow-y-auto shrink-0">
+    <nav class="p-4 space-y-1">
+      <p class="nav-section-label px-3 pt-2 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Main</p>
+
+      <a href="rinmora-admin-dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-gauge w-4 text-center"></i> <span class="nav-label">Dashboard</span>
+      </a>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-bag-shopping w-4 text-center"></i> <span class="nav-label">Products</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-products.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Products</a>
+          <a href="rinmora-admin-product-add.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Add Product</a>
+          <a href="rinmora-admin-product-categories.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Categories</a>
+          <a href="rinmora-admin-product-brands.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Brands &amp; Collections</a>
+          <a href="rinmora-admin-product-attributes.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Attributes</a>
+          <a href="rinmora-admin-reviews.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Reviews</a>
+          <a href="rinmora-admin-inventory.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Inventory</a>
+        </div>
+      </div>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-receipt w-4 text-center"></i> <span class="nav-label">Orders</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Orders</a>
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Pending</a>
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Shipped</a>
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Returned / Refunded</a>
+        </div>
+      </div>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-users w-4 text-center"></i> <span class="nav-label">Customers</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-customers.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Customers</a>
+          <a href="rinmora-admin-customer-addresses.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Addresses</a>
+          <a href="rinmora-admin-wishlist-reports.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Wishlist Reports</a>
+          <a href="rinmora-admin-reward-points.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Reward Points</a>
+        </div>
+      </div>
+
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-bullhorn w-4 text-center"></i> <span class="nav-label">Marketing</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Content &amp; Store</p>
+
+      <a href="rinmora-admin-cms-homepage-builder.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-file-lines w-4 text-center"></i> <span class="nav-label">CMS</span>
+      </a>
+      <a href="rinmora-admin-media-manager.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-images w-4 text-center"></i> <span class="nav-label">Media Manager</span>
+      </a>
+      <a href="rinmora-admin-reviews.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary/20 text-ink font-semibold text-sm">
+        <i class="fa-regular fa-star w-4 text-center"></i> <span class="nav-label">Reviews</span>
+      </a>
+      <a href="rinmora-admin-inventory.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-warehouse w-4 text-center"></i> <span class="nav-label">Inventory</span>
+      </a>
+      <a href="rinmora-admin-shipping.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-truck-fast w-4 text-center"></i> <span class="nav-label">Shipping</span>
+      </a>
+      <a href="rinmora-admin-payments.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-credit-card w-4 text-center"></i> <span class="nav-label">Payments</span>
+      </a>
+      <a href="rinmora-admin-users.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-user-shield w-4 text-center"></i> <span class="nav-label">Users &amp; Roles</span>
+      </a>
+      <a href="rinmora-admin-reports.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-chart-line w-4 text-center"></i> <span class="nav-label">Reports</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">System</p>
+
+      <a href="rinmora-admin-seo.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-magnifying-glass-chart w-4 text-center"></i> <span class="nav-label">SEO</span>
+      </a>
+      <a href="rinmora-admin-contact-support.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-headset w-4 text-center"></i> <span class="nav-label">Contact &amp; Support</span>
+      </a>
+      <a href="rinmora-admin-notifications.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-bell w-4 text-center"></i> <span class="nav-label">Notifications</span>
+      </a>
+      <a href="rinmora-admin-activity-logs.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-clock-rotate-left w-4 text-center"></i> <span class="nav-label">Activity Logs</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Account</p>
+
+      <a href="rinmora-admin-profile.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-user w-4 text-center"></i> <span class="nav-label">My Profile</span>
+      </a>
+      <a href="rinmora-admin-settings.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-gear w-4 text-center"></i> <span class="nav-label">Settings</span>
+      </a>
+      <a href="../rinmora-login-preview.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-right-from-bracket w-4 text-center"></i> <span class="nav-label">Logout</span>
+      </a>
+    </nav>
+  </aside>
+
+
+  <!-- =========================================================
+       MAIN CONTENT
+  ========================================================== -->
+  <main class="flex-1 min-w-0 px-4 md:px-6 py-6">
+
+    <nav aria-label="Breadcrumb" class="text-xs text-black/40 mb-2">
+      <span>Admin</span> <i class="fa-solid fa-chevron-right text-[8px] mx-1.5"></i> <span class="text-ink font-medium">Reviews</span>
+    </nav>
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+      <div>
+        <h1 class="text-xl md:text-2xl font-bold">Reviews</h1>
+        <p class="text-black/45 text-sm mt-1">Moderate, respond to, and analyze customer reviews.</p>
+      </div>
+      <button class="inline-flex items-center gap-2 bg-white border border-black/10 rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-black/[0.03] transition">
+        <i class="fa-solid fa-file-export text-black/40"></i> Export
+      </button>
+    </div>
+
+    <!-- Stats + Distribution -->
+    <div class="grid lg:grid-cols-3 gap-4 mb-6">
+      <div class="grid grid-cols-2 gap-3 md:gap-4 lg:col-span-2">
+        <div class="bg-white rounded-2xl shadow-card p-5">
+          <p class="text-black/45 text-xs mb-1">Average Rating</p>
+          <p class="text-xl font-bold">4.7 <span class="text-primary-dark text-sm">★★★★★</span></p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-card p-5">
+          <p class="text-black/45 text-xs mb-1">Total Reviews</p>
+          <p id="statTotal" class="text-xl font-bold">2,148</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-card p-5">
+          <p class="text-black/45 text-xs mb-1">Pending</p>
+          <p id="statPending" class="text-xl font-bold text-warning">14</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-card p-5">
+          <p class="text-black/45 text-xs mb-1">Reported</p>
+          <p id="statReported" class="text-xl font-bold text-danger">3</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-3xl shadow-card p-5">
+        <h2 class="font-bold text-sm mb-4">Review Distribution</h2>
+        <div class="space-y-2.5">
+          <div class="flex items-center gap-2 text-xs">
+            <span class="w-8 text-black/50">5 ★</span>
+            <div class="flex-1 h-2 rounded-full bg-black/5 overflow-hidden"><div class="h-full bg-primary-dark rounded-full" style="width:68%"></div></div>
+            <span class="w-8 text-right text-black/50">68%</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <span class="w-8 text-black/50">4 ★</span>
+            <div class="flex-1 h-2 rounded-full bg-black/5 overflow-hidden"><div class="h-full bg-primary-dark rounded-full" style="width:21%"></div></div>
+            <span class="w-8 text-right text-black/50">21%</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <span class="w-8 text-black/50">3 ★</span>
+            <div class="flex-1 h-2 rounded-full bg-black/5 overflow-hidden"><div class="h-full bg-primary-dark rounded-full" style="width:7%"></div></div>
+            <span class="w-8 text-right text-black/50">7%</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <span class="w-8 text-black/50">2 ★</span>
+            <div class="flex-1 h-2 rounded-full bg-black/5 overflow-hidden"><div class="h-full bg-primary-dark rounded-full" style="width:3%"></div></div>
+            <span class="w-8 text-right text-black/50">3%</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <span class="w-8 text-black/50">1 ★</span>
+            <div class="flex-1 h-2 rounded-full bg-black/5 overflow-hidden"><div class="h-full bg-primary-dark rounded-full" style="width:1%"></div></div>
+            <span class="w-8 text-right text-black/50">1%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div id="reviewTabs" class="flex gap-2 overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0 mb-5">
+      <button data-tab="all" class="review-tab-btn shrink-0 text-xs font-semibold px-4 py-2 rounded-full bg-ink text-white transition">Product Reviews <span id="tabCountAll" class="opacity-60">(2,148)</span></button>
+      <button data-tab="pending" class="review-tab-btn shrink-0 text-xs font-medium px-4 py-2 rounded-full bg-white border border-black/10 hover:bg-black/5 transition">Pending <span id="tabCountPending" class="text-warning">(14)</span></button>
+      <button data-tab="approved" class="review-tab-btn shrink-0 text-xs font-medium px-4 py-2 rounded-full bg-white border border-black/10 hover:bg-black/5 transition">Approved <span id="tabCountApproved" class="text-black/40">(2,131)</span></button>
+      <button data-tab="reported" class="review-tab-btn shrink-0 text-xs font-medium px-4 py-2 rounded-full bg-white border border-black/10 hover:bg-black/5 transition">Reported <span id="tabCountReported" class="text-danger">(3)</span></button>
+    </div>
+
+    <!-- Filters + Table -->
+    <div class="bg-white rounded-3xl shadow-card overflow-hidden">
+      <div class="p-4 md:p-5 border-b border-black/5 flex flex-wrap items-center gap-3">
+        <div class="relative flex-1 min-w-[200px]">
+          <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-black/30 text-xs"></i>
+          <label for="reviewSearch" class="sr-only">Search reviews</label>
+          <input id="reviewSearch" type="text" placeholder="Search by product or customer..." class="w-full pl-10 pr-4 py-2.5 rounded-full bg-black/[0.03] text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition">
+        </div>
+        <div class="relative">
+          <select id="ratingFilter" aria-label="Filter by rating" class="appearance-none border border-black/10 rounded-full pl-4 pr-8 py-2.5 text-xs font-medium bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary">
+            <option value="all">All Ratings</option>
+            <option value="5">5 Stars</option>
+            <option value="4">4 Stars</option>
+            <option value="3-">3 Stars &amp; Below</option>
+          </select>
+          <i class="fa-solid fa-chevron-down text-[9px] absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-black/40"></i>
+        </div>
+        <div class="relative">
+          <select id="productFilter" aria-label="Filter by product" class="appearance-none border border-black/10 rounded-full pl-4 pr-8 py-2.5 text-xs font-medium bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary">
+            <option value="all">All Products</option>
+            <option>Milano Leather Tote</option>
+            <option>Sofia Clutch</option>
+            <option>Grace Everyday Tote</option>
+          </select>
+          <i class="fa-solid fa-chevron-down text-[9px] absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-black/40"></i>
+        </div>
+      </div>
+
+      <div id="bulkActionsBar" class="hidden items-center justify-between gap-3 px-4 md:px-5 py-3 bg-ink text-white text-sm">
+        <span><span id="bulkSelectedCount">0</span> selected</span>
+        <div class="flex items-center gap-2">
+          <button id="bulkApproveBtn" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-success/80 hover:bg-success transition">Approve</button>
+          <button id="bulkRejectBtn" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-danger hover:bg-danger/85 transition">Reject</button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm min-w-[860px]">
+          <thead>
+            <tr class="text-left text-black/40 text-xs uppercase tracking-wide border-b border-black/5">
+              <th class="py-3 pl-5 w-10"><input type="checkbox" id="selectAllReviews" class="w-4 h-4 rounded"></th>
+              <th class="py-3 font-medium">Customer</th>
+              <th class="py-3 font-medium">Product</th>
+              <th class="py-3 font-medium">Rating</th>
+              <th class="py-3 font-medium">Review</th>
+              <th class="py-3 font-medium">Date</th>
+              <th class="py-3 font-medium">Status</th>
+              <th class="py-3 pr-5 font-medium text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-black/5">
+
+            <tr class="review-row hover:bg-black/[0.02] transition" data-status="approved" data-rating="5" data-product="Milano Leather Tote" data-customer="Sana K.">
+              <td class="py-3 pl-5"><input type="checkbox" class="review-row-checkbox w-4 h-4 rounded"></td>
+              <td class="py-3">
+                <div class="flex items-center gap-2.5">
+                  <img src="https://picsum.photos/seed/rev-cust-1/60/60" alt="" class="w-8 h-8 rounded-full object-cover">
+                  <span class="font-medium">Sana K.</span>
+                </div>
+              </td>
+              <td class="py-3">
+                <div class="flex items-center gap-2.5">
+                  <img src="https://picsum.photos/seed/rev-prod-1/60/60" alt="" class="w-8 h-8 rounded-lg object-cover">
+                  <span class="text-black/60">Milano Leather Tote</span>
+                </div>
+              </td>
+              <td class="py-3 text-primary-dark">★★★★★</td>
+              <td class="py-3 text-black/60 max-w-[220px] truncate">"Exceeded my expectations, gorgeous stitching."</td>
+              <td class="py-3 text-black/50 text-xs">Jul 07, 2026</td>
+              <td class="py-3 status-cell"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Approved</span></td>
+              <td class="py-3 pr-5 text-right">
+                <div class="flex items-center justify-end gap-1 actions-cell">
+                  <button class="reply-toggle-btn w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition" aria-label="Reply"><i class="fa-regular fa-message text-black/40"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr class="reply-row hidden">
+              <td colspan="8" class="px-5 pb-4">
+                <div class="reply-box bg-canvas rounded-xl p-3 flex items-center gap-2">
+                  <input type="text" placeholder="Write a reply..." class="reply-input flex-1 px-3 py-2 rounded-lg border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                  <button class="reply-send-btn bg-ink text-white text-xs font-semibold px-4 py-2 rounded-lg hover:bg-black/80 transition">Send</button>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="review-row hover:bg-black/[0.02] transition" data-status="pending" data-rating="4" data-product="Sofia Clutch" data-customer="Hira M.">
+              <td class="py-3 pl-5"><input type="checkbox" class="review-row-checkbox w-4 h-4 rounded"></td>
+              <td class="py-3">
+                <div class="flex items-center gap-2.5">
+                  <img src="https://picsum.photos/seed/rev-cust-2/60/60" alt="" class="w-8 h-8 rounded-full object-cover">
+                  <span class="font-medium">Hira M.</span>
+                </div>
+              </td>
+              <td class="py-3">
+                <div class="flex items-center gap-2.5">
+                  <img src="https://picsum.photos/seed/rev-prod-2/60/60" alt="" class="w-8 h-8 rounded-lg object-cover">
+                  <span class="text-black/60">Sofia Clutch</span>
+                </div>
+              </td>
+              <td class="py-3 text-primary-dark">★★★★<span class="text-black/20">★</span></td>
+              <td class="py-3 text-black/60 max-w-[220px] truncate">"Lovely bag, slightly smaller than expected."</td>
+              <td class="py-3 text-black/50 text-xs">Jul 05, 2026</td>
+              <td class="py-3 status-cell"><span class="bg-warning/10 text-warning text-[11px] font-semibold px-2.5 py-1 rounded-full">Pending</span></td>
+              <td class="py-3 pr-5 text-right">
+                <div class="flex items-center justify-end gap-1 actions-cell">
+                  <button aria-label="Approve" class="approve-btn w-8 h-8 rounded-full grid place-items-center hover:bg-success/10 transition"><i class="fa-solid fa-check text-success"></i></button>
+                  <button aria-label="Reject" class="reject-btn w-8 h-8 rounded-full grid place-items-center hover:bg-danger/10 transition"><i class="fa-solid fa-xmark text-danger"></i></button>
+                  <button class="reply-toggle-btn w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition" aria-label="Reply"><i class="fa-regular fa-message text-black/40"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr class="reply-row hidden">
+              <td colspan="8" class="px-5 pb-4">
+                <div class="reply-box bg-canvas rounded-xl p-3 flex items-center gap-2">
+                  <input type="text" placeholder="Write a reply..." class="reply-input flex-1 px-3 py-2 rounded-lg border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                  <button class="reply-send-btn bg-ink text-white text-xs font-semibold px-4 py-2 rounded-lg hover:bg-black/80 transition">Send</button>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="review-row hover:bg-black/[0.02] transition" data-status="reported" data-rating="2" data-product="Grace Everyday Tote" data-customer="Amina R." data-report-reason="Flagged by 3 users for inappropriate language directed at another customer in the comments.">
+              <td class="py-3 pl-5"><input type="checkbox" class="review-row-checkbox w-4 h-4 rounded"></td>
+              <td class="py-3">
+                <div class="flex items-center gap-2.5">
+                  <img src="https://picsum.photos/seed/rev-cust-3/60/60" alt="" class="w-8 h-8 rounded-full object-cover">
+                  <span class="font-medium">Amina R.</span>
+                </div>
+              </td>
+              <td class="py-3">
+                <div class="flex items-center gap-2.5">
+                  <img src="https://picsum.photos/seed/rev-prod-3/60/60" alt="" class="w-8 h-8 rounded-lg object-cover">
+                  <span class="text-black/60">Grace Everyday Tote</span>
+                </div>
+              </td>
+              <td class="py-3 text-primary-dark">★★<span class="text-black/20">★★★</span></td>
+              <td class="py-3 text-black/60 max-w-[220px] truncate">"This review contains inappropriate language..."</td>
+              <td class="py-3 text-black/50 text-xs">Jul 04, 2026</td>
+              <td class="py-3 status-cell"><span class="bg-danger/10 text-danger text-[11px] font-semibold px-2.5 py-1 rounded-full">Reported</span></td>
+              <td class="py-3 pr-5 text-right">
+                <div class="flex items-center justify-end gap-1 actions-cell">
+                  <button aria-label="View report details" class="report-view-btn w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-regular fa-flag text-danger"></i></button>
+                  <button aria-label="Approve" class="approve-btn w-8 h-8 rounded-full grid place-items-center hover:bg-success/10 transition"><i class="fa-solid fa-check text-success"></i></button>
+                  <button aria-label="Reject" class="reject-btn w-8 h-8 rounded-full grid place-items-center hover:bg-danger/10 transition"><i class="fa-solid fa-xmark text-danger"></i></button>
+                </div>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-4 px-4 md:px-5 py-4 border-t border-black/5">
+        <p class="text-xs text-black/45">Showing 1–3 of 2,148 reviews</p>
+        <nav aria-label="Pagination" class="flex items-center gap-1.5">
+          <button aria-label="Previous page" class="w-8 h-8 rounded-full border border-black/10 grid place-items-center hover:bg-black/5 transition text-xs"><i class="fa-solid fa-chevron-left"></i></button>
+          <button aria-current="page" class="w-8 h-8 rounded-full bg-ink text-white grid place-items-center text-xs font-semibold">1</button>
+          <button class="w-8 h-8 rounded-full border border-black/10 grid place-items-center hover:bg-black/5 transition text-xs font-medium">2</button>
+          <button aria-label="Next page" class="w-8 h-8 rounded-full border border-black/10 grid place-items-center hover:bg-black/5 transition text-xs"><i class="fa-solid fa-chevron-right"></i></button>
+        </nav>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- =========================================================
+     REPORT DETAILS MODAL
+========================================================== -->
+<div id="reportModalOverlay" class="hidden fixed inset-0 z-50 bg-black/40 items-center justify-center p-4">
+  <div class="bg-white rounded-3xl shadow-soft w-full max-w-sm">
+    <div class="flex items-center justify-between px-5 pt-5">
+      <h2 class="font-bold text-base">Report Details</h2>
+      <button id="reportModalCloseBtn" aria-label="Close" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-xmark text-black/50"></i></button>
+    </div>
+    <div class="px-5 py-4">
+      <div class="flex items-center gap-2.5 mb-3">
+        <span class="w-9 h-9 rounded-full bg-danger/10 grid place-items-center shrink-0"><i class="fa-regular fa-flag text-danger text-sm"></i></span>
+        <div>
+          <p id="reportModalCustomer" class="text-sm font-semibold">Amina R.</p>
+          <p id="reportModalProduct" class="text-black/45 text-xs">Grace Everyday Tote</p>
+        </div>
+      </div>
+      <p id="reportModalReason" class="text-black/60 text-sm bg-canvas rounded-xl p-3"></p>
+    </div>
+    <div class="flex items-center gap-2 px-5 pb-5 pt-1">
+      <button id="reportDismissBtn" class="flex-1 border border-black/10 rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-black/[0.03] transition">Dismiss Report</button>
+      <button id="reportRemoveBtn" class="flex-1 bg-danger text-white rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-danger/85 transition">Remove Review</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="reviewToast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-ink text-white text-xs font-semibold px-4 py-2.5 rounded-full shadow-soft"></div>
+
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+  const mobileSidebarBtn = document.getElementById('mobileSidebarBtn');
+  const collapseSidebarBtn = document.getElementById('collapseSidebarBtn');
+  function openMobileSidebar() {
+    sidebar.classList.remove('-translate-x-full');
+    sidebarOverlay.classList.remove('invisible', 'pointer-events-none');
+    requestAnimationFrame(() => sidebarOverlay.classList.add('bg-black/40'));
+  }
+  function closeMobileSidebar() {
+    sidebar.classList.add('-translate-x-full');
+    sidebarOverlay.classList.remove('bg-black/40');
+    sidebarOverlay.classList.add('pointer-events-none');
+    setTimeout(() => sidebarOverlay.classList.add('invisible'), 300);
+  }
+  mobileSidebarBtn.addEventListener('click', openMobileSidebar);
+  sidebarOverlay.addEventListener('click', closeMobileSidebar);
+  collapseSidebarBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('sidebar-collapsed');
+    sidebar.classList.toggle('w-72');
+    sidebar.classList.toggle('w-20');
+  });
+
+  const dropdowns = [['quickActionsBtn','quickActionsMenu'],['notifBtn','notifMenu'],['msgBtn','msgMenu'],['profileBtn','profileMenu']];
+  dropdowns.forEach(([btnId, menuId]) => {
+    const btn = document.getElementById(btnId);
+    const menu = document.getElementById(menuId);
+    if (!btn || !menu) return;
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = !menu.classList.contains('hidden');
+      dropdowns.forEach(([, mId]) => document.getElementById(mId)?.classList.add('hidden'));
+      menu.classList.toggle('hidden', isOpen);
+    });
+  });
+  document.addEventListener('click', () => dropdowns.forEach(([, mId]) => document.getElementById(mId)?.classList.add('hidden')));
+
+  document.getElementById('themeToggleBtn').addEventListener('click', function () {
+    const icon = this.querySelector('i');
+    icon.classList.toggle('fa-moon');
+    icon.classList.toggle('fa-sun');
+  });
+
+  document.querySelectorAll('.reply-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const replyRow = this.closest('tr').nextElementSibling;
+      replyRow.classList.toggle('hidden');
+      const input = replyRow.querySelector('.reply-input');
+      if (input) input.focus();
+    });
+  });
+
+  document.querySelectorAll('.reply-send-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const box = this.closest('.reply-box');
+      const input = box.querySelector('.reply-input');
+      const text = input.value.trim();
+      if (!text) return;
+      box.innerHTML = `
+        <span class="w-7 h-7 rounded-full bg-success/10 grid place-items-center shrink-0"><i class="fa-solid fa-check text-success text-[10px]"></i></span>
+        <span class="text-black/70 text-sm flex-1"><span class="font-semibold">Reply sent:</span> "${text}"</span>
+      `;
+      const replyRow = box.closest('tr');
+      replyRow.classList.add('hidden');
+      showToast('Reply sent to customer');
+    });
+  });
+
+  const selectAllReviews = document.getElementById('selectAllReviews');
+  const rowCheckboxes = document.querySelectorAll('.review-row-checkbox');
+  const bulkActionsBar = document.getElementById('bulkActionsBar');
+  const bulkSelectedCount = document.getElementById('bulkSelectedCount');
+  function updateBulkBar() {
+    const checked = document.querySelectorAll('.review-row-checkbox:checked').length;
+    bulkSelectedCount.textContent = checked;
+    bulkActionsBar.classList.toggle('hidden', checked === 0);
+    bulkActionsBar.classList.toggle('flex', checked > 0);
+    selectAllReviews.checked = checked === rowCheckboxes.length;
+  }
+  selectAllReviews.addEventListener('change', function () {
+    rowCheckboxes.forEach(cb => cb.checked = this.checked);
+    updateBulkBar();
+  });
+  rowCheckboxes.forEach(cb => cb.addEventListener('change', updateBulkBar));
+
+  // =========================================================
+  // TOAST
+  // =========================================================
+  function showToast(message) {
+    const toast = document.getElementById('reviewToast');
+    toast.textContent = message;
+    toast.classList.remove('hidden');
+    clearTimeout(toast._hideTimer);
+    toast._hideTimer = setTimeout(() => toast.classList.add('hidden'), 1800);
+  }
+
+  // =========================================================
+  // LIVE COUNTS (stat cards + tab labels)
+  // =========================================================
+  function parseCount(text) { return parseInt(text.replace(/,/g, ''), 10) || 0; }
+  function formatCount(n) { return n.toLocaleString('en-US'); }
+
+  const counts = {
+    total: parseCount(document.getElementById('statTotal').textContent),
+    pending: parseCount(document.getElementById('statPending').textContent),
+    reported: parseCount(document.getElementById('statReported').textContent),
+    approved: parseCount(document.getElementById('tabCountApproved').textContent.replace(/[()]/g, '')),
+  };
+
+  function renderCounts() {
+    document.getElementById('statTotal').textContent = formatCount(counts.total);
+    document.getElementById('statPending').textContent = formatCount(counts.pending);
+    document.getElementById('statReported').textContent = formatCount(counts.reported);
+    document.getElementById('tabCountAll').textContent = '(' + formatCount(counts.total) + ')';
+    document.getElementById('tabCountPending').textContent = '(' + formatCount(counts.pending) + ')';
+    document.getElementById('tabCountApproved').textContent = '(' + formatCount(counts.approved) + ')';
+    document.getElementById('tabCountReported').textContent = '(' + formatCount(counts.reported) + ')';
+  }
+
+  // =========================================================
+  // ROW STATUS TRANSITIONS
+  // =========================================================
+  const statusBadges = {
+    approved: '<span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Approved</span>',
+    pending: '<span class="bg-warning/10 text-warning text-[11px] font-semibold px-2.5 py-1 rounded-full">Pending</span>',
+    reported: '<span class="bg-danger/10 text-danger text-[11px] font-semibold px-2.5 py-1 rounded-full">Reported</span>',
+    rejected: '<span class="bg-black/5 text-black/45 text-[11px] font-semibold px-2.5 py-1 rounded-full">Rejected</span>',
+  };
+
+  function setRowStatus(row, newStatus) {
+    const oldStatus = row.dataset.status;
+    if (oldStatus === newStatus) return;
+
+    if (oldStatus === 'pending') counts.pending--;
+    if (oldStatus === 'reported') counts.reported--;
+    if (oldStatus === 'approved') counts.approved--;
+    if (newStatus === 'pending') counts.pending++;
+    if (newStatus === 'reported') counts.reported++;
+    if (newStatus === 'approved') counts.approved++;
+
+    row.dataset.status = newStatus;
+    row.querySelector('.status-cell').innerHTML = statusBadges[newStatus];
+
+    const actionsCell = row.querySelector('.actions-cell');
+    const replyBtn = actionsCell.querySelector('.reply-toggle-btn');
+    actionsCell.innerHTML = '';
+    if (newStatus === 'pending' || newStatus === 'reported') {
+      const approveBtn = document.createElement('button');
+      approveBtn.className = 'approve-btn w-8 h-8 rounded-full grid place-items-center hover:bg-success/10 transition';
+      approveBtn.setAttribute('aria-label', 'Approve');
+      approveBtn.innerHTML = '<i class="fa-solid fa-check text-success"></i>';
+      approveBtn.addEventListener('click', () => { setRowStatus(row, 'approved'); showToast('Review approved'); renderCounts(); applyFilters(); });
+      actionsCell.appendChild(approveBtn);
+
+      const rejectBtn = document.createElement('button');
+      rejectBtn.className = 'reject-btn w-8 h-8 rounded-full grid place-items-center hover:bg-danger/10 transition';
+      rejectBtn.setAttribute('aria-label', 'Reject');
+      rejectBtn.innerHTML = '<i class="fa-solid fa-xmark text-danger"></i>';
+      rejectBtn.addEventListener('click', () => { setRowStatus(row, 'rejected'); showToast('Review rejected'); renderCounts(); applyFilters(); });
+      actionsCell.appendChild(rejectBtn);
+    }
+    if (replyBtn) actionsCell.appendChild(replyBtn);
+  }
+
+  document.querySelectorAll('.approve-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const row = btn.closest('tr');
+      setRowStatus(row, 'approved');
+      renderCounts();
+      applyFilters();
+      showToast('Review approved');
+    });
+  });
+  document.querySelectorAll('.reject-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const row = btn.closest('tr');
+      setRowStatus(row, 'rejected');
+      renderCounts();
+      applyFilters();
+      showToast('Review rejected');
+    });
+  });
+
+  document.getElementById('bulkApproveBtn').addEventListener('click', () => {
+    let n = 0;
+    document.querySelectorAll('.review-row-checkbox:checked').forEach(cb => { setRowStatus(cb.closest('tr'), 'approved'); n++; });
+    renderCounts();
+    applyFilters();
+    showToast(n + (n === 1 ? ' review approved' : ' reviews approved'));
+  });
+  document.getElementById('bulkRejectBtn').addEventListener('click', () => {
+    let n = 0;
+    document.querySelectorAll('.review-row-checkbox:checked').forEach(cb => { setRowStatus(cb.closest('tr'), 'rejected'); n++; });
+    renderCounts();
+    applyFilters();
+    showToast(n + (n === 1 ? ' review rejected' : ' reviews rejected'));
+  });
+
+  // =========================================================
+  // REPORT DETAILS MODAL
+  // =========================================================
+  const reportModalOverlay = document.getElementById('reportModalOverlay');
+  let reportModalRow = null;
+
+  function openReportModal(row) {
+    reportModalRow = row;
+    document.getElementById('reportModalCustomer').textContent = row.dataset.customer;
+    document.getElementById('reportModalProduct').textContent = row.dataset.product;
+    document.getElementById('reportModalReason').textContent = row.dataset.reportReason || 'No additional details provided.';
+    reportModalOverlay.classList.remove('hidden');
+    reportModalOverlay.classList.add('flex');
+  }
+  function closeReportModal() {
+    reportModalOverlay.classList.add('hidden');
+    reportModalOverlay.classList.remove('flex');
+    reportModalRow = null;
+  }
+
+  document.querySelectorAll('.report-view-btn').forEach(btn => {
+    btn.addEventListener('click', () => openReportModal(btn.closest('tr')));
+  });
+  document.getElementById('reportModalCloseBtn').addEventListener('click', closeReportModal);
+  reportModalOverlay.addEventListener('click', (e) => { if (e.target === reportModalOverlay) closeReportModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeReportModal(); });
+
+  document.getElementById('reportDismissBtn').addEventListener('click', () => {
+    if (!reportModalRow) return;
+    setRowStatus(reportModalRow, 'approved');
+    renderCounts();
+    applyFilters();
+    showToast('Report dismissed, review approved');
+    closeReportModal();
+  });
+  document.getElementById('reportRemoveBtn').addEventListener('click', () => {
+    if (!reportModalRow) return;
+    if (reportModalRow.dataset.status === 'reported') counts.reported--;
+    counts.total--;
+    renderCounts();
+    const replyRow = reportModalRow.nextElementSibling?.classList.contains('reply-row') ? reportModalRow.nextElementSibling : null;
+    reportModalRow.remove();
+    if (replyRow) replyRow.remove();
+    showToast('Review removed');
+    closeReportModal();
+  });
+
+  // =========================================================
+  // TABS + RATING/PRODUCT FILTERS + SEARCH
+  // =========================================================
+  const reviewSearch = document.getElementById('reviewSearch');
+  const ratingFilter = document.getElementById('ratingFilter');
+  const productFilter = document.getElementById('productFilter');
+  let activeTab = 'all';
+
+  function applyFilters() {
+    const query = reviewSearch.value.trim().toLowerCase();
+    const rating = ratingFilter.value;
+    const product = productFilter.value;
+
+    document.querySelectorAll('.review-row').forEach(row => {
+      const matchesTab = activeTab === 'all' || row.dataset.status === activeTab;
+      const r = parseInt(row.dataset.rating, 10);
+      const matchesRating = rating === 'all' || (rating === '3-' ? r <= 3 : r === parseInt(rating, 10));
+      const matchesProduct = product === 'all' || row.dataset.product === product;
+      const haystack = (row.dataset.customer + ' ' + row.dataset.product + ' ' + row.textContent).toLowerCase();
+      const matchesSearch = !query || haystack.includes(query);
+      const visible = matchesTab && matchesRating && matchesProduct && matchesSearch;
+
+      row.classList.toggle('hidden', !visible);
+      const replyRow = row.nextElementSibling;
+      if (replyRow && replyRow.classList.contains('reply-row') && !visible) {
+        replyRow.classList.add('hidden');
+      }
+    });
+  }
+
+  document.querySelectorAll('.review-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeTab = btn.dataset.tab;
+      document.querySelectorAll('.review-tab-btn').forEach(b => {
+        b.classList.remove('bg-ink', 'text-white', 'font-semibold');
+        b.classList.add('bg-white', 'border', 'border-black/10', 'font-medium');
+      });
+      btn.classList.add('bg-ink', 'text-white', 'font-semibold');
+      btn.classList.remove('bg-white', 'border', 'border-black/10', 'font-medium');
+      applyFilters();
+    });
+  });
+
+  ratingFilter.addEventListener('change', applyFilters);
+  productFilter.addEventListener('change', applyFilters);
+  reviewSearch.addEventListener('input', applyFilters);
+
+  renderCounts();
+</script>
+
+</body>
+</html>

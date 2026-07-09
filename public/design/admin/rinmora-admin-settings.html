@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — Rinmora Admin</title>
+<meta name="description" content="Rinmora Admin — manage your store configuration, branding, and integrations.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: '#CFBAA5', 'primary-dark': '#b89e84', ink: '#000000',
+          canvas: '#F8F8F8',
+          success: '#22C55E', warning: '#F59E0B', danger: '#EF4444', info: '#3B82F6',
+        },
+        fontFamily: { sans: ['Inter', 'sans-serif'] },
+        borderRadius: { '4xl': '2rem' },
+        boxShadow: { soft: '0 20px 60px -15px rgba(0,0,0,0.12)', card: '0 4px 24px -8px rgba(0,0,0,0.08)' },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Inter', sans-serif; }
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+  .fade-up { animation: fadeUp .5s ease both; }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(10px);} to {opacity:1; transform:translateY(0);} }
+  .hover-lift { transition: transform .2s ease, box-shadow .2s ease; }
+  .hover-lift:hover { transform: translateY(-2px); }
+  .sidebar-collapsed .nav-label,
+  .sidebar-collapsed .nav-section-label,
+  .sidebar-collapsed .sidebar-brand-text,
+  .sidebar-collapsed .nav-chevron { display: none; }
+  .sidebar-collapsed .submenu { display: none !important; }
+  .crop-corner { position: absolute; width: 18px; height: 18px; border-color: #b89e84; }
+</style>
+</head>
+
+<body class="bg-canvas text-ink antialiased">
+
+<!-- =========================================================
+     TOPBAR
+========================================================== -->
+<header class="sticky top-0 z-40 bg-white border-b border-black/5">
+  <div class="flex items-center gap-3 h-16 px-4 md:px-6">
+    <button id="mobileSidebarBtn" aria-label="Open sidebar" class="lg:hidden w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <button id="collapseSidebarBtn" aria-label="Collapse sidebar" class="hidden lg:grid w-9 h-9 place-items-center rounded-full hover:bg-black/5 transition">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <a href="rinmora-admin-dashboard.html" class="flex items-center gap-2 shrink-0">
+      <img src="../../logo-01.png" alt="Rinmora" class="h-7 w-auto">
+      <span class="hidden sm:inline text-[10px] font-semibold uppercase tracking-wider bg-ink text-white px-2 py-0.5 rounded-full">Admin</span>
+    </a>
+
+    <div class="flex-1 max-w-xl mx-auto hidden sm:block">
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-black/30 text-sm"></i>
+        <label for="globalSearch" class="sr-only">Global search</label>
+        <input id="globalSearch" type="text" placeholder="Search products, orders, customers..." class="w-full pl-11 pr-4 py-2.5 rounded-full bg-black/[0.03] border border-transparent text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition">
+      </div>
+    </div>
+
+    <div class="flex items-center gap-1 ml-auto sm:ml-0">
+      <button aria-label="Search" class="sm:hidden w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+        <i class="fa-solid fa-magnifying-glass text-sm"></i>
+      </button>
+
+      <div class="relative">
+        <button id="quickActionsBtn" class="hidden md:inline-flex items-center gap-2 bg-primary text-ink font-semibold text-xs uppercase tracking-wide px-4 py-2.5 rounded-full hover:bg-primary-dark transition">
+          <i class="fa-solid fa-plus text-[10px]"></i> Quick Actions
+        </button>
+        <div id="quickActionsMenu" class="hidden absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <a href="rinmora-admin-product-add.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-bag-shopping w-4 text-black/40"></i> New Product</a>
+          <a href="rinmora-admin-orders.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-receipt w-4 text-black/40"></i> New Order</a>
+          <a href="rinmora-admin-customers.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-user-plus w-4 text-black/40"></i> New Customer</a>
+        </div>
+      </div>
+
+      <div class="relative">
+        <button id="notifBtn" aria-label="Notifications" class="relative w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+          <i class="fa-regular fa-bell text-sm"></i>
+          <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-danger"></span>
+        </button>
+        <div id="notifMenu" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <p class="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black/40">Notifications</p>
+          <a href="#" class="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <span class="w-8 h-8 rounded-full bg-warning/15 grid place-items-center shrink-0"><i class="fa-solid fa-triangle-exclamation text-warning text-xs"></i></span>
+            <span class="text-sm"><span class="font-medium">SMTP connection expiring soon</span><br><span class="text-black/45 text-xs">Renew credentials before Aug 1</span></span>
+          </a>
+          <a href="#" class="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <span class="w-8 h-8 rounded-full bg-success/15 grid place-items-center shrink-0"><i class="fa-solid fa-circle-check text-success text-xs"></i></span>
+            <span class="text-sm"><span class="font-medium">Theme colors updated</span><br><span class="text-black/45 text-xs">2 minutes ago</span></span>
+          </a>
+          <a href="#" class="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <span class="w-8 h-8 rounded-full bg-info/15 grid place-items-center shrink-0"><i class="fa-solid fa-language text-info text-xs"></i></span>
+            <span class="text-sm"><span class="font-medium">French translation 42% complete</span><br><span class="text-black/45 text-xs">1 hour ago</span></span>
+          </a>
+        </div>
+      </div>
+
+      <div class="relative">
+        <button id="msgBtn" aria-label="Messages" class="relative w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+          <i class="fa-regular fa-envelope text-sm"></i>
+          <span class="absolute top-1 right-1.5 w-4 h-4 rounded-full bg-ink text-white text-[9px] font-bold grid place-items-center">2</span>
+        </button>
+        <div id="msgMenu" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <p class="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black/40">Messages</p>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <img src="https://picsum.photos/seed/admin-msg-1/60/60" alt="" class="w-8 h-8 rounded-full object-cover">
+            <span class="text-sm"><span class="font-medium">Sana K.</span><br><span class="text-black/45 text-xs">Question about order #RIN-20583</span></span>
+          </a>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <img src="https://picsum.photos/seed/admin-msg-2/60/60" alt="" class="w-8 h-8 rounded-full object-cover">
+            <span class="text-sm"><span class="font-medium">Amina R.</span><br><span class="text-black/45 text-xs">Return request submitted</span></span>
+          </a>
+        </div>
+      </div>
+
+      <button id="themeToggleBtn" aria-label="Toggle theme" class="w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+        <i class="fa-regular fa-moon text-sm"></i>
+      </button>
+
+      <div class="relative pl-1">
+        <button id="profileBtn" class="flex items-center gap-2 pl-1.5 pr-2.5 py-1.5 rounded-full hover:bg-black/5 transition">
+          <img src="https://picsum.photos/seed/admin-avatar/80/80" alt="Admin" class="w-7 h-7 rounded-full object-cover">
+          <span class="hidden md:inline text-sm font-medium">Ayesha N.</span>
+          <i class="fa-solid fa-chevron-down text-[10px] text-black/40"></i>
+        </button>
+        <div id="profileMenu" class="hidden absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-regular fa-user w-4 text-black/40"></i> My Profile</a>
+          <a href="rinmora-admin-settings.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-gear w-4 text-black/40"></i> Settings</a>
+          <div class="border-t border-black/5 my-1"></div>
+          <a href="../rinmora-login-preview.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-danger hover:bg-danger/5 transition"><i class="fa-solid fa-right-from-bracket w-4"></i> Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="flex">
+
+  <!-- =========================================================
+       SIDEBAR
+  ========================================================== -->
+  <div id="sidebarOverlay" class="fixed inset-0 bg-black/0 z-30 lg:hidden invisible pointer-events-none transition-colors duration-300"></div>
+
+  <aside id="sidebar" class="fixed lg:sticky top-16 left-0 z-30 h-[calc(100vh-4rem)] w-72 bg-white border-r border-black/5 -translate-x-full lg:translate-x-0 transition-all duration-300 ease-out overflow-y-auto shrink-0">
+    <nav class="p-4 space-y-1">
+      <p class="nav-section-label px-3 pt-2 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Main</p>
+
+      <a href="rinmora-admin-dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-gauge w-4 text-center"></i> <span class="nav-label">Dashboard</span>
+      </a>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-bag-shopping w-4 text-center"></i> <span class="nav-label">Products</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-products.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Products</a>
+          <a href="rinmora-admin-product-add.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Add Product</a>
+          <a href="rinmora-admin-product-categories.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Categories</a>
+          <a href="rinmora-admin-product-brands.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Brands &amp; Collections</a>
+          <a href="rinmora-admin-product-attributes.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Attributes</a>
+          <a href="rinmora-admin-reviews.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Reviews</a>
+          <a href="rinmora-admin-inventory.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Inventory</a>
+        </div>
+      </div>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-receipt w-4 text-center"></i> <span class="nav-label">Orders</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Orders</a>
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Pending</a>
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Shipped</a>
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Returned / Refunded</a>
+        </div>
+      </div>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-users w-4 text-center"></i> <span class="nav-label">Customers</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-customers.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Customers</a>
+          <a href="rinmora-admin-customer-addresses.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Addresses</a>
+          <a href="rinmora-admin-wishlist-reports.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Wishlist Reports</a>
+          <a href="rinmora-admin-reward-points.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Reward Points</a>
+        </div>
+      </div>
+
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-bullhorn w-4 text-center"></i> <span class="nav-label">Marketing</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Content &amp; Store</p>
+
+      <a href="rinmora-admin-cms-homepage-builder.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-file-lines w-4 text-center"></i> <span class="nav-label">CMS</span>
+      </a>
+      <a href="rinmora-admin-media-manager.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-images w-4 text-center"></i> <span class="nav-label">Media Manager</span>
+      </a>
+      <a href="rinmora-admin-reviews.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-star w-4 text-center"></i> <span class="nav-label">Reviews</span>
+      </a>
+      <a href="rinmora-admin-inventory.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-warehouse w-4 text-center"></i> <span class="nav-label">Inventory</span>
+      </a>
+      <a href="rinmora-admin-shipping.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-truck-fast w-4 text-center"></i> <span class="nav-label">Shipping</span>
+      </a>
+      <a href="rinmora-admin-payments.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-credit-card w-4 text-center"></i> <span class="nav-label">Payments</span>
+      </a>
+      <a href="rinmora-admin-users.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-user-shield w-4 text-center"></i> <span class="nav-label">Users &amp; Roles</span>
+      </a>
+      <a href="rinmora-admin-reports.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-chart-line w-4 text-center"></i> <span class="nav-label">Reports</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">System</p>
+
+      <a href="rinmora-admin-seo.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-magnifying-glass-chart w-4 text-center"></i> <span class="nav-label">SEO</span>
+      </a>
+      <a href="rinmora-admin-contact-support.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-headset w-4 text-center"></i> <span class="nav-label">Contact &amp; Support</span>
+      </a>
+      <a href="rinmora-admin-notifications.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-bell w-4 text-center"></i> <span class="nav-label">Notifications</span>
+      </a>
+      <a href="rinmora-admin-activity-logs.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-clock-rotate-left w-4 text-center"></i> <span class="nav-label">Activity Logs</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Account</p>
+
+      <a href="rinmora-admin-profile.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-user w-4 text-center"></i> <span class="nav-label">My Profile</span>
+      </a>
+      <a href="rinmora-admin-settings.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary/20 text-ink font-semibold text-sm">
+        <i class="fa-solid fa-gear w-4 text-center"></i> <span class="nav-label">Settings</span>
+      </a>
+      <a href="../rinmora-login-preview.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-right-from-bracket w-4 text-center"></i> <span class="nav-label">Logout</span>
+      </a>
+    </nav>
+  </aside>
+
+
+  <!-- =========================================================
+       MAIN CONTENT
+  ========================================================== -->
+  <main class="flex-1 min-w-0 px-4 md:px-6 py-6">
+
+    <nav aria-label="Breadcrumb" class="text-xs text-black/40 mb-2">
+      <span>Admin</span> <i class="fa-solid fa-chevron-right text-[8px] mx-1.5"></i> <span class="text-ink font-medium">Settings</span>
+    </nav>
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+      <div>
+        <h1 class="text-xl md:text-2xl font-bold">Settings</h1>
+        <p class="text-black/45 text-sm mt-1">Manage your store configuration, branding, and integrations.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="rinmora-admin-dashboard.html" class="inline-flex items-center gap-2 bg-white border border-black/10 rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-black/[0.03] transition">
+          <i class="fa-solid fa-arrow-left text-black/40 text-[10px]"></i> Back to Dashboard
+        </a>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         SETTINGS TABS
+    ========================================================== -->
+    <div class="grid lg:grid-cols-[248px_1fr] gap-6 items-start">
+
+      <!-- Sub nav -->
+      <nav class="lg:sticky lg:top-[88px] bg-white rounded-3xl shadow-card p-3 flex lg:flex-col gap-1 overflow-x-auto lg:overflow-visible">
+        <button type="button" class="tab-btn active-tab w-full text-left flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold bg-primary/20 text-ink transition whitespace-nowrap shrink-0" data-tab="general">
+          <i class="fa-solid fa-store w-4 text-center"></i> General
+        </button>
+        <button type="button" class="tab-btn w-full text-left flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-black/60 hover:bg-black/5 transition whitespace-nowrap shrink-0" data-tab="store-info">
+          <i class="fa-regular fa-building w-4 text-center"></i> Store Information
+        </button>
+        <button type="button" class="tab-btn w-full text-left flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-black/60 hover:bg-black/5 transition whitespace-nowrap shrink-0" data-tab="logo-favicon">
+          <i class="fa-solid fa-image w-4 text-center"></i> Logo &amp; Favicon
+        </button>
+        <button type="button" class="tab-btn w-full text-left flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-black/60 hover:bg-black/5 transition whitespace-nowrap shrink-0" data-tab="theme-colors">
+          <i class="fa-solid fa-palette w-4 text-center"></i> Theme Colors
+        </button>
+        <button type="button" class="tab-btn w-full text-left flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-black/60 hover:bg-black/5 transition whitespace-nowrap shrink-0" data-tab="email">
+          <i class="fa-solid fa-envelope w-4 text-center"></i> Email Settings
+        </button>
+        <button type="button" class="tab-btn w-full text-left flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-black/60 hover:bg-black/5 transition whitespace-nowrap shrink-0" data-tab="sms">
+          <i class="fa-solid fa-comment-sms w-4 text-center"></i> SMS Settings
+        </button>
+        <button type="button" class="tab-btn w-full text-left flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-black/60 hover:bg-black/5 transition whitespace-nowrap shrink-0" data-tab="social">
+          <i class="fa-solid fa-share-nodes w-4 text-center"></i> Social Media
+        </button>
+        <button type="button" class="tab-btn w-full text-left flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-black/60 hover:bg-black/5 transition whitespace-nowrap shrink-0" data-tab="seo">
+          <i class="fa-solid fa-magnifying-glass w-4 text-center"></i> SEO Settings
+        </button>
+        <button type="button" class="tab-btn w-full text-left flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-black/60 hover:bg-black/5 transition whitespace-nowrap shrink-0" data-tab="currency">
+          <i class="fa-solid fa-sack-dollar w-4 text-center"></i> Currency
+        </button>
+        <button type="button" class="tab-btn w-full text-left flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-black/60 hover:bg-black/5 transition whitespace-nowrap shrink-0" data-tab="taxes">
+          <i class="fa-solid fa-percent w-4 text-center"></i> Taxes
+        </button>
+        <button type="button" class="tab-btn w-full text-left flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-black/60 hover:bg-black/5 transition whitespace-nowrap shrink-0" data-tab="language">
+          <i class="fa-solid fa-language w-4 text-center"></i> Language
+        </button>
+        <button type="button" class="tab-btn w-full text-left flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-black/60 hover:bg-black/5 transition whitespace-nowrap shrink-0" data-tab="timezone">
+          <i class="fa-solid fa-clock w-4 text-center"></i> Timezone
+        </button>
+      </nav>
+
+      <!-- Panels -->
+      <div class="min-w-0">
+
+        <!-- ============ GENERAL ============ -->
+        <div id="panel-general" class="tab-panel space-y-6">
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <h2 class="font-bold text-sm mb-1">Store Details</h2>
+            <p class="text-black/40 text-xs mb-5">Core information about how your store appears and operates.</p>
+            <div class="grid md:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="storeName">Store Name</label>
+                <input id="storeName" type="text" value="Rinmora" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="defaultCountry">Default Country</label>
+                <div class="relative">
+                  <select id="defaultCountry" class="w-full appearance-none px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition pr-10">
+                    <option>United States</option>
+                    <option>United Kingdom</option>
+                    <option>United Arab Emirates</option>
+                    <option>Pakistan</option>
+                    <option>Canada</option>
+                  </select>
+                  <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-black/30 text-xs pointer-events-none"></i>
+                </div>
+              </div>
+            </div>
+            <div class="divide-y divide-black/5 mt-2">
+              <div class="flex items-center justify-between gap-4 py-3">
+                <div>
+                  <p class="text-sm font-semibold">Store Status</p>
+                  <p class="text-black/45 text-xs mt-0.5">Store is live and accepting orders from customers.</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                  <input type="checkbox" class="peer sr-only" checked>
+                  <span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span>
+                  <span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span>
+                </label>
+              </div>
+              <div class="flex items-center justify-between gap-4 py-3">
+                <div>
+                  <p class="text-sm font-semibold">Maintenance Mode</p>
+                  <p class="text-black/45 text-xs mt-0.5">Show a maintenance page to visitors while you work.</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                  <input type="checkbox" class="peer sr-only">
+                  <span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span>
+                  <span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <h2 class="font-bold text-sm mb-1">Store Logo Preview</h2>
+            <p class="text-black/40 text-xs mb-5">The logo currently shown across your storefront header and admin topbar.</p>
+            <div class="flex items-center gap-4 bg-black/[0.02] rounded-2xl p-4">
+              <div class="w-16 h-16 rounded-xl bg-white border border-black/5 grid place-items-center overflow-hidden shrink-0">
+                <img src="../../logo-01.png" alt="Current logo" class="max-w-[70%] max-h-[70%] object-contain">
+              </div>
+              <div class="min-w-0">
+                <p class="text-sm font-medium">logo-01.png</p>
+                <p class="text-black/40 text-xs">240×80px · 12KB</p>
+              </div>
+              <button class="ml-auto text-xs font-semibold text-danger hover:underline shrink-0">Remove</button>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-2 border-t border-black/5 mt-2">
+            <button type="button" class="text-sm font-semibold px-5 py-2.5 rounded-full border border-black/10 hover:bg-black/5 transition">Reset</button>
+            <button type="button" class="text-sm font-semibold px-6 py-2.5 rounded-full bg-ink text-white hover:bg-black/80 transition">Save Changes</button>
+          </div>
+        </div>
+
+        <!-- ============ STORE INFORMATION ============ -->
+        <div id="panel-store-info" class="tab-panel space-y-6 hidden">
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <h2 class="font-bold text-sm mb-1">Business Information</h2>
+            <p class="text-black/40 text-xs mb-5">Details displayed on invoices, receipts, and your storefront footer.</p>
+            <div class="grid md:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="bizName">Business Name</label>
+                <input id="bizName" type="text" value="Rinmora Leather Goods LLC" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="bizPhone">Phone</label>
+                <input id="bizPhone" type="text" value="+1 (415) 555-0148" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              </div>
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium mb-1.5" for="bizAddress">Address</label>
+                <textarea id="bizAddress" rows="2" class="w-full px-4 py-3 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition resize-none">208 Market Street, Suite 4B, San Francisco, CA 94103, United States</textarea>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="bizEmail">Email</label>
+                <input id="bizEmail" type="text" value="hello@rinmora.com" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="supportPhone">Support Contact Phone</label>
+                <input id="supportPhone" type="text" value="+1 (415) 555-0199" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              </div>
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium mb-1.5" for="supportEmail">Support Contact Email</label>
+                <input id="supportEmail" type="text" value="support@rinmora.com" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              </div>
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium mb-1.5" for="storeDesc">Store Description</label>
+                <textarea id="storeDesc" rows="4" class="w-full px-4 py-3 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition resize-none">Rinmora crafts premium leather handbags for the modern woman — timeless silhouettes, ethically sourced materials, and finishing detail worthy of a lifetime companion.</textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <h2 class="font-bold text-sm mb-1">Business Hours</h2>
+            <p class="text-black/40 text-xs mb-5">Displayed on your Contact page and used for support response estimates.</p>
+            <div class="divide-y divide-black/5">
+              <div class="grid grid-cols-[80px_1fr_auto_1fr_auto] gap-3 items-center py-2.5">
+                <span class="text-xs font-semibold text-black/60">Monday</span>
+                <select class="w-full appearance-none px-3 py-2 rounded-lg border border-black/10 bg-white text-xs focus:outline-none focus:ring-2 focus:ring-primary transition"><option>10:00 AM</option></select>
+                <span class="text-black/30 text-xs text-center">to</span>
+                <select class="w-full appearance-none px-3 py-2 rounded-lg border border-black/10 bg-white text-xs focus:outline-none focus:ring-2 focus:ring-primary transition"><option>8:00 PM</option></select>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only" checked><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+              <div class="grid grid-cols-[80px_1fr_auto_1fr_auto] gap-3 items-center py-2.5">
+                <span class="text-xs font-semibold text-black/60">Tuesday</span>
+                <select class="w-full appearance-none px-3 py-2 rounded-lg border border-black/10 bg-white text-xs focus:outline-none focus:ring-2 focus:ring-primary transition"><option>10:00 AM</option></select>
+                <span class="text-black/30 text-xs text-center">to</span>
+                <select class="w-full appearance-none px-3 py-2 rounded-lg border border-black/10 bg-white text-xs focus:outline-none focus:ring-2 focus:ring-primary transition"><option>8:00 PM</option></select>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only" checked><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+              <div class="grid grid-cols-[80px_1fr_auto_1fr_auto] gap-3 items-center py-2.5">
+                <span class="text-xs font-semibold text-black/60">Wednesday</span>
+                <select class="w-full appearance-none px-3 py-2 rounded-lg border border-black/10 bg-white text-xs focus:outline-none focus:ring-2 focus:ring-primary transition"><option>10:00 AM</option></select>
+                <span class="text-black/30 text-xs text-center">to</span>
+                <select class="w-full appearance-none px-3 py-2 rounded-lg border border-black/10 bg-white text-xs focus:outline-none focus:ring-2 focus:ring-primary transition"><option>8:00 PM</option></select>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only" checked><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+              <div class="grid grid-cols-[80px_1fr_auto_1fr_auto] gap-3 items-center py-2.5">
+                <span class="text-xs font-semibold text-black/60">Thursday</span>
+                <select class="w-full appearance-none px-3 py-2 rounded-lg border border-black/10 bg-white text-xs focus:outline-none focus:ring-2 focus:ring-primary transition"><option>10:00 AM</option></select>
+                <span class="text-black/30 text-xs text-center">to</span>
+                <select class="w-full appearance-none px-3 py-2 rounded-lg border border-black/10 bg-white text-xs focus:outline-none focus:ring-2 focus:ring-primary transition"><option>8:00 PM</option></select>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only" checked><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+              <div class="grid grid-cols-[80px_1fr_auto_1fr_auto] gap-3 items-center py-2.5">
+                <span class="text-xs font-semibold text-black/60">Friday</span>
+                <select class="w-full appearance-none px-3 py-2 rounded-lg border border-black/10 bg-white text-xs focus:outline-none focus:ring-2 focus:ring-primary transition"><option>10:00 AM</option></select>
+                <span class="text-black/30 text-xs text-center">to</span>
+                <select class="w-full appearance-none px-3 py-2 rounded-lg border border-black/10 bg-white text-xs focus:outline-none focus:ring-2 focus:ring-primary transition"><option>9:00 PM</option></select>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only" checked><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+              <div class="grid grid-cols-[80px_1fr_auto_1fr_auto] gap-3 items-center py-2.5">
+                <span class="text-xs font-semibold text-black/60">Saturday</span>
+                <select class="w-full appearance-none px-3 py-2 rounded-lg border border-black/10 bg-white text-xs focus:outline-none focus:ring-2 focus:ring-primary transition"><option>11:00 AM</option></select>
+                <span class="text-black/30 text-xs text-center">to</span>
+                <select class="w-full appearance-none px-3 py-2 rounded-lg border border-black/10 bg-white text-xs focus:outline-none focus:ring-2 focus:ring-primary transition"><option>6:00 PM</option></select>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only" checked><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+              <div class="grid grid-cols-[80px_1fr_auto_1fr_auto] gap-3 items-center py-2.5">
+                <span class="text-xs font-semibold text-black/60">Sunday</span>
+                <select class="w-full appearance-none px-3 py-2 rounded-lg border border-black/10 bg-black/[0.02] text-xs text-black/30 focus:outline-none transition" disabled><option>Closed</option></select>
+                <span class="text-black/20 text-xs text-center">—</span>
+                <select class="w-full appearance-none px-3 py-2 rounded-lg border border-black/10 bg-black/[0.02] text-xs text-black/30 focus:outline-none transition" disabled><option>Closed</option></select>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only"><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <h2 class="font-bold text-sm mb-1">Store Location</h2>
+            <p class="text-black/40 text-xs mb-5">Map preview for your flagship boutique address.</p>
+            <div class="rounded-2xl overflow-hidden border border-black/10 h-56 bg-black/[0.03] grid place-items-center">
+              <div class="text-center">
+                <i class="fa-solid fa-map-location-dot text-2xl text-black/25 mb-2"></i>
+                <p class="text-sm text-black/40">Map preview</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-2 border-t border-black/5 mt-2">
+            <button type="button" class="text-sm font-semibold px-5 py-2.5 rounded-full border border-black/10 hover:bg-black/5 transition">Reset</button>
+            <button type="button" class="text-sm font-semibold px-6 py-2.5 rounded-full bg-ink text-white hover:bg-black/80 transition">Save Changes</button>
+          </div>
+        </div>
+
+        <!-- ============ LOGO & FAVICON ============ -->
+        <div id="panel-logo-favicon" class="tab-panel space-y-6 hidden">
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <h2 class="font-bold text-sm mb-1">Current Assets</h2>
+            <p class="text-black/40 text-xs mb-5">These are live on your storefront right now.</p>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div class="flex items-center gap-4 bg-black/[0.02] rounded-2xl p-4">
+                <div class="w-16 h-16 rounded-xl bg-white border border-black/5 grid place-items-center overflow-hidden shrink-0">
+                  <img src="../../logo-01.png" alt="Current logo" class="max-w-[70%] max-h-[70%] object-contain">
+                </div>
+                <div class="min-w-0">
+                  <p class="text-sm font-medium">logo-01.png</p>
+                  <p class="text-black/40 text-xs">240×80px · 12KB</p>
+                </div>
+                <button class="ml-auto text-xs font-semibold text-danger hover:underline shrink-0">Remove</button>
+              </div>
+              <div class="flex items-center gap-4 bg-black/[0.02] rounded-2xl p-4">
+                <div class="w-16 h-16 rounded-xl bg-white border border-black/5 grid place-items-center overflow-hidden shrink-0">
+                  <img src="../../logo-01.png" alt="Current favicon" class="max-w-[55%] max-h-[55%] object-contain">
+                </div>
+                <div class="min-w-0">
+                  <p class="text-sm font-medium">favicon.png</p>
+                  <p class="text-black/40 text-xs">64×64px · 3KB</p>
+                </div>
+                <button class="ml-auto text-xs font-semibold text-danger hover:underline shrink-0">Remove</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <h2 class="font-bold text-sm mb-1">Upload New Assets</h2>
+            <p class="text-black/40 text-xs mb-5">Recommended: transparent PNG or SVG for logos, 512×512px for favicon.</p>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium mb-1.5">Upload Logo</label>
+                <div class="border-2 border-dashed border-black/10 rounded-2xl p-8 text-center hover:border-primary hover:bg-primary/5 transition cursor-pointer">
+                  <i class="fa-solid fa-cloud-arrow-up text-2xl text-black/25 mb-3"></i>
+                  <p class="text-sm font-medium">Click to upload or drag and drop</p>
+                  <p class="text-black/40 text-xs mt-1">PNG, JPG, SVG up to 5MB</p>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5">Upload Dark Logo</label>
+                <div class="border-2 border-dashed border-black/10 rounded-2xl p-8 text-center hover:border-primary hover:bg-primary/5 transition cursor-pointer">
+                  <i class="fa-solid fa-cloud-arrow-up text-2xl text-black/25 mb-3"></i>
+                  <p class="text-sm font-medium">Click to upload or drag and drop</p>
+                  <p class="text-black/40 text-xs mt-1">For dark-mode header background</p>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5">Upload Mobile Logo</label>
+                <div class="border-2 border-dashed border-black/10 rounded-2xl p-8 text-center hover:border-primary hover:bg-primary/5 transition cursor-pointer">
+                  <i class="fa-solid fa-cloud-arrow-up text-2xl text-black/25 mb-3"></i>
+                  <p class="text-sm font-medium">Click to upload or drag and drop</p>
+                  <p class="text-black/40 text-xs mt-1">Compact mark for small screens</p>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5">Upload Favicon</label>
+                <div class="border-2 border-dashed border-black/10 rounded-2xl p-8 text-center hover:border-primary hover:bg-primary/5 transition cursor-pointer">
+                  <i class="fa-solid fa-cloud-arrow-up text-2xl text-black/25 mb-3"></i>
+                  <p class="text-sm font-medium">Click to upload or drag and drop</p>
+                  <p class="text-black/40 text-xs mt-1">ICO or PNG, 512×512px</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <h2 class="font-bold text-sm mb-1 text-center">Crop Preview</h2>
+            <p class="text-black/40 text-xs mb-5 text-center">Fine-tune framing before an upload is saved.</p>
+            <div class="aspect-square max-w-xs mx-auto rounded-2xl border-2 border-dashed border-black/15 grid place-items-center bg-black/[0.02] relative">
+              <span class="crop-corner border-t-2 border-l-2 top-3 left-3 rounded-tl-md"></span>
+              <span class="crop-corner border-t-2 border-r-2 top-3 right-3 rounded-tr-md"></span>
+              <span class="crop-corner border-b-2 border-l-2 bottom-3 left-3 rounded-bl-md"></span>
+              <span class="crop-corner border-b-2 border-r-2 bottom-3 right-3 rounded-br-md"></span>
+              <div class="text-center">
+                <i class="fa-solid fa-crop-simple text-2xl text-black/25 mb-2"></i>
+                <p class="text-xs text-black/40">Crop Preview</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-2 border-t border-black/5 mt-2">
+            <button type="button" class="text-sm font-semibold px-5 py-2.5 rounded-full border border-black/10 hover:bg-black/5 transition">Reset</button>
+            <button type="button" class="text-sm font-semibold px-6 py-2.5 rounded-full bg-ink text-white hover:bg-black/80 transition">Save Changes</button>
+          </div>
+        </div>
+
+        <!-- ============ THEME COLORS ============ -->
+        <div id="panel-theme-colors" class="tab-panel space-y-6 hidden">
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <h2 class="font-bold text-sm mb-1">Brand Palette</h2>
+            <p class="text-black/40 text-xs mb-5">Colors used across your storefront theme and admin accents.</p>
+            <div class="grid md:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-sm font-medium mb-1.5">Primary Color</label>
+                <div class="flex items-center gap-3">
+                  <label class="relative w-11 h-11 rounded-xl overflow-hidden border border-black/10 shrink-0 cursor-pointer" style="background:#CFBAA5">
+                    <input type="color" value="#CFBAA5" class="absolute -inset-2 opacity-0 cursor-pointer">
+                  </label>
+                  <input type="text" value="#CFBAA5" class="flex-1 px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary transition">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5">Secondary Color</label>
+                <div class="flex items-center gap-3">
+                  <label class="relative w-11 h-11 rounded-xl overflow-hidden border border-black/10 shrink-0 cursor-pointer" style="background:#000000">
+                    <input type="color" value="#000000" class="absolute -inset-2 opacity-0 cursor-pointer">
+                  </label>
+                  <input type="text" value="#000000" class="flex-1 px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary transition">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5">Accent Color</label>
+                <div class="flex items-center gap-3">
+                  <label class="relative w-11 h-11 rounded-xl overflow-hidden border border-black/10 shrink-0 cursor-pointer" style="background:#3B82F6">
+                    <input type="color" value="#3B82F6" class="absolute -inset-2 opacity-0 cursor-pointer">
+                  </label>
+                  <input type="text" value="#3B82F6" class="flex-1 px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary transition">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5">Background Color</label>
+                <div class="flex items-center gap-3">
+                  <label class="relative w-11 h-11 rounded-xl overflow-hidden border border-black/10 shrink-0 cursor-pointer" style="background:#F8F8F8">
+                    <input type="color" value="#F8F8F8" class="absolute -inset-2 opacity-0 cursor-pointer">
+                  </label>
+                  <input type="text" value="#F8F8F8" class="flex-1 px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary transition">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <h2 class="font-bold text-sm mb-1">Live Preview</h2>
+            <p class="text-black/40 text-xs mb-5">How your current palette renders across common UI elements.</p>
+            <div class="grid md:grid-cols-2 gap-6">
+              <div class="space-y-4">
+                <div class="flex flex-wrap items-center gap-3">
+                  <button class="bg-primary text-ink rounded-full px-5 py-2.5 text-sm font-semibold">Primary Button</button>
+                  <button class="bg-ink text-white rounded-full px-5 py-2.5 text-sm font-semibold">Secondary Button</button>
+                </div>
+                <div class="rounded-2xl p-4 border border-black/10" style="background:#F8F8F8">
+                  <h3 class="font-bold text-sm mb-1">Sample Card Heading</h3>
+                  <p class="text-black/50 text-xs">A short paragraph of storefront body copy shown against your background color, to check contrast and warmth.</p>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <p class="text-2xl font-extrabold">Aa — Heading 1</p>
+                <p class="text-lg font-bold">Aa — Heading 2</p>
+                <p class="text-sm text-black/60">Aa — Body copy at default size, used for descriptions and helper text throughout the storefront.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between gap-3 pt-2 border-t border-black/5 mt-2">
+            <button type="button" class="text-sm font-semibold text-black/50 hover:text-danger transition">
+              <i class="fa-solid fa-arrow-rotate-left mr-1.5 text-xs"></i> Reset Theme to Defaults
+            </button>
+            <div class="flex items-center gap-3">
+              <button type="button" class="text-sm font-semibold px-5 py-2.5 rounded-full border border-black/10 hover:bg-black/5 transition">Reset</button>
+              <button type="button" class="text-sm font-semibold px-6 py-2.5 rounded-full bg-ink text-white hover:bg-black/80 transition">Save Changes</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ EMAIL SETTINGS ============ -->
+        <div id="panel-email" class="tab-panel space-y-6 hidden">
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <h2 class="font-bold text-sm mb-1">SMTP Configuration</h2>
+            <p class="text-black/40 text-xs mb-5">Used for order confirmations, shipping updates, and marketing emails.</p>
+            <div class="grid md:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="smtpHost">SMTP Host</label>
+                <input id="smtpHost" type="text" value="smtp.mailgun.org" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="smtpPort">SMTP Port</label>
+                <input id="smtpPort" type="text" value="587" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="smtpEncryption">Encryption</label>
+                <div class="relative">
+                  <select id="smtpEncryption" class="w-full appearance-none px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition pr-10">
+                    <option>None</option>
+                    <option>SSL</option>
+                    <option selected>TLS</option>
+                  </select>
+                  <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-black/30 text-xs pointer-events-none"></i>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="smtpUser">Username</label>
+                <input id="smtpUser" type="text" value="no-reply@rinmora.com" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="smtpPass">Password</label>
+                <input id="smtpPass" type="password" value="supersecret123" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              </div>
+              <div></div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="senderName">Sender Name</label>
+                <input id="senderName" type="text" value="Rinmora" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="senderEmail">Sender Email</label>
+                <input id="senderEmail" type="text" value="no-reply@rinmora.com" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-4 mt-6">
+              <button type="button" class="inline-flex items-center gap-2 bg-primary text-ink font-semibold text-xs uppercase tracking-wide px-4 py-2.5 rounded-full hover:bg-primary-dark transition">
+                <i class="fa-solid fa-paper-plane text-[10px]"></i> Send Test Email
+              </button>
+              <div class="flex items-center gap-2.5 bg-success/10 rounded-2xl px-4 py-2.5">
+                <i class="fa-solid fa-circle-check text-success text-sm"></i>
+                <span class="text-xs font-semibold text-success">Connected — last tested 2 hours ago</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-2 border-t border-black/5 mt-2">
+            <button type="button" class="text-sm font-semibold px-5 py-2.5 rounded-full border border-black/10 hover:bg-black/5 transition">Reset</button>
+            <button type="button" class="text-sm font-semibold px-6 py-2.5 rounded-full bg-ink text-white hover:bg-black/80 transition">Save Changes</button>
+          </div>
+        </div>
+
+        <!-- ============ SMS SETTINGS ============ -->
+        <div id="panel-sms" class="tab-panel space-y-6 hidden">
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <h2 class="font-bold text-sm mb-1">SMS Provider</h2>
+            <p class="text-black/40 text-xs mb-5">Used for order and delivery notifications sent to customers' phones.</p>
+            <div class="grid md:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="smsProvider">Provider</label>
+                <div class="relative">
+                  <select id="smsProvider" class="w-full appearance-none px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition pr-10">
+                    <option selected>Twilio</option>
+                    <option>Nexmo</option>
+                    <option>Custom</option>
+                  </select>
+                  <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-black/30 text-xs pointer-events-none"></i>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="smsSender">Sender ID</label>
+                <input id="smsSender" type="text" value="RINMORA" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              </div>
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium mb-1.5" for="smsApiKey">API Key</label>
+                <div class="relative">
+                  <input id="smsApiKey" type="password" value="sk_live_9f2a7c1e4b8d4f2a" class="w-full px-4 py-2.5 pr-11 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                  <button type="button" aria-label="Reveal API key" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-black/30 hover:text-black/60 transition">
+                    <i class="fa-solid fa-eye text-xs"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center justify-between gap-4 py-3 border-t border-black/5 mt-2">
+              <div>
+                <p class="text-sm font-semibold">Enable SMS Notifications</p>
+                <p class="text-black/45 text-xs mt-0.5">Send order status updates to customers via SMS.</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                <input type="checkbox" class="peer sr-only" checked>
+                <span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span>
+                <span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span>
+              </label>
+            </div>
+            <div class="mt-4">
+              <button type="button" class="inline-flex items-center gap-2 border border-black/10 rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-black/[0.03] transition">
+                <i class="fa-solid fa-paper-plane text-black/40 text-[10px]"></i> Test SMS
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="hover-lift bg-white rounded-2xl shadow-card p-5">
+              <span class="w-9 h-9 rounded-full bg-primary/20 grid place-items-center mb-3"><i class="fa-solid fa-gauge-high text-primary-dark text-xs"></i></span>
+              <p class="text-xl font-bold">98.2%</p>
+              <p class="text-black/45 text-xs mt-0.5">Delivery Rate</p>
+            </div>
+            <div class="hover-lift bg-white rounded-2xl shadow-card p-5">
+              <span class="w-9 h-9 rounded-full bg-primary/20 grid place-items-center mb-3"><i class="fa-solid fa-comment-sms text-primary-dark text-xs"></i></span>
+              <p class="text-xl font-bold">1,240</p>
+              <p class="text-black/45 text-xs mt-0.5">Messages Sent This Month</p>
+            </div>
+            <div class="hover-lift bg-white rounded-2xl shadow-card p-5">
+              <span class="w-9 h-9 rounded-full bg-primary/20 grid place-items-center mb-3"><i class="fa-solid fa-wallet text-primary-dark text-xs"></i></span>
+              <p class="text-xl font-bold">$42.00</p>
+              <p class="text-black/45 text-xs mt-0.5">Balance</p>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-2 border-t border-black/5 mt-2">
+            <button type="button" class="text-sm font-semibold px-5 py-2.5 rounded-full border border-black/10 hover:bg-black/5 transition">Reset</button>
+            <button type="button" class="text-sm font-semibold px-6 py-2.5 rounded-full bg-ink text-white hover:bg-black/80 transition">Save Changes</button>
+          </div>
+        </div>
+
+        <!-- ============ SOCIAL MEDIA ============ -->
+        <div id="panel-social" class="tab-panel space-y-6 hidden">
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <h2 class="font-bold text-sm mb-1">Social Profiles</h2>
+            <p class="text-black/40 text-xs mb-5">Linked in your storefront footer and share buttons.</p>
+            <div class="divide-y divide-black/5">
+              <div class="flex items-center gap-4 py-3">
+                <span class="w-9 h-9 rounded-full bg-black/5 grid place-items-center shrink-0"><i class="fa-brands fa-facebook text-black/60"></i></span>
+                <input type="text" value="https://facebook.com/rinmora" class="flex-1 min-w-0 px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only" checked><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+              <div class="flex items-center gap-4 py-3">
+                <span class="w-9 h-9 rounded-full bg-black/5 grid place-items-center shrink-0"><i class="fa-brands fa-instagram text-black/60"></i></span>
+                <input type="text" value="https://instagram.com/rinmora" class="flex-1 min-w-0 px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only" checked><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+              <div class="flex items-center gap-4 py-3">
+                <span class="w-9 h-9 rounded-full bg-black/5 grid place-items-center shrink-0"><i class="fa-brands fa-tiktok text-black/60"></i></span>
+                <input type="text" value="https://tiktok.com/@rinmora" class="flex-1 min-w-0 px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only" checked><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+              <div class="flex items-center gap-4 py-3">
+                <span class="w-9 h-9 rounded-full bg-black/5 grid place-items-center shrink-0"><i class="fa-brands fa-pinterest text-black/60"></i></span>
+                <input type="text" value="https://pinterest.com/rinmora" class="flex-1 min-w-0 px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only"><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+              <div class="flex items-center gap-4 py-3">
+                <span class="w-9 h-9 rounded-full bg-black/5 grid place-items-center shrink-0"><i class="fa-brands fa-youtube text-black/60"></i></span>
+                <input type="text" value="https://youtube.com/@rinmora" class="flex-1 min-w-0 px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only"><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+              <div class="flex items-center gap-4 py-3">
+                <span class="w-9 h-9 rounded-full bg-black/5 grid place-items-center shrink-0"><i class="fa-brands fa-linkedin text-black/60"></i></span>
+                <input type="text" value="https://linkedin.com/company/rinmora" class="flex-1 min-w-0 px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only"><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+              <div class="flex items-center gap-4 py-3">
+                <span class="w-9 h-9 rounded-full bg-black/5 grid place-items-center shrink-0"><i class="fa-brands fa-x-twitter text-black/60"></i></span>
+                <input type="text" value="https://x.com/rinmora" class="flex-1 min-w-0 px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only" checked><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+              <div class="flex items-center gap-4 py-3">
+                <span class="w-9 h-9 rounded-full bg-black/5 grid place-items-center shrink-0"><i class="fa-brands fa-whatsapp text-black/60"></i></span>
+                <input type="text" value="https://wa.me/14155550148" class="flex-1 min-w-0 px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only" checked><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <h2 class="font-bold text-sm mb-1">Footer Preview</h2>
+            <p class="text-black/40 text-xs mb-5">Enabled platforms as they'll appear in the storefront footer.</p>
+            <div class="flex gap-3">
+              <span class="w-10 h-10 rounded-full bg-black/5 grid place-items-center"><i class="fa-brands fa-facebook text-black/60 text-sm"></i></span>
+              <span class="w-10 h-10 rounded-full bg-black/5 grid place-items-center"><i class="fa-brands fa-instagram text-black/60 text-sm"></i></span>
+              <span class="w-10 h-10 rounded-full bg-black/5 grid place-items-center"><i class="fa-brands fa-tiktok text-black/60 text-sm"></i></span>
+              <span class="w-10 h-10 rounded-full bg-black/5 grid place-items-center"><i class="fa-brands fa-x-twitter text-black/60 text-sm"></i></span>
+              <span class="w-10 h-10 rounded-full bg-black/5 grid place-items-center"><i class="fa-brands fa-whatsapp text-black/60 text-sm"></i></span>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-2 border-t border-black/5 mt-2">
+            <button type="button" class="text-sm font-semibold px-5 py-2.5 rounded-full border border-black/10 hover:bg-black/5 transition">Reset</button>
+            <button type="button" class="text-sm font-semibold px-6 py-2.5 rounded-full bg-ink text-white hover:bg-black/80 transition">Save Changes</button>
+          </div>
+        </div>
+
+        <!-- ============ SEO SETTINGS ============ -->
+        <div id="panel-seo" class="tab-panel space-y-6 hidden">
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <h2 class="font-bold text-sm mb-1">Default Meta Tags</h2>
+            <p class="text-black/40 text-xs mb-5">Used as a fallback whenever a page doesn't define its own SEO fields.</p>
+            <div class="space-y-5">
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="metaTitle">Default Meta Title</label>
+                <input id="metaTitle" type="text" value="Rinmora — Premium Handcrafted Leather Handbags" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="metaDesc">Meta Description</label>
+                <textarea id="metaDesc" rows="3" class="w-full px-4 py-3 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition resize-none">Shop timeless leather handbags, totes, and clutches crafted for everyday luxury. Free shipping on orders over $150.</textarea>
+                <p class="text-black/40 text-xs mt-1.5">142 / 160 characters</p>
+              </div>
+              <div class="grid md:grid-cols-2 gap-5">
+                <div>
+                  <label class="block text-sm font-medium mb-1.5" for="metaKeywords">Keywords</label>
+                  <input id="metaKeywords" type="text" value="leather handbags, luxury purses, designer totes, Rinmora" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1.5" for="canonicalUrl">Canonical URL</label>
+                  <input id="canonicalUrl" type="text" value="https://rinmora.com/" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5">OG Image</label>
+                <div class="grid md:grid-cols-[1fr_auto] gap-4 items-center">
+                  <div class="border-2 border-dashed border-black/10 rounded-2xl p-8 text-center hover:border-primary hover:bg-primary/5 transition cursor-pointer">
+                    <i class="fa-solid fa-cloud-arrow-up text-2xl text-black/25 mb-3"></i>
+                    <p class="text-sm font-medium">Click to upload or drag and drop</p>
+                    <p class="text-black/40 text-xs mt-1">1200×630px recommended</p>
+                  </div>
+                  <img src="https://picsum.photos/seed/rinmora-og/160/90" alt="Current OG image preview" class="w-40 h-[90px] rounded-xl object-cover border border-black/10">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+              <h2 class="font-bold text-sm mb-4">Google Search Preview</h2>
+              <div class="border border-black/10 rounded-2xl p-4 bg-white">
+                <p class="text-success text-xs">https://rinmora.com</p>
+                <p class="text-info text-base font-medium leading-snug mt-0.5">Rinmora — Premium Handcrafted Leather Handbags</p>
+                <p class="text-black/50 text-xs mt-1 leading-relaxed">Shop timeless leather handbags, totes, and clutches crafted for everyday luxury. Free shipping on orders over $150.</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+              <h2 class="font-bold text-sm mb-4">Twitter Card Preview</h2>
+              <div class="border border-black/10 rounded-xl overflow-hidden">
+                <div class="aspect-video bg-black/[0.04] grid place-items-center">
+                  <img src="https://picsum.photos/seed/rinmora-og/400/220" alt="Twitter card preview image" class="w-full h-full object-cover">
+                </div>
+                <div class="p-3">
+                  <p class="text-sm font-semibold truncate">Rinmora — Premium Handcrafted Leather Handbags</p>
+                  <p class="text-black/40 text-xs mt-0.5">rinmora.com</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-2 border-t border-black/5 mt-2">
+            <button type="button" class="text-sm font-semibold px-5 py-2.5 rounded-full border border-black/10 hover:bg-black/5 transition">Reset</button>
+            <button type="button" class="text-sm font-semibold px-6 py-2.5 rounded-full bg-ink text-white hover:bg-black/80 transition">Save Changes</button>
+          </div>
+        </div>
+
+        <!-- ============ CURRENCY ============ -->
+        <div id="panel-currency" class="tab-panel space-y-6 hidden">
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <h2 class="font-bold text-sm mb-1">Currency Configuration</h2>
+            <p class="text-black/40 text-xs mb-5">Controls how prices are formatted and calculated storewide.</p>
+            <div class="grid md:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="defaultCurrency">Default Currency</label>
+                <div class="relative">
+                  <select id="defaultCurrency" class="w-full appearance-none px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition pr-10">
+                    <option selected>USD — US Dollar</option>
+                    <option>EUR — Euro</option>
+                    <option>GBP — British Pound</option>
+                    <option>AED — UAE Dirham</option>
+                    <option>PKR — Pakistani Rupee</option>
+                  </select>
+                  <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-black/30 text-xs pointer-events-none"></i>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="currencySymbol">Currency Symbol</label>
+                <input id="currencySymbol" type="text" value="$" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="currencyPosition">Position</label>
+                <div class="relative">
+                  <select id="currencyPosition" class="w-full appearance-none px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition pr-10">
+                    <option>Before amount ($100)</option>
+                    <option>After amount (100$)</option>
+                  </select>
+                  <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-black/30 text-xs pointer-events-none"></i>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="decimalPlaces">Decimal Places</label>
+                <div class="relative">
+                  <select id="decimalPlaces" class="w-full appearance-none px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition pr-10">
+                    <option>0</option>
+                    <option selected>2</option>
+                  </select>
+                  <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-black/30 text-xs pointer-events-none"></i>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center justify-between gap-4 py-3 border-t border-black/5 mt-2">
+              <div>
+                <p class="text-sm font-semibold">Currency Active</p>
+                <p class="text-black/45 text-xs mt-0.5">Available for customers to select at checkout.</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                <input type="checkbox" class="peer sr-only" checked>
+                <span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span>
+                <span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6 overflow-x-auto">
+            <div class="flex items-center justify-between mb-5">
+              <h2 class="font-bold text-sm">Exchange Rate Table</h2>
+              <span class="text-black/40 text-xs">Rates vs. USD</span>
+            </div>
+            <table class="w-full text-sm min-w-[560px]">
+              <thead>
+                <tr class="text-left text-black/40 text-xs uppercase tracking-wide">
+                  <th class="pb-3 font-medium">Currency</th>
+                  <th class="pb-3 font-medium">Symbol</th>
+                  <th class="pb-3 font-medium">Rate vs USD</th>
+                  <th class="pb-3 font-medium">Last Updated</th>
+                  <th class="pb-3 font-medium text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-black/5">
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5 font-semibold">US Dollar (USD)</td>
+                  <td class="py-3.5 text-black/60">$</td>
+                  <td class="py-3.5 text-black/60">1.00</td>
+                  <td class="py-3.5 text-black/40 text-xs">Base currency</td>
+                  <td class="py-3.5 text-right"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Active</span></td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5 font-semibold">Euro (EUR)</td>
+                  <td class="py-3.5 text-black/60">€</td>
+                  <td class="py-3.5 text-black/60">0.92</td>
+                  <td class="py-3.5 text-black/40 text-xs">2 hours ago</td>
+                  <td class="py-3.5 text-right"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Active</span></td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5 font-semibold">British Pound (GBP)</td>
+                  <td class="py-3.5 text-black/60">£</td>
+                  <td class="py-3.5 text-black/60">0.79</td>
+                  <td class="py-3.5 text-black/40 text-xs">2 hours ago</td>
+                  <td class="py-3.5 text-right"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Active</span></td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5 font-semibold">UAE Dirham (AED)</td>
+                  <td class="py-3.5 text-black/60">د.إ</td>
+                  <td class="py-3.5 text-black/60">3.67</td>
+                  <td class="py-3.5 text-black/40 text-xs">2 hours ago</td>
+                  <td class="py-3.5 text-right"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Active</span></td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5 font-semibold">Pakistani Rupee (PKR)</td>
+                  <td class="py-3.5 text-black/60">₨</td>
+                  <td class="py-3.5 text-black/60">278.45</td>
+                  <td class="py-3.5 text-black/40 text-xs">6 hours ago</td>
+                  <td class="py-3.5 text-right"><span class="bg-black/5 text-black/50 text-[11px] font-semibold px-2.5 py-1 rounded-full">Inactive</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-2 border-t border-black/5 mt-2">
+            <button type="button" class="text-sm font-semibold px-5 py-2.5 rounded-full border border-black/10 hover:bg-black/5 transition">Reset</button>
+            <button type="button" class="text-sm font-semibold px-6 py-2.5 rounded-full bg-ink text-white hover:bg-black/80 transition">Save Changes</button>
+          </div>
+        </div>
+
+        <!-- ============ TAXES ============ -->
+        <div id="panel-taxes" class="tab-panel space-y-6 hidden">
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <h2 class="font-bold text-sm mb-1">Tax Rules</h2>
+            <p class="text-black/40 text-xs mb-5">Rules are applied in order to matching products at checkout.</p>
+            <div class="divide-y divide-black/5">
+              <div class="flex items-center gap-4 py-3">
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold">Standard VAT</p>
+                  <p class="text-black/45 text-xs mt-0.5">Applies to: All Products</p>
+                </div>
+                <span class="text-sm font-semibold shrink-0">20%</span>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only" checked><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+              <div class="flex items-center gap-4 py-3">
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold">Reduced Rate</p>
+                  <p class="text-black/45 text-xs mt-0.5">Applies to: Accessories</p>
+                </div>
+                <span class="text-sm font-semibold shrink-0">5%</span>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only" checked><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+              <div class="flex items-center gap-4 py-3">
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold">Zero Rated</p>
+                  <p class="text-black/45 text-xs mt-0.5">Applies to: Export Orders</p>
+                </div>
+                <span class="text-sm font-semibold shrink-0">0%</span>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only" checked><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+              <div class="flex items-center gap-4 py-3">
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold">Digital Goods</p>
+                  <p class="text-black/45 text-xs mt-0.5">Applies to: Gift Cards</p>
+                </div>
+                <span class="text-sm font-semibold shrink-0">12%</span>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only"><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <h2 class="font-bold text-sm mb-1">Tax Classes</h2>
+            <p class="text-black/40 text-xs mb-4">Assign these classes to products to control which tax rules apply.</p>
+            <div class="flex flex-wrap gap-2">
+              <span class="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-primary/20 text-ink">Standard</span>
+              <span class="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-black/5 text-black/60">Reduced</span>
+              <span class="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-black/5 text-black/60">Zero</span>
+              <span class="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-black/5 text-black/60">Exempt</span>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6 overflow-x-auto">
+            <h2 class="font-bold text-sm mb-5">Country Tax Rules</h2>
+            <table class="w-full text-sm min-w-[560px]">
+              <thead>
+                <tr class="text-left text-black/40 text-xs uppercase tracking-wide">
+                  <th class="pb-3 font-medium">Country</th>
+                  <th class="pb-3 font-medium">Tax Class</th>
+                  <th class="pb-3 font-medium">Rate</th>
+                  <th class="pb-3 font-medium text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-black/5">
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5 font-semibold">🇺🇸 United States</td>
+                  <td class="py-3.5 text-black/60">Standard</td>
+                  <td class="py-3.5 text-black/60">7.25%</td>
+                  <td class="py-3.5 text-right"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Active</span></td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5 font-semibold">🇬🇧 United Kingdom</td>
+                  <td class="py-3.5 text-black/60">Standard</td>
+                  <td class="py-3.5 text-black/60">20%</td>
+                  <td class="py-3.5 text-right"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Active</span></td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5 font-semibold">🇦🇪 UAE</td>
+                  <td class="py-3.5 text-black/60">Zero</td>
+                  <td class="py-3.5 text-black/60">0%</td>
+                  <td class="py-3.5 text-right"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Active</span></td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5 font-semibold">🇵🇰 Pakistan</td>
+                  <td class="py-3.5 text-black/60">Standard</td>
+                  <td class="py-3.5 text-black/60">17%</td>
+                  <td class="py-3.5 text-right"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Active</span></td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5 font-semibold">🇪🇺 European Union</td>
+                  <td class="py-3.5 text-black/60">Reduced</td>
+                  <td class="py-3.5 text-black/60">21%</td>
+                  <td class="py-3.5 text-right"><span class="bg-black/5 text-black/50 text-[11px] font-semibold px-2.5 py-1 rounded-full">Inactive</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6 max-w-sm">
+            <h2 class="font-bold text-sm mb-4">Tax Summary Preview</h2>
+            <div class="space-y-2.5 text-sm">
+              <div class="flex items-center justify-between"><span class="text-black/50">Subtotal</span><span class="font-semibold">$248.00</span></div>
+              <div class="flex items-center justify-between"><span class="text-black/50">Tax (17%)</span><span class="font-semibold">$42.16</span></div>
+              <div class="flex items-center justify-between pt-2.5 border-t border-black/10"><span class="font-bold">Total</span><span class="font-bold">$290.16</span></div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-2 border-t border-black/5 mt-2">
+            <button type="button" class="text-sm font-semibold px-5 py-2.5 rounded-full border border-black/10 hover:bg-black/5 transition">Reset</button>
+            <button type="button" class="text-sm font-semibold px-6 py-2.5 rounded-full bg-ink text-white hover:bg-black/80 transition">Save Changes</button>
+          </div>
+        </div>
+
+        <!-- ============ LANGUAGE ============ -->
+        <div id="panel-language" class="tab-panel space-y-6 hidden">
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <h2 class="font-bold text-sm mb-1">Language Preferences</h2>
+            <p class="text-black/40 text-xs mb-5">Choose the default storefront language and which translations are live.</p>
+            <div class="grid md:grid-cols-2 gap-5 mb-2">
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="defaultLanguage">Default Language</label>
+                <div class="relative">
+                  <select id="defaultLanguage" class="w-full appearance-none px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition pr-10">
+                    <option selected>English</option>
+                    <option>Arabic</option>
+                    <option>Urdu</option>
+                    <option>French</option>
+                  </select>
+                  <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-black/30 text-xs pointer-events-none"></i>
+                </div>
+              </div>
+              <div class="flex items-end">
+                <div class="flex items-center justify-between gap-4 w-full">
+                  <div>
+                    <p class="text-sm font-semibold">RTL Layout</p>
+                    <p class="text-black/45 text-xs mt-0.5">Enable right-to-left layout for Arabic/Urdu.</p>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                    <input type="checkbox" class="peer sr-only">
+                    <span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span>
+                    <span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <p class="text-sm font-medium mb-2 mt-4">Available Languages</p>
+            <div class="divide-y divide-black/5">
+              <div class="flex items-center gap-3 py-2.5">
+                <span class="text-lg">🇺🇸</span>
+                <span class="text-sm flex-1">English</span>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only" checked><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+              <div class="flex items-center gap-3 py-2.5">
+                <span class="text-lg">🇸🇦</span>
+                <span class="text-sm flex-1">Arabic</span>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only" checked><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+              <div class="flex items-center gap-3 py-2.5">
+                <span class="text-lg">🇵🇰</span>
+                <span class="text-sm flex-1">Urdu</span>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only" checked><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+              <div class="flex items-center gap-3 py-2.5">
+                <span class="text-lg">🇫🇷</span>
+                <span class="text-sm flex-1">French</span>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only"><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+              <div class="flex items-center gap-3 py-2.5">
+                <span class="text-lg">🇩🇪</span>
+                <span class="text-sm flex-1">German</span>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only"><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+              <div class="flex items-center gap-3 py-2.5">
+                <span class="text-lg">🇪🇸</span>
+                <span class="text-sm flex-1">Spanish</span>
+                <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" class="peer sr-only"><span class="w-10 h-6 bg-black/10 peer-checked:bg-success rounded-full transition block"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4"></span></label>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mt-5 pt-4 border-t border-black/5">
+              <span class="text-xs font-semibold px-3 py-1.5 rounded-full bg-success/10 text-success">3 Active</span>
+              <span class="text-xs font-semibold px-3 py-1.5 rounded-full bg-warning/10 text-warning">2 In Progress</span>
+              <span class="text-xs font-semibold px-3 py-1.5 rounded-full bg-black/5 text-black/50">1 Disabled</span>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6 overflow-x-auto">
+            <h2 class="font-bold text-sm mb-5">Translation Progress</h2>
+            <table class="w-full text-sm min-w-[560px]">
+              <thead>
+                <tr class="text-left text-black/40 text-xs uppercase tracking-wide">
+                  <th class="pb-3 font-medium">Language</th>
+                  <th class="pb-3 font-medium">Code</th>
+                  <th class="pb-3 font-medium">Native Name</th>
+                  <th class="pb-3 font-medium">Completion</th>
+                  <th class="pb-3 font-medium text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-black/5">
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5 font-semibold">English</td>
+                  <td class="py-3.5 text-black/60">en</td>
+                  <td class="py-3.5 text-black/60">English</td>
+                  <td class="py-3.5 w-40">
+                    <div class="flex items-center gap-2">
+                      <div class="h-1.5 flex-1 rounded-full bg-black/5 overflow-hidden"><div class="h-full bg-primary-dark rounded-full" style="width:100%"></div></div>
+                      <span class="text-xs text-black/50 shrink-0">100%</span>
+                    </div>
+                  </td>
+                  <td class="py-3.5 text-right"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Active</span></td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5 font-semibold">Arabic</td>
+                  <td class="py-3.5 text-black/60">ar</td>
+                  <td class="py-3.5 text-black/60">العربية</td>
+                  <td class="py-3.5 w-40">
+                    <div class="flex items-center gap-2">
+                      <div class="h-1.5 flex-1 rounded-full bg-black/5 overflow-hidden"><div class="h-full bg-primary-dark rounded-full" style="width:85%"></div></div>
+                      <span class="text-xs text-black/50 shrink-0">85%</span>
+                    </div>
+                  </td>
+                  <td class="py-3.5 text-right"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Active</span></td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5 font-semibold">Urdu</td>
+                  <td class="py-3.5 text-black/60">ur</td>
+                  <td class="py-3.5 text-black/60">اردو</td>
+                  <td class="py-3.5 w-40">
+                    <div class="flex items-center gap-2">
+                      <div class="h-1.5 flex-1 rounded-full bg-black/5 overflow-hidden"><div class="h-full bg-primary-dark rounded-full" style="width:78%"></div></div>
+                      <span class="text-xs text-black/50 shrink-0">78%</span>
+                    </div>
+                  </td>
+                  <td class="py-3.5 text-right"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Active</span></td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5 font-semibold">French</td>
+                  <td class="py-3.5 text-black/60">fr</td>
+                  <td class="py-3.5 text-black/60">Français</td>
+                  <td class="py-3.5 w-40">
+                    <div class="flex items-center gap-2">
+                      <div class="h-1.5 flex-1 rounded-full bg-black/5 overflow-hidden"><div class="h-full bg-warning rounded-full" style="width:42%"></div></div>
+                      <span class="text-xs text-black/50 shrink-0">42%</span>
+                    </div>
+                  </td>
+                  <td class="py-3.5 text-right"><span class="bg-warning/10 text-warning text-[11px] font-semibold px-2.5 py-1 rounded-full">In Progress</span></td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5 font-semibold">German</td>
+                  <td class="py-3.5 text-black/60">de</td>
+                  <td class="py-3.5 text-black/60">Deutsch</td>
+                  <td class="py-3.5 w-40">
+                    <div class="flex items-center gap-2">
+                      <div class="h-1.5 flex-1 rounded-full bg-black/5 overflow-hidden"><div class="h-full bg-black/20 rounded-full" style="width:15%"></div></div>
+                      <span class="text-xs text-black/50 shrink-0">15%</span>
+                    </div>
+                  </td>
+                  <td class="py-3.5 text-right"><span class="bg-black/5 text-black/50 text-[11px] font-semibold px-2.5 py-1 rounded-full">Disabled</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-2 border-t border-black/5 mt-2">
+            <button type="button" class="text-sm font-semibold px-5 py-2.5 rounded-full border border-black/10 hover:bg-black/5 transition">Reset</button>
+            <button type="button" class="text-sm font-semibold px-6 py-2.5 rounded-full bg-ink text-white hover:bg-black/80 transition">Save Changes</button>
+          </div>
+        </div>
+
+        <!-- ============ TIMEZONE ============ -->
+        <div id="panel-timezone" class="tab-panel space-y-6 hidden">
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+            <h2 class="font-bold text-sm mb-1">Date &amp; Time Format</h2>
+            <p class="text-black/40 text-xs mb-5">Controls how dates and timestamps are displayed across the admin panel and storefront.</p>
+            <div class="grid md:grid-cols-3 gap-5">
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="timezoneSelect">Timezone</label>
+                <div class="relative">
+                  <select id="timezoneSelect" class="w-full appearance-none px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition pr-10">
+                    <option selected>(GMT+05:00) Karachi, Islamabad</option>
+                    <option>(GMT-05:00) New York</option>
+                    <option>(GMT+00:00) London</option>
+                    <option>(GMT+04:00) Dubai</option>
+                    <option>(GMT+01:00) Paris</option>
+                  </select>
+                  <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-black/30 text-xs pointer-events-none"></i>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="dateFormat">Date Format</label>
+                <div class="relative">
+                  <select id="dateFormat" class="w-full appearance-none px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition pr-10">
+                    <option selected>DD/MM/YYYY</option>
+                    <option>MM/DD/YYYY</option>
+                    <option>YYYY-MM-DD</option>
+                  </select>
+                  <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-black/30 text-xs pointer-events-none"></i>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5" for="timeFormat">Time Format</label>
+                <div class="relative">
+                  <select id="timeFormat" class="w-full appearance-none px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition pr-10">
+                    <option selected>12-hour</option>
+                    <option>24-hour</option>
+                  </select>
+                  <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-black/30 text-xs pointer-events-none"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6 max-w-md">
+            <h2 class="font-bold text-sm mb-1">Preview</h2>
+            <p class="text-black/40 text-xs mb-4">Today's date &amp; time would display as:</p>
+            <div class="flex items-center gap-3 bg-black/[0.02] rounded-2xl p-4">
+              <span class="w-9 h-9 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-solid fa-clock text-primary-dark text-xs"></i></span>
+              <p class="text-lg font-bold">09/07/2026 · 10:24 AM</p>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-2 border-t border-black/5 mt-2">
+            <button type="button" class="text-sm font-semibold px-5 py-2.5 rounded-full border border-black/10 hover:bg-black/5 transition">Reset</button>
+            <button type="button" class="text-sm font-semibold px-6 py-2.5 rounded-full bg-ink text-white hover:bg-black/80 transition">Save Changes</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // Sidebar (mobile drawer + desktop collapse)
+  const sidebar = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+  const mobileSidebarBtn = document.getElementById('mobileSidebarBtn');
+  const collapseSidebarBtn = document.getElementById('collapseSidebarBtn');
+
+  function openMobileSidebar() {
+    sidebar.classList.remove('-translate-x-full');
+    sidebarOverlay.classList.remove('invisible', 'pointer-events-none');
+    requestAnimationFrame(() => sidebarOverlay.classList.add('bg-black/40'));
+  }
+  function closeMobileSidebar() {
+    sidebar.classList.add('-translate-x-full');
+    sidebarOverlay.classList.remove('bg-black/40');
+    sidebarOverlay.classList.add('pointer-events-none');
+    setTimeout(() => sidebarOverlay.classList.add('invisible'), 300);
+  }
+  mobileSidebarBtn.addEventListener('click', openMobileSidebar);
+  sidebarOverlay.addEventListener('click', closeMobileSidebar);
+
+  collapseSidebarBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('sidebar-collapsed');
+    sidebar.classList.toggle('w-72');
+    sidebar.classList.toggle('w-20');
+  });
+
+  document.querySelectorAll('.submenu-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const submenu = btn.nextElementSibling;
+      const chevron = btn.querySelector('.nav-chevron');
+      submenu.classList.toggle('hidden');
+      chevron.classList.toggle('rotate-180');
+    });
+  });
+
+  const dropdowns = [
+    ['quickActionsBtn', 'quickActionsMenu'],
+    ['notifBtn', 'notifMenu'],
+    ['msgBtn', 'msgMenu'],
+    ['profileBtn', 'profileMenu'],
+  ];
+  dropdowns.forEach(([btnId, menuId]) => {
+    const btn = document.getElementById(btnId);
+    const menu = document.getElementById(menuId);
+    if (!btn || !menu) return;
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = !menu.classList.contains('hidden');
+      dropdowns.forEach(([, mId]) => document.getElementById(mId)?.classList.add('hidden'));
+      menu.classList.toggle('hidden', isOpen);
+    });
+  });
+  document.addEventListener('click', () => {
+    dropdowns.forEach(([, mId]) => document.getElementById(mId)?.classList.add('hidden'));
+  });
+
+  document.getElementById('themeToggleBtn').addEventListener('click', function () {
+    const icon = this.querySelector('i');
+    icon.classList.toggle('fa-moon');
+    icon.classList.toggle('fa-sun');
+  });
+
+  // ==== PAGE-SPECIFIC SCRIPT: Settings vertical tab nav ====
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('active-tab', 'bg-primary/20', 'text-ink', 'font-semibold');
+        b.classList.add('text-black/60', 'font-medium');
+      });
+      btn.classList.add('active-tab', 'bg-primary/20', 'text-ink', 'font-semibold');
+      btn.classList.remove('text-black/60', 'font-medium');
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById('panel-' + btn.dataset.tab).classList.remove('hidden');
+    });
+  });
+</script>
+
+</body>
+</html>

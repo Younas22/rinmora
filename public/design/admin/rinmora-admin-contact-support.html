@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact & Support — Rinmora Admin</title>
+<meta name="description" content="Rinmora Admin — manage customer messages, support tickets, and newsletter subscribers.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: '#CFBAA5', 'primary-dark': '#b89e84', ink: '#000000',
+          canvas: '#F8F8F8',
+          success: '#22C55E', warning: '#F59E0B', danger: '#EF4444', info: '#3B82F6',
+        },
+        fontFamily: { sans: ['Inter', 'sans-serif'] },
+        borderRadius: { '4xl': '2rem' },
+        boxShadow: { soft: '0 20px 60px -15px rgba(0,0,0,0.12)', card: '0 4px 24px -8px rgba(0,0,0,0.08)' },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Inter', sans-serif; }
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+  .fade-up { animation: fadeUp .5s ease both; }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(10px);} to {opacity:1; transform:translateY(0);} }
+  .hover-lift { transition: transform .2s ease, box-shadow .2s ease; }
+  .hover-lift:hover { transform: translateY(-2px); }
+  .sidebar-collapsed .nav-label,
+  .sidebar-collapsed .nav-section-label,
+  .sidebar-collapsed .sidebar-brand-text,
+  .sidebar-collapsed .nav-chevron { display: none; }
+  .sidebar-collapsed .submenu { display: none !important; }
+</style>
+</head>
+
+<body class="bg-canvas text-ink antialiased">
+
+<!-- =========================================================
+     TOPBAR
+========================================================== -->
+<header class="sticky top-0 z-40 bg-white border-b border-black/5">
+  <div class="flex items-center gap-3 h-16 px-4 md:px-6">
+    <button id="mobileSidebarBtn" aria-label="Open sidebar" class="lg:hidden w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <button id="collapseSidebarBtn" aria-label="Collapse sidebar" class="hidden lg:grid w-9 h-9 place-items-center rounded-full hover:bg-black/5 transition">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <a href="rinmora-admin-dashboard.html" class="flex items-center gap-2 shrink-0">
+      <img src="../../logo-01.png" alt="Rinmora" class="h-7 w-auto">
+      <span class="hidden sm:inline text-[10px] font-semibold uppercase tracking-wider bg-ink text-white px-2 py-0.5 rounded-full">Admin</span>
+    </a>
+
+    <div class="flex-1 max-w-xl mx-auto hidden sm:block">
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-black/30 text-sm"></i>
+        <label for="globalSearch" class="sr-only">Global search</label>
+        <input id="globalSearch" type="text" placeholder="Search products, orders, customers..." class="w-full pl-11 pr-4 py-2.5 rounded-full bg-black/[0.03] border border-transparent text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition">
+      </div>
+    </div>
+
+    <div class="flex items-center gap-1 ml-auto sm:ml-0">
+      <button aria-label="Search" class="sm:hidden w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+        <i class="fa-solid fa-magnifying-glass text-sm"></i>
+      </button>
+
+      <div class="relative">
+        <button id="quickActionsBtn" class="hidden md:inline-flex items-center gap-2 bg-primary text-ink font-semibold text-xs uppercase tracking-wide px-4 py-2.5 rounded-full hover:bg-primary-dark transition">
+          <i class="fa-solid fa-plus text-[10px]"></i> Quick Actions
+        </button>
+        <div id="quickActionsMenu" class="hidden absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <a href="rinmora-admin-product-add.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-bag-shopping w-4 text-black/40"></i> New Product</a>
+          <a href="rinmora-admin-orders.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-receipt w-4 text-black/40"></i> New Order</a>
+          <a href="rinmora-admin-customers.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-user-plus w-4 text-black/40"></i> New Customer</a>
+        </div>
+      </div>
+
+      <div class="relative">
+        <button id="notifBtn" aria-label="Notifications" class="relative w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+          <i class="fa-regular fa-bell text-sm"></i>
+          <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-danger"></span>
+        </button>
+        <div id="notifMenu" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <p class="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black/40">Notifications</p>
+          <a href="#" class="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <span class="w-8 h-8 rounded-full bg-danger/15 grid place-items-center shrink-0"><i class="fa-solid fa-headset text-danger text-xs"></i></span>
+            <span class="text-sm"><span class="font-medium">New high-priority ticket</span><br><span class="text-black/45 text-xs">#TCK-1042 — Damaged zipper</span></span>
+          </a>
+          <a href="#" class="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <span class="w-8 h-8 rounded-full bg-success/15 grid place-items-center shrink-0"><i class="fa-solid fa-circle-check text-success text-xs"></i></span>
+            <span class="text-sm"><span class="font-medium">Ticket #TCK-1037 resolved</span><br><span class="text-black/45 text-xs">15 minutes ago</span></span>
+          </a>
+          <a href="#" class="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <span class="w-8 h-8 rounded-full bg-info/15 grid place-items-center shrink-0"><i class="fa-solid fa-user-plus text-info text-xs"></i></span>
+            <span class="text-sm"><span class="font-medium">312 new subscribers</span><br><span class="text-black/45 text-xs">This month</span></span>
+          </a>
+        </div>
+      </div>
+
+      <div class="relative">
+        <button id="msgBtn" aria-label="Messages" class="relative w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+          <i class="fa-regular fa-envelope text-sm"></i>
+          <span class="absolute top-1 right-1.5 w-4 h-4 rounded-full bg-ink text-white text-[9px] font-bold grid place-items-center">2</span>
+        </button>
+        <div id="msgMenu" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <p class="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black/40">Messages</p>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <img src="https://picsum.photos/seed/admin-msg-1/60/60" alt="" class="w-8 h-8 rounded-full object-cover">
+            <span class="text-sm"><span class="font-medium">Sana K.</span><br><span class="text-black/45 text-xs">Question about order #RIN-20583</span></span>
+          </a>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <img src="https://picsum.photos/seed/admin-msg-2/60/60" alt="" class="w-8 h-8 rounded-full object-cover">
+            <span class="text-sm"><span class="font-medium">Bilal A.</span><br><span class="text-black/45 text-xs">Bulk order inquiry</span></span>
+          </a>
+        </div>
+      </div>
+
+      <button id="themeToggleBtn" aria-label="Toggle theme" class="w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+        <i class="fa-regular fa-moon text-sm"></i>
+      </button>
+
+      <div class="relative pl-1">
+        <button id="profileBtn" class="flex items-center gap-2 pl-1.5 pr-2.5 py-1.5 rounded-full hover:bg-black/5 transition">
+          <img src="https://picsum.photos/seed/admin-avatar/80/80" alt="Admin" class="w-7 h-7 rounded-full object-cover">
+          <span class="hidden md:inline text-sm font-medium">Ayesha N.</span>
+          <i class="fa-solid fa-chevron-down text-[10px] text-black/40"></i>
+        </button>
+        <div id="profileMenu" class="hidden absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-regular fa-user w-4 text-black/40"></i> My Profile</a>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-gear w-4 text-black/40"></i> Settings</a>
+          <div class="border-t border-black/5 my-1"></div>
+          <a href="../rinmora-login-preview.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-danger hover:bg-danger/5 transition"><i class="fa-solid fa-right-from-bracket w-4"></i> Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="flex">
+
+  <!-- =========================================================
+       SIDEBAR
+  ========================================================== -->
+  <div id="sidebarOverlay" class="fixed inset-0 bg-black/0 z-30 lg:hidden invisible pointer-events-none transition-colors duration-300"></div>
+
+  <aside id="sidebar" class="fixed lg:sticky top-16 left-0 z-30 h-[calc(100vh-4rem)] w-72 bg-white border-r border-black/5 -translate-x-full lg:translate-x-0 transition-all duration-300 ease-out overflow-y-auto shrink-0">
+    <nav class="p-4 space-y-1">
+      <p class="nav-section-label px-3 pt-2 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Main</p>
+
+      <a href="rinmora-admin-dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-gauge w-4 text-center"></i> <span class="nav-label">Dashboard</span>
+      </a>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-bag-shopping w-4 text-center"></i> <span class="nav-label">Products</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-products.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Products</a>
+          <a href="rinmora-admin-product-add.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Add Product</a>
+          <a href="rinmora-admin-product-categories.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Categories</a>
+          <a href="rinmora-admin-product-brands.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Brands &amp; Collections</a>
+          <a href="rinmora-admin-product-attributes.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Attributes</a>
+          <a href="rinmora-admin-reviews.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Reviews</a>
+          <a href="rinmora-admin-inventory.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Inventory</a>
+        </div>
+      </div>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-receipt w-4 text-center"></i> <span class="nav-label">Orders</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Orders</a>
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Pending</a>
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Shipped</a>
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Returned / Refunded</a>
+        </div>
+      </div>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-users w-4 text-center"></i> <span class="nav-label">Customers</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-customers.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Customers</a>
+          <a href="rinmora-admin-customer-addresses.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Addresses</a>
+          <a href="rinmora-admin-wishlist-reports.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Wishlist Reports</a>
+          <a href="rinmora-admin-reward-points.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Reward Points</a>
+        </div>
+      </div>
+
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-bullhorn w-4 text-center"></i> <span class="nav-label">Marketing</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Content &amp; Store</p>
+
+      <a href="rinmora-admin-cms-homepage-builder.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-file-lines w-4 text-center"></i> <span class="nav-label">CMS</span>
+      </a>
+      <a href="rinmora-admin-media-manager.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-images w-4 text-center"></i> <span class="nav-label">Media Manager</span>
+      </a>
+      <a href="rinmora-admin-reviews.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-star w-4 text-center"></i> <span class="nav-label">Reviews</span>
+      </a>
+      <a href="rinmora-admin-inventory.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-warehouse w-4 text-center"></i> <span class="nav-label">Inventory</span>
+      </a>
+      <a href="rinmora-admin-shipping.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-truck-fast w-4 text-center"></i> <span class="nav-label">Shipping</span>
+      </a>
+      <a href="rinmora-admin-payments.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-credit-card w-4 text-center"></i> <span class="nav-label">Payments</span>
+      </a>
+      <a href="rinmora-admin-users.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-user-shield w-4 text-center"></i> <span class="nav-label">Users &amp; Roles</span>
+      </a>
+      <a href="rinmora-admin-reports.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-chart-line w-4 text-center"></i> <span class="nav-label">Reports</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">System</p>
+
+      <a href="rinmora-admin-seo.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-magnifying-glass-chart w-4 text-center"></i> <span class="nav-label">SEO</span>
+      </a>
+      <a href="rinmora-admin-contact-support.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary/20 text-ink font-semibold text-sm">
+        <i class="fa-solid fa-headset w-4 text-center"></i> <span class="nav-label">Contact &amp; Support</span>
+      </a>
+      <a href="rinmora-admin-notifications.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-bell w-4 text-center"></i> <span class="nav-label">Notifications</span>
+      </a>
+      <a href="rinmora-admin-activity-logs.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-clock-rotate-left w-4 text-center"></i> <span class="nav-label">Activity Logs</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Account</p>
+
+      <a href="rinmora-admin-profile.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-user w-4 text-center"></i> <span class="nav-label">My Profile</span>
+      </a>
+      <a href="rinmora-admin-settings.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-gear w-4 text-center"></i> <span class="nav-label">Settings</span>
+      </a>
+      <a href="../rinmora-login-preview.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-right-from-bracket w-4 text-center"></i> <span class="nav-label">Logout</span>
+      </a>
+    </nav>
+  </aside>
+
+
+  <!-- =========================================================
+       MAIN CONTENT
+  ========================================================== -->
+  <main class="flex-1 min-w-0 px-4 md:px-6 py-6">
+
+    <!-- Breadcrumb + Page Header -->
+    <nav aria-label="Breadcrumb" class="text-xs text-black/40 mb-2">
+      <span>Admin</span> <i class="fa-solid fa-chevron-right text-[8px] mx-1.5"></i> <span class="text-ink font-medium">Contact &amp; Support</span>
+    </nav>
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+      <div>
+        <h1 class="text-xl md:text-2xl font-bold">Contact &amp; Support</h1>
+        <p class="text-black/45 text-sm mt-1">Manage customer messages, support tickets, and newsletter subscribers.</p>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         TAB NAV + PANELS
+    ========================================================== -->
+    <div class="grid lg:grid-cols-[248px_1fr] gap-6 items-start">
+
+      <!-- Sub nav -->
+      <nav class="lg:sticky lg:top-[88px] bg-white rounded-3xl shadow-card p-3 flex lg:flex-col gap-1 overflow-x-auto lg:overflow-visible">
+        <button type="button" class="tab-btn active-tab w-full text-left flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold bg-primary/20 text-ink transition whitespace-nowrap shrink-0" data-tab="messages">
+          <i class="fa-solid fa-envelope-open-text w-4 text-center"></i> Contact Messages
+        </button>
+        <button type="button" class="tab-btn w-full text-left flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-black/60 hover:bg-black/5 transition whitespace-nowrap shrink-0" data-tab="tickets">
+          <i class="fa-solid fa-headset w-4 text-center"></i> Support Tickets
+        </button>
+        <button type="button" class="tab-btn w-full text-left flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-black/60 hover:bg-black/5 transition whitespace-nowrap shrink-0" data-tab="subscribers">
+          <i class="fa-solid fa-users-line w-4 text-center"></i> Newsletter Subscribers
+        </button>
+      </nav>
+
+      <!-- Panels -->
+      <div class="min-w-0">
+
+        <!-- =====================================================
+             PANEL: MESSAGES
+        ====================================================== -->
+        <div id="panel-messages" class="tab-panel space-y-6">
+
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6 overflow-x-auto">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+              <h2 class="font-bold text-sm">Contact Messages</h2>
+              <div class="flex items-center gap-2">
+                <div class="relative">
+                  <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-black/30 text-xs"></i>
+                  <input type="text" placeholder="Search messages..." class="pl-9 pr-4 py-2 rounded-full bg-black/[0.03] border border-transparent text-xs focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition w-40 md:w-56">
+                </div>
+                <div class="relative">
+                  <label for="priorityFilter" class="sr-only">Filter by priority</label>
+                  <select id="priorityFilter" class="appearance-none pl-3.5 pr-8 py-2 rounded-full border border-black/10 bg-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary transition">
+                    <option>All Priorities</option>
+                    <option>High</option>
+                    <option>Medium</option>
+                    <option>Low</option>
+                  </select>
+                  <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-black/30 text-[9px] pointer-events-none"></i>
+                </div>
+                <button class="inline-flex items-center gap-2 border border-black/10 rounded-full px-3.5 py-2 text-xs font-semibold hover:bg-black/[0.03] transition">
+                  <i class="fa-solid fa-filter text-black/40 text-[10px]"></i> Filters
+                </button>
+              </div>
+            </div>
+
+            <table class="w-full text-sm min-w-[840px]">
+              <thead>
+                <tr class="text-left text-black/40 text-xs uppercase tracking-wide">
+                  <th class="pb-3 font-medium">Customer</th>
+                  <th class="pb-3 font-medium">Subject</th>
+                  <th class="pb-3 font-medium">Priority</th>
+                  <th class="pb-3 font-medium">Date</th>
+                  <th class="pb-3 font-medium text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-black/5">
+                <tr class="hover:bg-black/[0.04] transition bg-primary/5">
+                  <td class="py-3.5">
+                    <div class="flex items-center gap-3">
+                      <img src="https://picsum.photos/seed/msg-1/80/80" alt="Sana Khan" class="w-9 h-9 rounded-full object-cover">
+                      <div class="min-w-0">
+                        <p class="text-sm font-semibold flex items-center gap-1.5">Sana Khan <span class="w-1.5 h-1.5 rounded-full bg-info shrink-0" aria-label="Unread"></span></p>
+                        <p class="text-black/40 text-xs truncate">sana.khan@gmail.com</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-3.5 text-black/70">Question about order #RIN-20583</td>
+                  <td class="py-3.5"><span class="bg-danger/10 text-danger text-[11px] font-semibold px-2.5 py-1 rounded-full">High</span></td>
+                  <td class="py-3.5 text-black/45 text-xs">Jul 8, 2026</td>
+                  <td class="py-3.5">
+                    <div class="flex items-center justify-end gap-1">
+                      <button aria-label="Reply" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-reply text-xs text-black/50"></i></button>
+                      <button aria-label="Archive" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-box-archive text-xs text-black/50"></i></button>
+                      <button aria-label="Delete" class="w-8 h-8 rounded-full grid place-items-center hover:bg-danger/10 transition"><i class="fa-solid fa-trash text-xs text-danger"></i></button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="hover:bg-black/[0.04] transition bg-primary/5">
+                  <td class="py-3.5">
+                    <div class="flex items-center gap-3">
+                      <img src="https://picsum.photos/seed/msg-2/80/80" alt="Bilal Ahmed" class="w-9 h-9 rounded-full object-cover">
+                      <div class="min-w-0">
+                        <p class="text-sm font-semibold flex items-center gap-1.5">Bilal Ahmed <span class="w-1.5 h-1.5 rounded-full bg-info shrink-0" aria-label="Unread"></span></p>
+                        <p class="text-black/40 text-xs truncate">bilal.ahmed@outlook.com</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-3.5 text-black/70">Bulk order inquiry</td>
+                  <td class="py-3.5"><span class="bg-warning/10 text-warning text-[11px] font-semibold px-2.5 py-1 rounded-full">Medium</span></td>
+                  <td class="py-3.5 text-black/45 text-xs">Jul 8, 2026</td>
+                  <td class="py-3.5">
+                    <div class="flex items-center justify-end gap-1">
+                      <button aria-label="Reply" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-reply text-xs text-black/50"></i></button>
+                      <button aria-label="Archive" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-box-archive text-xs text-black/50"></i></button>
+                      <button aria-label="Delete" class="w-8 h-8 rounded-full grid place-items-center hover:bg-danger/10 transition"><i class="fa-solid fa-trash text-xs text-danger"></i></button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5">
+                    <div class="flex items-center gap-3">
+                      <img src="https://picsum.photos/seed/msg-3/80/80" alt="Hira Malik" class="w-9 h-9 rounded-full object-cover">
+                      <div class="min-w-0">
+                        <p class="text-sm font-medium">Hira Malik</p>
+                        <p class="text-black/40 text-xs truncate">hira.malik@yahoo.com</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-3.5 text-black/70">Return policy question</td>
+                  <td class="py-3.5"><span class="bg-info/10 text-info text-[11px] font-semibold px-2.5 py-1 rounded-full">Low</span></td>
+                  <td class="py-3.5 text-black/45 text-xs">Jul 7, 2026</td>
+                  <td class="py-3.5">
+                    <div class="flex items-center justify-end gap-1">
+                      <button aria-label="Reply" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-reply text-xs text-black/50"></i></button>
+                      <button aria-label="Archive" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-box-archive text-xs text-black/50"></i></button>
+                      <button aria-label="Delete" class="w-8 h-8 rounded-full grid place-items-center hover:bg-danger/10 transition"><i class="fa-solid fa-trash text-xs text-danger"></i></button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5">
+                    <div class="flex items-center gap-3">
+                      <img src="https://picsum.photos/seed/msg-4/80/80" alt="Faisal Traders" class="w-9 h-9 rounded-full object-cover">
+                      <div class="min-w-0">
+                        <p class="text-sm font-medium">Faisal Traders</p>
+                        <p class="text-black/40 text-xs truncate">faisal@faisaltraders.com</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-3.5 text-black/70">Wholesale partnership</td>
+                  <td class="py-3.5"><span class="bg-warning/10 text-warning text-[11px] font-semibold px-2.5 py-1 rounded-full">Medium</span></td>
+                  <td class="py-3.5 text-black/45 text-xs">Jul 6, 2026</td>
+                  <td class="py-3.5">
+                    <div class="flex items-center justify-end gap-1">
+                      <button aria-label="Reply" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-reply text-xs text-black/50"></i></button>
+                      <button aria-label="Archive" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-box-archive text-xs text-black/50"></i></button>
+                      <button aria-label="Delete" class="w-8 h-8 rounded-full grid place-items-center hover:bg-danger/10 transition"><i class="fa-solid fa-trash text-xs text-danger"></i></button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="hover:bg-black/[0.04] transition bg-primary/5">
+                  <td class="py-3.5">
+                    <div class="flex items-center gap-3">
+                      <img src="https://picsum.photos/seed/msg-5/80/80" alt="Zoya Ahmed" class="w-9 h-9 rounded-full object-cover">
+                      <div class="min-w-0">
+                        <p class="text-sm font-semibold flex items-center gap-1.5">Zoya Ahmed <span class="w-1.5 h-1.5 rounded-full bg-info shrink-0" aria-label="Unread"></span></p>
+                        <p class="text-black/40 text-xs truncate">zoya.ahmed@gmail.com</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-3.5 text-black/70">Product defect report</td>
+                  <td class="py-3.5"><span class="bg-danger/10 text-danger text-[11px] font-semibold px-2.5 py-1 rounded-full">High</span></td>
+                  <td class="py-3.5 text-black/45 text-xs">Jul 5, 2026</td>
+                  <td class="py-3.5">
+                    <div class="flex items-center justify-end gap-1">
+                      <button aria-label="Reply" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-reply text-xs text-black/50"></i></button>
+                      <button aria-label="Archive" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-box-archive text-xs text-black/50"></i></button>
+                      <button aria-label="Delete" class="w-8 h-8 rounded-full grid place-items-center hover:bg-danger/10 transition"><i class="fa-solid fa-trash text-xs text-danger"></i></button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5">
+                    <div class="flex items-center gap-3">
+                      <img src="https://picsum.photos/seed/msg-6/80/80" alt="Amina Raza" class="w-9 h-9 rounded-full object-cover">
+                      <div class="min-w-0">
+                        <p class="text-sm font-medium">Amina Raza</p>
+                        <p class="text-black/40 text-xs truncate">amina.raza@hotmail.com</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-3.5 text-black/70">Gift wrapping availability</td>
+                  <td class="py-3.5"><span class="bg-info/10 text-info text-[11px] font-semibold px-2.5 py-1 rounded-full">Low</span></td>
+                  <td class="py-3.5 text-black/45 text-xs">Jul 4, 2026</td>
+                  <td class="py-3.5">
+                    <div class="flex items-center justify-end gap-1">
+                      <button aria-label="Reply" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-reply text-xs text-black/50"></i></button>
+                      <button aria-label="Archive" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-box-archive text-xs text-black/50"></i></button>
+                      <button aria-label="Delete" class="w-8 h-8 rounded-full grid place-items-center hover:bg-danger/10 transition"><i class="fa-solid fa-trash text-xs text-danger"></i></button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5">
+                    <div class="flex items-center gap-3">
+                      <img src="https://picsum.photos/seed/msg-7/80/80" alt="Noor Fatima" class="w-9 h-9 rounded-full object-cover">
+                      <div class="min-w-0">
+                        <p class="text-sm font-medium">Noor Fatima</p>
+                        <p class="text-black/40 text-xs truncate">noor.fatima@gmail.com</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-3.5 text-black/70">Website login issue</td>
+                  <td class="py-3.5"><span class="bg-warning/10 text-warning text-[11px] font-semibold px-2.5 py-1 rounded-full">Medium</span></td>
+                  <td class="py-3.5 text-black/45 text-xs">Jul 3, 2026</td>
+                  <td class="py-3.5">
+                    <div class="flex items-center justify-end gap-1">
+                      <button aria-label="Reply" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-reply text-xs text-black/50"></i></button>
+                      <button aria-label="Archive" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-box-archive text-xs text-black/50"></i></button>
+                      <button aria-label="Delete" class="w-8 h-8 rounded-full grid place-items-center hover:bg-danger/10 transition"><i class="fa-solid fa-trash text-xs text-danger"></i></button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="flex items-center justify-between mt-5 pt-4 border-t border-black/5 text-xs text-black/45">
+              <p>Showing 1–7 of 63</p>
+              <div class="flex items-center gap-1">
+                <button aria-label="Previous page" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-chevron-left text-[10px]"></i></button>
+                <button class="w-8 h-8 rounded-full grid place-items-center bg-ink text-white font-semibold">1</button>
+                <button class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition">2</button>
+                <button class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition">3</button>
+                <button aria-label="Next page" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-chevron-right text-[10px]"></i></button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- =====================================================
+             PANEL: TICKETS
+        ====================================================== -->
+        <div id="panel-tickets" class="tab-panel space-y-6 hidden">
+
+          <!-- KPI row -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+            <div class="hover-lift bg-white rounded-2xl shadow-card p-5">
+              <div class="flex items-center justify-between mb-3">
+                <span class="w-9 h-9 rounded-full bg-info/15 grid place-items-center"><i class="fa-solid fa-envelope-open text-info text-xs"></i></span>
+              </div>
+              <p class="text-xl font-bold">12</p>
+              <p class="text-black/45 text-xs mt-0.5">Open</p>
+            </div>
+            <div class="hover-lift bg-white rounded-2xl shadow-card p-5">
+              <div class="flex items-center justify-between mb-3">
+                <span class="w-9 h-9 rounded-full bg-warning/15 grid place-items-center"><i class="fa-solid fa-hourglass-half text-warning text-xs"></i></span>
+              </div>
+              <p class="text-xl font-bold">5</p>
+              <p class="text-black/45 text-xs mt-0.5">Pending</p>
+            </div>
+            <div class="hover-lift bg-white rounded-2xl shadow-card p-5">
+              <div class="flex items-center justify-between mb-3">
+                <span class="w-9 h-9 rounded-full bg-success/15 grid place-items-center"><i class="fa-solid fa-circle-check text-success text-xs"></i></span>
+              </div>
+              <p class="text-xl font-bold">34</p>
+              <p class="text-black/45 text-xs mt-0.5">Resolved</p>
+            </div>
+            <div class="hover-lift bg-white rounded-2xl shadow-card p-5">
+              <div class="flex items-center justify-between mb-3">
+                <span class="w-9 h-9 rounded-full bg-black/5 grid place-items-center"><i class="fa-solid fa-box-archive text-black/50 text-xs"></i></span>
+              </div>
+              <p class="text-xl font-bold">21</p>
+              <p class="text-black/45 text-xs mt-0.5">Closed</p>
+            </div>
+          </div>
+
+          <!-- Ticket list + detail -->
+          <div class="grid lg:grid-cols-[1fr_380px] gap-4 items-start">
+
+            <!-- Ticket list -->
+            <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+              <div class="flex items-center justify-between mb-4">
+                <h2 class="font-bold text-sm">All Tickets</h2>
+                <button class="inline-flex items-center gap-2 border border-black/10 rounded-full px-3.5 py-2 text-xs font-semibold hover:bg-black/[0.03] transition">
+                  <i class="fa-solid fa-filter text-black/40 text-[10px]"></i> Filters
+                </button>
+              </div>
+              <div class="divide-y divide-black/5">
+                <button type="button" class="w-full text-left flex items-center gap-3 py-3.5 px-3 -mx-3 rounded-xl bg-primary/5 ring-1 ring-primary/30 transition">
+                  <img src="https://picsum.photos/seed/tck-1/80/80" alt="Sana Khan" class="w-9 h-9 rounded-full object-cover shrink-0">
+                  <div class="min-w-0 flex-1">
+                    <p class="text-sm font-semibold truncate">#TCK-1042 · Damaged zipper on Milano Tote</p>
+                    <p class="text-black/40 text-xs truncate">Sana Khan</p>
+                  </div>
+                  <div class="flex flex-col items-end gap-1 shrink-0">
+                    <span class="bg-info/10 text-info text-[11px] font-semibold px-2.5 py-1 rounded-full">Open</span>
+                    <span class="text-black/35 text-[10px]">12m ago</span>
+                  </div>
+                </button>
+                <button type="button" class="w-full text-left flex items-center gap-3 py-3.5 px-3 -mx-3 rounded-xl hover:bg-black/[0.02] transition">
+                  <img src="https://picsum.photos/seed/tck-2/80/80" alt="Bilal Ahmed" class="w-9 h-9 rounded-full object-cover shrink-0">
+                  <div class="min-w-0 flex-1">
+                    <p class="text-sm font-semibold truncate">#TCK-1041 · Wrong item received</p>
+                    <p class="text-black/40 text-xs truncate">Bilal Ahmed</p>
+                  </div>
+                  <div class="flex flex-col items-end gap-1 shrink-0">
+                    <span class="bg-warning/10 text-warning text-[11px] font-semibold px-2.5 py-1 rounded-full">Pending</span>
+                    <span class="text-black/35 text-[10px]">1h ago</span>
+                  </div>
+                </button>
+                <button type="button" class="w-full text-left flex items-center gap-3 py-3.5 px-3 -mx-3 rounded-xl hover:bg-black/[0.02] transition">
+                  <img src="https://picsum.photos/seed/tck-3/80/80" alt="Hira Malik" class="w-9 h-9 rounded-full object-cover shrink-0">
+                  <div class="min-w-0 flex-1">
+                    <p class="text-sm font-semibold truncate">#TCK-1039 · Refund not processed</p>
+                    <p class="text-black/40 text-xs truncate">Hira Malik</p>
+                  </div>
+                  <div class="flex flex-col items-end gap-1 shrink-0">
+                    <span class="bg-info/10 text-info text-[11px] font-semibold px-2.5 py-1 rounded-full">Open</span>
+                    <span class="text-black/35 text-[10px]">3h ago</span>
+                  </div>
+                </button>
+                <button type="button" class="w-full text-left flex items-center gap-3 py-3.5 px-3 -mx-3 rounded-xl hover:bg-black/[0.02] transition">
+                  <img src="https://picsum.photos/seed/tck-4/80/80" alt="Zoya Ahmed" class="w-9 h-9 rounded-full object-cover shrink-0">
+                  <div class="min-w-0 flex-1">
+                    <p class="text-sm font-semibold truncate">#TCK-1037 · Late delivery complaint</p>
+                    <p class="text-black/40 text-xs truncate">Zoya Ahmed</p>
+                  </div>
+                  <div class="flex flex-col items-end gap-1 shrink-0">
+                    <span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Resolved</span>
+                    <span class="text-black/35 text-[10px]">Yesterday</span>
+                  </div>
+                </button>
+                <button type="button" class="w-full text-left flex items-center gap-3 py-3.5 px-3 -mx-3 rounded-xl hover:bg-black/[0.02] transition">
+                  <img src="https://picsum.photos/seed/tck-5/80/80" alt="Amina Raza" class="w-9 h-9 rounded-full object-cover shrink-0">
+                  <div class="min-w-0 flex-1">
+                    <p class="text-sm font-semibold truncate">#TCK-1035 · Discount code not working</p>
+                    <p class="text-black/40 text-xs truncate">Amina Raza</p>
+                  </div>
+                  <div class="flex flex-col items-end gap-1 shrink-0">
+                    <span class="bg-black/5 text-black/50 text-[11px] font-semibold px-2.5 py-1 rounded-full">Closed</span>
+                    <span class="text-black/35 text-[10px]">2 days ago</span>
+                  </div>
+                </button>
+                <button type="button" class="w-full text-left flex items-center gap-3 py-3.5 px-3 -mx-3 rounded-xl hover:bg-black/[0.02] transition">
+                  <img src="https://picsum.photos/seed/tck-6/80/80" alt="Noor Fatima" class="w-9 h-9 rounded-full object-cover shrink-0">
+                  <div class="min-w-0 flex-1">
+                    <p class="text-sm font-semibold truncate">#TCK-1033 · Packaging feedback</p>
+                    <p class="text-black/40 text-xs truncate">Noor Fatima</p>
+                  </div>
+                  <div class="flex flex-col items-end gap-1 shrink-0">
+                    <span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Resolved</span>
+                    <span class="text-black/35 text-[10px]">3 days ago</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Ticket detail (inline, static — currently viewing #TCK-1042) -->
+            <div class="bg-white rounded-3xl shadow-card p-5 md:p-6 space-y-6 lg:sticky lg:top-[88px]">
+
+              <!-- Status timeline stepper -->
+              <div class="flex items-center">
+                <div class="flex flex-col items-center gap-2">
+                  <span class="w-3 h-3 rounded-full bg-primary-dark"></span>
+                  <span class="text-[10px] font-semibold text-ink">Open</span>
+                </div>
+                <div class="h-px flex-1 bg-black/10 mx-1"></div>
+                <div class="flex flex-col items-center gap-2">
+                  <span class="w-3 h-3 rounded-full bg-black/15"></span>
+                  <span class="text-[10px] text-black/40">Pending</span>
+                </div>
+                <div class="h-px flex-1 bg-black/10 mx-1"></div>
+                <div class="flex flex-col items-center gap-2">
+                  <span class="w-3 h-3 rounded-full bg-black/15"></span>
+                  <span class="text-[10px] text-black/40">Resolved</span>
+                </div>
+                <div class="h-px flex-1 bg-black/10 mx-1"></div>
+                <div class="flex flex-col items-center gap-2">
+                  <span class="w-3 h-3 rounded-full bg-black/15"></span>
+                  <span class="text-[10px] text-black/40">Closed</span>
+                </div>
+              </div>
+
+              <!-- Customer details -->
+              <div class="flex items-center gap-3 pb-5 border-b border-black/5">
+                <img src="https://picsum.photos/seed/tck-1/80/80" alt="Sana Khan" class="w-11 h-11 rounded-full object-cover">
+                <div class="min-w-0">
+                  <p class="text-sm font-semibold">Sana Khan</p>
+                  <p class="text-black/40 text-xs truncate">sana.khan@gmail.com</p>
+                  <p class="text-black/35 text-[11px] mt-0.5">Customer since Jan 2024</p>
+                </div>
+                <span class="ml-auto bg-info/10 text-info text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0">#TCK-1042</span>
+              </div>
+
+              <!-- Conversation timeline -->
+              <div>
+                <h3 class="text-xs font-semibold uppercase tracking-wide text-black/40 mb-3">Conversation Timeline</h3>
+                <div class="space-y-3">
+                  <div class="flex justify-start">
+                    <div class="max-w-[85%] bg-black/[0.03] rounded-2xl rounded-tl-sm px-4 py-2.5">
+                      <p class="text-sm">Hi, the zipper on my Milano Tote broke after just two weeks of light use. Could I get a replacement?</p>
+                      <p class="text-black/35 text-[10px] mt-1.5">Sana Khan · Jul 6, 10:14 AM</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-end">
+                    <div class="max-w-[85%] bg-primary/15 rounded-2xl rounded-tr-sm px-4 py-2.5">
+                      <p class="text-sm">So sorry to hear that! Could you share a photo of the zipper and your order number?</p>
+                      <p class="text-black/35 text-[10px] mt-1.5 text-right">Ayesha N. (Admin) · Jul 6, 11:02 AM</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-start">
+                    <div class="max-w-[85%] bg-black/[0.03] rounded-2xl rounded-tl-sm px-4 py-2.5">
+                      <p class="text-sm">Attached the photo and receipt. Order #RIN-20512.</p>
+                      <p class="text-black/35 text-[10px] mt-1.5">Sana Khan · Jul 6, 11:20 AM</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-end">
+                    <div class="max-w-[85%] bg-primary/15 rounded-2xl rounded-tr-sm px-4 py-2.5">
+                      <p class="text-sm">Thank you! A replacement is being processed and will ship within 2 business days.</p>
+                      <p class="text-black/35 text-[10px] mt-1.5 text-right">Ayesha N. (Admin) · Jul 6, 2:45 PM</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Attachments -->
+              <div>
+                <h3 class="text-xs font-semibold uppercase tracking-wide text-black/40 mb-3">Attachments</h3>
+                <div class="flex flex-wrap gap-2">
+                  <span class="inline-flex items-center gap-2 bg-black/[0.03] rounded-full px-3.5 py-2 text-xs font-medium"><i class="fa-solid fa-paperclip text-black/30"></i> zipper-damage.jpg <span class="text-black/35">· 1.2MB</span></span>
+                  <span class="inline-flex items-center gap-2 bg-black/[0.03] rounded-full px-3.5 py-2 text-xs font-medium"><i class="fa-solid fa-paperclip text-black/30"></i> receipt.pdf <span class="text-black/35">· 340KB</span></span>
+                </div>
+              </div>
+
+              <!-- Internal notes -->
+              <div>
+                <h3 class="text-xs font-semibold uppercase tracking-wide text-black/40 mb-3">Internal Notes</h3>
+                <div class="bg-warning/5 border border-warning/20 rounded-xl p-3">
+                  <p class="text-sm">Repeat customer, VIP tier — expedite replacement and include a handwritten apology card.</p>
+                  <p class="text-warning text-[11px] font-semibold mt-1.5"><i class="fa-solid fa-lock text-[9px] mr-1"></i>Visible to staff only</p>
+                </div>
+              </div>
+
+              <!-- Reply editor -->
+              <div>
+                <h3 class="text-xs font-semibold uppercase tracking-wide text-black/40 mb-3">Reply Editor</h3>
+                <div class="border-b border-black/10 pb-2 mb-2 flex gap-1">
+                  <button type="button" aria-label="Bold" class="w-7 h-7 rounded-lg grid place-items-center hover:bg-black/5 transition text-xs"><i class="fa-solid fa-bold"></i></button>
+                  <button type="button" aria-label="Italic" class="w-7 h-7 rounded-lg grid place-items-center hover:bg-black/5 transition text-xs"><i class="fa-solid fa-italic"></i></button>
+                  <button type="button" aria-label="Bullet list" class="w-7 h-7 rounded-lg grid place-items-center hover:bg-black/5 transition text-xs"><i class="fa-solid fa-list-ul"></i></button>
+                  <button type="button" aria-label="Insert link" class="w-7 h-7 rounded-lg grid place-items-center hover:bg-black/5 transition text-xs"><i class="fa-solid fa-link"></i></button>
+                  <button type="button" aria-label="Insert image" class="w-7 h-7 rounded-lg grid place-items-center hover:bg-black/5 transition text-xs"><i class="fa-solid fa-image"></i></button>
+                </div>
+                <label for="replyText" class="sr-only">Reply message</label>
+                <textarea id="replyText" rows="4" placeholder="Type your reply..." class="w-full px-4 py-3 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition resize-none"></textarea>
+                <div class="flex flex-wrap items-center justify-between gap-3 mt-3">
+                  <div class="relative">
+                    <label for="ticketStatus" class="sr-only">Ticket status</label>
+                    <select id="ticketStatus" class="appearance-none px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition pr-10">
+                      <option>Open</option>
+                      <option>Pending</option>
+                      <option>Resolved</option>
+                      <option>Closed</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-black/30 text-xs pointer-events-none"></i>
+                  </div>
+                  <button type="button" class="inline-flex items-center gap-2 text-sm font-semibold px-6 py-2.5 rounded-full bg-ink text-white hover:bg-black/80 transition"><i class="fa-solid fa-paper-plane text-xs"></i> Send Reply</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- =====================================================
+             PANEL: SUBSCRIBERS
+        ====================================================== -->
+        <div id="panel-subscribers" class="tab-panel space-y-6 hidden">
+
+          <!-- Stats + growth chart -->
+          <div class="grid lg:grid-cols-3 gap-4">
+            <div class="hover-lift bg-white rounded-2xl shadow-card p-5">
+              <div class="flex items-center justify-between mb-3">
+                <span class="w-9 h-9 rounded-full bg-primary/20 grid place-items-center"><i class="fa-solid fa-users-line text-primary-dark text-xs"></i></span>
+                <span class="text-[11px] font-semibold text-success bg-success/10 px-2 py-1 rounded-full"><i class="fa-solid fa-arrow-up text-[9px] mr-0.5"></i>6.9%</span>
+              </div>
+              <p class="text-xl font-bold">4,820</p>
+              <p class="text-black/45 text-xs mt-0.5">Total Subscribers</p>
+            </div>
+            <div class="hover-lift bg-white rounded-2xl shadow-card p-5">
+              <div class="flex items-center justify-between mb-3">
+                <span class="w-9 h-9 rounded-full bg-primary/20 grid place-items-center"><i class="fa-solid fa-chart-line text-primary-dark text-xs"></i></span>
+                <span class="text-[11px] font-semibold text-success bg-success/10 px-2 py-1 rounded-full"><i class="fa-solid fa-arrow-up text-[9px] mr-0.5"></i>12.1%</span>
+              </div>
+              <p class="text-xl font-bold">+312</p>
+              <p class="text-black/45 text-xs mt-0.5">Growth This Month</p>
+            </div>
+            <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+              <h2 class="font-bold text-sm mb-1">Growth Chart</h2>
+              <p class="text-black/40 text-xs mb-4">New subscribers, last 6 months</p>
+              <svg viewBox="0 0 600 160" class="w-full h-20" preserveAspectRatio="none">
+                <polygon points="0,140 100,120 200,112 300,92 400,72 500,45 600,20 600,160 0,160" fill="#CFBAA5" fill-opacity="0.2"/>
+                <polyline points="0,140 100,120 200,112 300,92 400,72 500,45 600,20" fill="none" stroke="#b89e84" stroke-width="3"/>
+              </svg>
+              <div class="flex justify-between text-[10px] text-black/40 mt-2">
+                <span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subscribers table -->
+          <div class="bg-white rounded-3xl shadow-card p-5 md:p-6 overflow-x-auto">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+              <h2 class="font-bold text-sm">Newsletter Subscribers</h2>
+              <div class="flex items-center gap-2">
+                <div class="relative">
+                  <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-black/30 text-xs"></i>
+                  <input type="text" placeholder="Search subscribers..." class="pl-9 pr-4 py-2 rounded-full bg-black/[0.03] border border-transparent text-xs focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition w-40 md:w-56">
+                </div>
+                <button class="inline-flex items-center gap-2 border border-black/10 rounded-full px-3.5 py-2 text-xs font-semibold hover:bg-black/[0.03] transition">
+                  <i class="fa-solid fa-file-export text-black/40 text-[10px]"></i> Export
+                </button>
+                <button class="inline-flex items-center gap-2 border border-black/10 rounded-full px-3.5 py-2 text-xs font-semibold hover:bg-black/[0.03] transition">
+                  <i class="fa-solid fa-file-import text-black/40 text-[10px]"></i> Import
+                </button>
+                <button class="inline-flex items-center gap-2 border border-black/10 rounded-full px-3.5 py-2 text-xs font-semibold hover:bg-black/[0.03] transition">
+                  <i class="fa-solid fa-filter text-black/40 text-[10px]"></i> Filters
+                </button>
+              </div>
+            </div>
+
+            <table class="w-full text-sm min-w-[760px]">
+              <thead>
+                <tr class="text-left text-black/40 text-xs uppercase tracking-wide">
+                  <th class="pb-3 font-medium w-10"><input type="checkbox" aria-label="Select all subscribers" class="w-4 h-4 rounded border-black/20 accent-ink"></th>
+                  <th class="pb-3 font-medium">Email</th>
+                  <th class="pb-3 font-medium">Status</th>
+                  <th class="pb-3 font-medium">Subscription Date</th>
+                  <th class="pb-3 font-medium">Source</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-black/5">
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5"><input type="checkbox" checked aria-label="Select subscriber sana.khan@gmail.com" class="w-4 h-4 rounded border-black/20 accent-ink"></td>
+                  <td class="py-3.5 font-medium">sana.khan@gmail.com</td>
+                  <td class="py-3.5"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Subscribed</span></td>
+                  <td class="py-3.5 text-black/45 text-xs">Jun 12, 2026</td>
+                  <td class="py-3.5 text-black/50 text-xs">Checkout</td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5"><input type="checkbox" checked aria-label="Select subscriber bilal.ahmed@outlook.com" class="w-4 h-4 rounded border-black/20 accent-ink"></td>
+                  <td class="py-3.5 font-medium">bilal.ahmed@outlook.com</td>
+                  <td class="py-3.5"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Subscribed</span></td>
+                  <td class="py-3.5 text-black/45 text-xs">Jun 18, 2026</td>
+                  <td class="py-3.5 text-black/50 text-xs">Website</td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5"><input type="checkbox" checked aria-label="Select subscriber hira.malik@yahoo.com" class="w-4 h-4 rounded border-black/20 accent-ink"></td>
+                  <td class="py-3.5 font-medium">hira.malik@yahoo.com</td>
+                  <td class="py-3.5"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Subscribed</span></td>
+                  <td class="py-3.5 text-black/45 text-xs">Jun 22, 2026</td>
+                  <td class="py-3.5 text-black/50 text-xs">Checkout</td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5"><input type="checkbox" aria-label="Select subscriber zoya.ahmed@gmail.com" class="w-4 h-4 rounded border-black/20 accent-ink"></td>
+                  <td class="py-3.5 font-medium">zoya.ahmed@gmail.com</td>
+                  <td class="py-3.5"><span class="bg-black/5 text-black/50 text-[11px] font-semibold px-2.5 py-1 rounded-full">Unsubscribed</span></td>
+                  <td class="py-3.5 text-black/45 text-xs">Apr 3, 2026</td>
+                  <td class="py-3.5 text-black/50 text-xs">Import</td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5"><input type="checkbox" aria-label="Select subscriber amina.raza@hotmail.com" class="w-4 h-4 rounded border-black/20 accent-ink"></td>
+                  <td class="py-3.5 font-medium">amina.raza@hotmail.com</td>
+                  <td class="py-3.5"><span class="bg-danger/10 text-danger text-[11px] font-semibold px-2.5 py-1 rounded-full">Bounced</span></td>
+                  <td class="py-3.5 text-black/45 text-xs">Feb 27, 2026</td>
+                  <td class="py-3.5 text-black/50 text-xs">Website</td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5"><input type="checkbox" aria-label="Select subscriber noor.fatima@gmail.com" class="w-4 h-4 rounded border-black/20 accent-ink"></td>
+                  <td class="py-3.5 font-medium">noor.fatima@gmail.com</td>
+                  <td class="py-3.5"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Subscribed</span></td>
+                  <td class="py-3.5 text-black/45 text-xs">Jul 1, 2026</td>
+                  <td class="py-3.5 text-black/50 text-xs">Checkout</td>
+                </tr>
+                <tr class="hover:bg-black/[0.02] transition">
+                  <td class="py-3.5"><input type="checkbox" aria-label="Select subscriber faisal@faisaltraders.com" class="w-4 h-4 rounded border-black/20 accent-ink"></td>
+                  <td class="py-3.5 font-medium">faisal@faisaltraders.com</td>
+                  <td class="py-3.5"><span class="bg-success/10 text-success text-[11px] font-semibold px-2.5 py-1 rounded-full">Subscribed</span></td>
+                  <td class="py-3.5 text-black/45 text-xs">May 9, 2026</td>
+                  <td class="py-3.5 text-black/50 text-xs">Import</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="flex items-center justify-between mt-5 pt-4 border-t border-black/5 text-xs text-black/45">
+              <p>Showing 1–7 of 4,820</p>
+              <div class="flex items-center gap-1">
+                <button aria-label="Previous page" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-chevron-left text-[10px]"></i></button>
+                <button class="w-8 h-8 rounded-full grid place-items-center bg-ink text-white font-semibold">1</button>
+                <button class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition">2</button>
+                <button class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition">3</button>
+                <button aria-label="Next page" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-chevron-right text-[10px]"></i></button>
+              </div>
+            </div>
+
+            <!-- Bulk action bar -->
+            <div class="flex flex-wrap items-center gap-3 mt-4 bg-black/[0.02] rounded-2xl px-4 py-3">
+              <p class="text-xs font-semibold text-black/60">3 selected</p>
+              <p class="text-black/35 text-xs hidden sm:block">Bulk actions apply to the selected subscribers only.</p>
+              <div class="flex items-center gap-2 ml-auto">
+                <button type="button" class="text-xs font-semibold px-4 py-2 rounded-full border border-danger/30 text-danger hover:bg-danger/5 transition">Bulk Delete</button>
+                <button type="button" class="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full bg-primary-dark text-white hover:bg-primary transition"><i class="fa-solid fa-paper-plane text-[10px]"></i> Email Campaign</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // Sidebar (mobile drawer + desktop collapse)
+  const sidebar = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+  const mobileSidebarBtn = document.getElementById('mobileSidebarBtn');
+  const collapseSidebarBtn = document.getElementById('collapseSidebarBtn');
+
+  function openMobileSidebar() {
+    sidebar.classList.remove('-translate-x-full');
+    sidebarOverlay.classList.remove('invisible', 'pointer-events-none');
+    requestAnimationFrame(() => sidebarOverlay.classList.add('bg-black/40'));
+  }
+  function closeMobileSidebar() {
+    sidebar.classList.add('-translate-x-full');
+    sidebarOverlay.classList.remove('bg-black/40');
+    sidebarOverlay.classList.add('pointer-events-none');
+    setTimeout(() => sidebarOverlay.classList.add('invisible'), 300);
+  }
+  mobileSidebarBtn.addEventListener('click', openMobileSidebar);
+  sidebarOverlay.addEventListener('click', closeMobileSidebar);
+
+  collapseSidebarBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('sidebar-collapsed');
+    sidebar.classList.toggle('w-72');
+    sidebar.classList.toggle('w-20');
+  });
+
+  document.querySelectorAll('.submenu-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const submenu = btn.nextElementSibling;
+      const chevron = btn.querySelector('.nav-chevron');
+      submenu.classList.toggle('hidden');
+      chevron.classList.toggle('rotate-180');
+    });
+  });
+
+  const dropdowns = [
+    ['quickActionsBtn', 'quickActionsMenu'],
+    ['notifBtn', 'notifMenu'],
+    ['msgBtn', 'msgMenu'],
+    ['profileBtn', 'profileMenu'],
+  ];
+  dropdowns.forEach(([btnId, menuId]) => {
+    const btn = document.getElementById(btnId);
+    const menu = document.getElementById(menuId);
+    if (!btn || !menu) return;
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = !menu.classList.contains('hidden');
+      dropdowns.forEach(([, mId]) => document.getElementById(mId)?.classList.add('hidden'));
+      menu.classList.toggle('hidden', isOpen);
+    });
+  });
+  document.addEventListener('click', () => {
+    dropdowns.forEach(([, mId]) => document.getElementById(mId)?.classList.add('hidden'));
+  });
+
+  document.getElementById('themeToggleBtn').addEventListener('click', function () {
+    const icon = this.querySelector('i');
+    icon.classList.toggle('fa-moon');
+    icon.classList.toggle('fa-sun');
+  });
+
+  // ==== PAGE-SPECIFIC SCRIPT BELOW ====
+
+  // Vertical tab nav (Contact Messages / Support Tickets / Newsletter Subscribers)
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('active-tab', 'bg-primary/20', 'text-ink', 'font-semibold');
+        b.classList.add('text-black/60', 'font-medium');
+      });
+      btn.classList.add('active-tab', 'bg-primary/20', 'text-ink', 'font-semibold');
+      btn.classList.remove('text-black/60', 'font-medium');
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById('panel-' + btn.dataset.tab).classList.remove('hidden');
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports — Rinmora Admin</title>
+<meta name="description" content="Rinmora Admin — sales, revenue, and performance reports.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: '#CFBAA5', 'primary-dark': '#b89e84', ink: '#000000',
+          canvas: '#F8F8F8',
+          success: '#22C55E', warning: '#F59E0B', danger: '#EF4444', info: '#3B82F6',
+        },
+        fontFamily: { sans: ['Inter', 'sans-serif'] },
+        borderRadius: { '4xl': '2rem' },
+        boxShadow: { soft: '0 20px 60px -15px rgba(0,0,0,0.12)', card: '0 4px 24px -8px rgba(0,0,0,0.08)' },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Inter', sans-serif; }
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+  .sidebar-collapsed .nav-label,
+  .sidebar-collapsed .nav-section-label,
+  .sidebar-collapsed .sidebar-brand-text,
+  .sidebar-collapsed .nav-chevron { display: none; }
+  .sidebar-collapsed .submenu { display: none !important; }
+</style>
+</head>
+
+<body class="bg-canvas text-ink antialiased">
+
+<!-- =========================================================
+     TOPBAR
+========================================================== -->
+<header class="sticky top-0 z-40 bg-white border-b border-black/5">
+  <div class="flex items-center gap-3 h-16 px-4 md:px-6">
+    <button id="mobileSidebarBtn" aria-label="Open sidebar" class="lg:hidden w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition"><i class="fa-solid fa-bars"></i></button>
+    <button id="collapseSidebarBtn" aria-label="Collapse sidebar" class="hidden lg:grid w-9 h-9 place-items-center rounded-full hover:bg-black/5 transition"><i class="fa-solid fa-bars"></i></button>
+    <a href="rinmora-admin-dashboard.html" class="flex items-center gap-2 shrink-0">
+      <img src="../../logo-01.png" alt="Rinmora" class="h-7 w-auto">
+      <span class="hidden sm:inline text-[10px] font-semibold uppercase tracking-wider bg-ink text-white px-2 py-0.5 rounded-full">Admin</span>
+    </a>
+    <div class="flex-1 max-w-xl mx-auto hidden sm:block">
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-black/30 text-sm"></i>
+        <label for="globalSearch" class="sr-only">Global search</label>
+        <input id="globalSearch" type="text" placeholder="Search products, orders, customers..." class="w-full pl-11 pr-4 py-2.5 rounded-full bg-black/[0.03] border border-transparent text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition">
+      </div>
+    </div>
+    <div class="flex items-center gap-1 ml-auto sm:ml-0">
+      <button aria-label="Search" class="sm:hidden w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition"><i class="fa-solid fa-magnifying-glass text-sm"></i></button>
+      <div class="relative">
+        <button id="quickActionsBtn" class="hidden md:inline-flex items-center gap-2 bg-primary text-ink font-semibold text-xs uppercase tracking-wide px-4 py-2.5 rounded-full hover:bg-primary-dark transition"><i class="fa-solid fa-plus text-[10px]"></i> Quick Actions</button>
+        <div id="quickActionsMenu" class="hidden absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <a href="rinmora-admin-product-add.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-bag-shopping w-4 text-black/40"></i> New Product</a>
+          <a href="rinmora-admin-orders.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-receipt w-4 text-black/40"></i> New Order</a>
+          <a href="rinmora-admin-customers.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-user-plus w-4 text-black/40"></i> New Customer</a>
+        </div>
+      </div>
+      <div class="relative">
+        <button id="notifBtn" aria-label="Notifications" class="relative w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition"><i class="fa-regular fa-bell text-sm"></i><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-danger"></span></button>
+        <div id="notifMenu" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <p class="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black/40">Notifications</p>
+          <a href="#" class="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <span class="w-8 h-8 rounded-full bg-success/15 grid place-items-center shrink-0"><i class="fa-solid fa-chart-line text-success text-xs"></i></span>
+            <span class="text-sm"><span class="font-medium">Monthly report ready</span><br><span class="text-black/45 text-xs">June sales report generated</span></span>
+          </a>
+        </div>
+      </div>
+      <div class="relative">
+        <button id="msgBtn" aria-label="Messages" class="relative w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition"><i class="fa-regular fa-envelope text-sm"></i><span class="absolute top-1 right-1.5 w-4 h-4 rounded-full bg-ink text-white text-[9px] font-bold grid place-items-center">2</span></button>
+        <div id="msgMenu" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <p class="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black/40">Messages</p>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-black/5 transition">
+            <img src="https://picsum.photos/seed/admin-msg-1/60/60" alt="" class="w-8 h-8 rounded-full object-cover">
+            <span class="text-sm"><span class="font-medium">Sana K.</span><br><span class="text-black/45 text-xs">Question about order #RIN-20583</span></span>
+          </a>
+        </div>
+      </div>
+      <button id="themeToggleBtn" aria-label="Toggle theme" class="w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition"><i class="fa-regular fa-moon text-sm"></i></button>
+      <div class="relative pl-1">
+        <button id="profileBtn" class="flex items-center gap-2 pl-1.5 pr-2.5 py-1.5 rounded-full hover:bg-black/5 transition">
+          <img src="https://picsum.photos/seed/admin-avatar/80/80" alt="Admin" class="w-7 h-7 rounded-full object-cover">
+          <span class="hidden md:inline text-sm font-medium">Ayesha N.</span>
+          <i class="fa-solid fa-chevron-down text-[10px] text-black/40"></i>
+        </button>
+        <div id="profileMenu" class="hidden absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-soft border border-black/5 p-2 z-50">
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-regular fa-user w-4 text-black/40"></i> My Profile</a>
+          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-black/5 transition"><i class="fa-solid fa-gear w-4 text-black/40"></i> Settings</a>
+          <div class="border-t border-black/5 my-1"></div>
+          <a href="../rinmora-login-preview.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-danger hover:bg-danger/5 transition"><i class="fa-solid fa-right-from-bracket w-4"></i> Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="flex">
+  <div id="sidebarOverlay" class="fixed inset-0 bg-black/0 z-30 lg:hidden invisible pointer-events-none transition-colors duration-300"></div>
+
+  <aside id="sidebar" class="fixed lg:sticky top-16 left-0 z-30 h-[calc(100vh-4rem)] w-72 bg-white border-r border-black/5 -translate-x-full lg:translate-x-0 transition-all duration-300 ease-out overflow-y-auto shrink-0">
+    <nav class="p-4 space-y-1">
+      <p class="nav-section-label px-3 pt-2 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Main</p>
+
+      <a href="rinmora-admin-dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-gauge w-4 text-center"></i> <span class="nav-label">Dashboard</span>
+      </a>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-bag-shopping w-4 text-center"></i> <span class="nav-label">Products</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-products.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Products</a>
+          <a href="rinmora-admin-product-add.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Add Product</a>
+          <a href="rinmora-admin-product-categories.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Categories</a>
+          <a href="rinmora-admin-product-brands.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Brands &amp; Collections</a>
+          <a href="rinmora-admin-product-attributes.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Attributes</a>
+          <a href="rinmora-admin-reviews.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Reviews</a>
+          <a href="rinmora-admin-inventory.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Inventory</a>
+        </div>
+      </div>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-receipt w-4 text-center"></i> <span class="nav-label">Orders</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Orders</a>
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Pending</a>
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Shipped</a>
+          <a href="rinmora-admin-orders.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Returned / Refunded</a>
+        </div>
+      </div>
+
+      <div>
+        <button class="submenu-toggle w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+          <span class="flex items-center gap-3"><i class="fa-solid fa-users w-4 text-center"></i> <span class="nav-label">Customers</span></span>
+          <i class="fa-solid fa-chevron-down nav-chevron text-[10px] transition-transform"></i>
+        </button>
+        <div class="submenu hidden pl-11 space-y-1 mt-1">
+          <a href="rinmora-admin-customers.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">All Customers</a>
+          <a href="rinmora-admin-customer-addresses.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Addresses</a>
+          <a href="rinmora-admin-wishlist-reports.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Wishlist Reports</a>
+          <a href="rinmora-admin-reward-points.html" class="block px-3 py-2 rounded-lg text-sm text-black/60 hover:bg-black/5 hover:text-ink transition">Reward Points</a>
+        </div>
+      </div>
+
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-bullhorn w-4 text-center"></i> <span class="nav-label">Marketing</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Content &amp; Store</p>
+
+      <a href="rinmora-admin-cms-homepage-builder.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-file-lines w-4 text-center"></i> <span class="nav-label">CMS</span>
+      </a>
+      <a href="rinmora-admin-media-manager.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-images w-4 text-center"></i> <span class="nav-label">Media Manager</span>
+      </a>
+      <a href="rinmora-admin-reviews.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-star w-4 text-center"></i> <span class="nav-label">Reviews</span>
+      </a>
+      <a href="rinmora-admin-inventory.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-warehouse w-4 text-center"></i> <span class="nav-label">Inventory</span>
+      </a>
+      <a href="rinmora-admin-shipping.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-truck-fast w-4 text-center"></i> <span class="nav-label">Shipping</span>
+      </a>
+      <a href="rinmora-admin-payments.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-credit-card w-4 text-center"></i> <span class="nav-label">Payments</span>
+      </a>
+      <a href="rinmora-admin-users.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-user-shield w-4 text-center"></i> <span class="nav-label">Users &amp; Roles</span>
+      </a>
+      <a href="rinmora-admin-reports.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary/20 text-ink font-semibold text-sm">
+        <i class="fa-solid fa-chart-line w-4 text-center"></i> <span class="nav-label">Reports</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">System</p>
+
+      <a href="rinmora-admin-seo.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-magnifying-glass-chart w-4 text-center"></i> <span class="nav-label">SEO</span>
+      </a>
+      <a href="rinmora-admin-contact-support.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-headset w-4 text-center"></i> <span class="nav-label">Contact &amp; Support</span>
+      </a>
+      <a href="rinmora-admin-notifications.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-bell w-4 text-center"></i> <span class="nav-label">Notifications</span>
+      </a>
+      <a href="rinmora-admin-activity-logs.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-clock-rotate-left w-4 text-center"></i> <span class="nav-label">Activity Logs</span>
+      </a>
+
+      <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Account</p>
+
+      <a href="rinmora-admin-profile.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-regular fa-user w-4 text-center"></i> <span class="nav-label">My Profile</span>
+      </a>
+      <a href="rinmora-admin-settings.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-gear w-4 text-center"></i> <span class="nav-label">Settings</span>
+      </a>
+      <a href="../rinmora-login-preview.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition">
+        <i class="fa-solid fa-right-from-bracket w-4 text-center"></i> <span class="nav-label">Logout</span>
+      </a>
+    </nav>
+  </aside>
+
+
+  <!-- =========================================================
+       MAIN CONTENT
+  ========================================================== -->
+  <main class="flex-1 min-w-0 px-4 md:px-6 py-6">
+
+    <nav aria-label="Breadcrumb" class="text-xs text-black/40 mb-2">
+      <span>Admin</span> <i class="fa-solid fa-chevron-right text-[8px] mx-1.5"></i> <span>Reports</span> <i class="fa-solid fa-chevron-right text-[8px] mx-1.5"></i> <span class="text-ink font-medium">Sales Report</span>
+    </nav>
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-5">
+      <div>
+        <h1 class="text-xl md:text-2xl font-bold">Sales Report</h1>
+        <p class="text-black/45 text-sm mt-1">Analyze revenue, orders, and growth across your store.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button class="inline-flex items-center gap-2 bg-white border border-black/10 rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-black/[0.03] transition"><i class="fa-regular fa-calendar text-black/40"></i> Jul 1 – Jul 31, 2026</button>
+        <button class="inline-flex items-center gap-2 bg-white border border-black/10 rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-black/[0.03] transition"><i class="fa-regular fa-file-pdf text-black/40"></i> PDF</button>
+        <button class="inline-flex items-center gap-2 bg-white border border-black/10 rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-black/[0.03] transition"><i class="fa-regular fa-file-excel text-black/40"></i> Excel</button>
+        <button class="inline-flex items-center gap-2 bg-white border border-black/10 rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-black/[0.03] transition"><i class="fa-solid fa-print text-black/40"></i> Print</button>
+      </div>
+    </div>
+
+    <!-- Report Type Tabs -->
+    <div class="flex gap-2 overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0 mb-6">
+      <button class="shrink-0 text-xs font-semibold px-4 py-2 rounded-full bg-ink text-white transition">Sales</button>
+      <button class="shrink-0 text-xs font-medium px-4 py-2 rounded-full bg-white border border-black/10 hover:bg-black/5 transition">Products</button>
+      <button class="shrink-0 text-xs font-medium px-4 py-2 rounded-full bg-white border border-black/10 hover:bg-black/5 transition">Customers</button>
+      <button class="shrink-0 text-xs font-medium px-4 py-2 rounded-full bg-white border border-black/10 hover:bg-black/5 transition">Orders</button>
+      <button class="shrink-0 text-xs font-medium px-4 py-2 rounded-full bg-white border border-black/10 hover:bg-black/5 transition">Revenue</button>
+      <button class="shrink-0 text-xs font-medium px-4 py-2 rounded-full bg-white border border-black/10 hover:bg-black/5 transition">Inventory</button>
+      <button class="shrink-0 text-xs font-medium px-4 py-2 rounded-full bg-white border border-black/10 hover:bg-black/5 transition">Coupons</button>
+    </div>
+
+    <!-- Stat Cards with growth -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
+      <div class="bg-white rounded-2xl shadow-card p-5">
+        <div class="flex items-center justify-between mb-2">
+          <p class="text-black/45 text-xs">Total Revenue</p>
+          <span class="text-[10px] font-semibold text-success bg-success/10 px-2 py-0.5 rounded-full"><i class="fa-solid fa-arrow-up text-[8px] mr-0.5"></i>18.2%</span>
+        </div>
+        <p class="text-xl font-bold">$182,940</p>
+        <p class="text-black/35 text-[11px] mt-1">vs $154,780 last period</p>
+      </div>
+      <div class="bg-white rounded-2xl shadow-card p-5">
+        <div class="flex items-center justify-between mb-2">
+          <p class="text-black/45 text-xs">Total Orders</p>
+          <span class="text-[10px] font-semibold text-success bg-success/10 px-2 py-0.5 rounded-full"><i class="fa-solid fa-arrow-up text-[8px] mr-0.5"></i>9.6%</span>
+        </div>
+        <p class="text-xl font-bold">1,580</p>
+        <p class="text-black/35 text-[11px] mt-1">vs 1,442 last period</p>
+      </div>
+      <div class="bg-white rounded-2xl shadow-card p-5">
+        <div class="flex items-center justify-between mb-2">
+          <p class="text-black/45 text-xs">Avg. Order Value</p>
+          <span class="text-[10px] font-semibold text-success bg-success/10 px-2 py-0.5 rounded-full"><i class="fa-solid fa-arrow-up text-[8px] mr-0.5"></i>3.1%</span>
+        </div>
+        <p class="text-xl font-bold">$115.80</p>
+        <p class="text-black/35 text-[11px] mt-1">vs $112.30 last period</p>
+      </div>
+      <div class="bg-white rounded-2xl shadow-card p-5">
+        <div class="flex items-center justify-between mb-2">
+          <p class="text-black/45 text-xs">Refund Rate</p>
+          <span class="text-[10px] font-semibold text-danger bg-danger/10 px-2 py-0.5 rounded-full"><i class="fa-solid fa-arrow-down text-[8px] mr-0.5"></i>0.4%</span>
+        </div>
+        <p class="text-xl font-bold">2.1%</p>
+        <p class="text-black/35 text-[11px] mt-1">vs 2.5% last period</p>
+      </div>
+    </div>
+
+    <!-- Revenue Trend + Weekly Trend -->
+    <div class="grid lg:grid-cols-3 gap-4 mb-6">
+      <div class="lg:col-span-2 bg-white rounded-3xl shadow-card p-5 md:p-6">
+        <h2 class="font-bold text-sm mb-1">Monthly Revenue Trend</h2>
+        <p class="text-black/40 text-xs mb-4">This year vs. last year</p>
+        <svg viewBox="0 0 600 160" class="w-full h-40" preserveAspectRatio="none">
+          <polyline points="0,140 50,120 100,130 150,90 200,100 250,60 300,80 350,50 400,65 450,35 500,45 550,20 600,30" fill="none" stroke="#e5e0da" stroke-width="3"/>
+          <polyline points="0,150 50,145 100,135 150,120 200,125 250,100 300,110 350,85 400,95 450,70 500,80 550,55 600,60" fill="none" stroke="#b89e84" stroke-width="3"/>
+        </svg>
+        <div class="flex justify-between text-[10px] text-black/40 mt-2">
+          <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+        <h2 class="font-bold text-sm mb-1">Revenue by Category</h2>
+        <p class="text-black/40 text-xs mb-5">This period</p>
+        <div class="flex items-center justify-center mb-5">
+          <div class="relative w-32 h-32 rounded-full" style="background: conic-gradient(#CFBAA5 0% 38%, #000000 38% 62%, #3B82F6 62% 82%, #F59E0B 82% 100%);">
+            <div class="absolute inset-3 bg-white rounded-full grid place-items-center">
+              <div class="text-center"><p class="text-base font-bold">$182.9k</p><p class="text-black/40 text-[9px]">Total</p></div>
+            </div>
+          </div>
+        </div>
+        <ul class="space-y-2 text-xs">
+          <li class="flex items-center justify-between"><span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-primary"></span> Tote Bags</span><span class="font-semibold">38%</span></li>
+          <li class="flex items-center justify-between"><span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-ink"></span> Crossbody</span><span class="font-semibold">24%</span></li>
+          <li class="flex items-center justify-between"><span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-info"></span> Mini Bags</span><span class="font-semibold">20%</span></li>
+          <li class="flex items-center justify-between"><span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-warning"></span> Clutches</span><span class="font-semibold">18%</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Weekly bar chart -->
+    <div class="bg-white rounded-3xl shadow-card p-5 md:p-6 mb-6">
+      <h2 class="font-bold text-sm mb-6">Weekly Order Volume</h2>
+      <div class="flex items-end gap-3 md:gap-5 h-40">
+        <div class="flex-1 flex flex-col items-center gap-2"><div class="w-full flex items-end justify-center h-full"><div class="w-6 md:w-8 rounded-t-lg bg-primary" style="height:55%"></div></div><span class="text-[10px] text-black/40">Wk 1</span></div>
+        <div class="flex-1 flex flex-col items-center gap-2"><div class="w-full flex items-end justify-center h-full"><div class="w-6 md:w-8 rounded-t-lg bg-primary" style="height:70%"></div></div><span class="text-[10px] text-black/40">Wk 2</span></div>
+        <div class="flex-1 flex flex-col items-center gap-2"><div class="w-full flex items-end justify-center h-full"><div class="w-6 md:w-8 rounded-t-lg bg-primary" style="height:62%"></div></div><span class="text-[10px] text-black/40">Wk 3</span></div>
+        <div class="flex-1 flex flex-col items-center gap-2"><div class="w-full flex items-end justify-center h-full"><div class="w-6 md:w-8 rounded-t-lg bg-primary" style="height:88%"></div></div><span class="text-[10px] text-black/40">Wk 4</span></div>
+      </div>
+    </div>
+
+    <!-- Top Products / Customers / Categories -->
+    <div class="grid lg:grid-cols-3 gap-4 mb-6">
+      <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+        <h2 class="font-bold text-sm mb-5">Top Products</h2>
+        <ul class="space-y-4">
+          <li class="flex items-center gap-3"><img src="https://picsum.photos/seed/rpt-prod-1/100/100" alt="" class="w-10 h-10 rounded-lg object-cover"><div class="flex-1 min-w-0"><p class="text-sm font-medium truncate">Milano Leather Tote</p><p class="text-black/40 text-xs">248 sold</p></div><p class="text-sm font-semibold">$29.2k</p></li>
+          <li class="flex items-center gap-3"><img src="https://picsum.photos/seed/rpt-prod-2/100/100" alt="" class="w-10 h-10 rounded-lg object-cover"><div class="flex-1 min-w-0"><p class="text-sm font-medium truncate">Grace Everyday Tote</p><p class="text-black/40 text-xs">201 sold</p></div><p class="text-sm font-semibold">$20.9k</p></li>
+          <li class="flex items-center gap-3"><img src="https://picsum.photos/seed/rpt-prod-3/100/100" alt="" class="w-10 h-10 rounded-lg object-cover"><div class="flex-1 min-w-0"><p class="text-sm font-medium truncate">Luna Crossbody</p><p class="text-black/40 text-xs">176 sold</p></div><p class="text-sm font-semibold">$13.0k</p></li>
+        </ul>
+      </div>
+
+      <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+        <h2 class="font-bold text-sm mb-5">Top Customers</h2>
+        <ul class="space-y-4">
+          <li class="flex items-center gap-3"><img src="https://picsum.photos/seed/rpt-cust-1/80/80" alt="" class="w-9 h-9 rounded-full object-cover"><div class="flex-1 min-w-0"><p class="text-sm font-medium truncate">Sana Khan</p><p class="text-black/40 text-xs">12 orders</p></div><p class="text-sm font-semibold">$1,286</p></li>
+          <li class="flex items-center gap-3"><img src="https://picsum.photos/seed/rpt-cust-2/80/80" alt="" class="w-9 h-9 rounded-full object-cover"><div class="flex-1 min-w-0"><p class="text-sm font-medium truncate">Hira Malik</p><p class="text-black/40 text-xs">8 orders</p></div><p class="text-sm font-semibold">$894</p></li>
+          <li class="flex items-center gap-3"><img src="https://picsum.photos/seed/rpt-cust-3/80/80" alt="" class="w-9 h-9 rounded-full object-cover"><div class="flex-1 min-w-0"><p class="text-sm font-medium truncate">Amina Raza</p><p class="text-black/40 text-xs">5 orders</p></div><p class="text-sm font-semibold">$412</p></li>
+        </ul>
+      </div>
+
+      <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
+        <h2 class="font-bold text-sm mb-5">Top Categories</h2>
+        <ul class="space-y-3">
+          <li><div class="flex items-center justify-between text-sm mb-1.5"><span>Tote Bags</span><span class="font-semibold">$69.5k</span></div><div class="h-1.5 rounded-full bg-black/5 overflow-hidden"><div class="h-full bg-primary-dark rounded-full" style="width:38%"></div></div></li>
+          <li><div class="flex items-center justify-between text-sm mb-1.5"><span>Crossbody</span><span class="font-semibold">$43.9k</span></div><div class="h-1.5 rounded-full bg-black/5 overflow-hidden"><div class="h-full bg-primary-dark rounded-full" style="width:24%"></div></div></li>
+          <li><div class="flex items-center justify-between text-sm mb-1.5"><span>Mini Bags</span><span class="font-semibold">$36.6k</span></div><div class="h-1.5 rounded-full bg-black/5 overflow-hidden"><div class="h-full bg-primary-dark rounded-full" style="width:20%"></div></div></li>
+          <li><div class="flex items-center justify-between text-sm mb-1.5"><span>Clutches</span><span class="font-semibold">$32.9k</span></div><div class="h-1.5 rounded-full bg-black/5 overflow-hidden"><div class="h-full bg-primary-dark rounded-full" style="width:18%"></div></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Summary Table -->
+    <div class="bg-white rounded-3xl shadow-card overflow-hidden">
+      <div class="p-5 border-b border-black/5">
+        <h2 class="font-bold text-sm">Daily Summary</h2>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm min-w-[560px]">
+          <thead>
+            <tr class="text-left text-black/40 text-xs uppercase tracking-wide border-b border-black/5">
+              <th class="py-3 pl-5 font-medium">Date</th>
+              <th class="py-3 font-medium text-right">Orders</th>
+              <th class="py-3 font-medium text-right">Revenue</th>
+              <th class="py-3 font-medium text-right">Refunds</th>
+              <th class="py-3 pr-5 font-medium text-right">Net</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-black/5">
+            <tr><td class="py-3 pl-5 text-black/60">Jul 08, 2026</td><td class="py-3 text-right">37</td><td class="py-3 text-right font-semibold">$4,286</td><td class="py-3 text-right text-danger">-$89</td><td class="py-3 pr-5 text-right font-semibold">$4,197</td></tr>
+            <tr><td class="py-3 pl-5 text-black/60">Jul 07, 2026</td><td class="py-3 text-right">31</td><td class="py-3 text-right font-semibold">$3,940</td><td class="py-3 text-right text-danger">$0</td><td class="py-3 pr-5 text-right font-semibold">$3,940</td></tr>
+            <tr><td class="py-3 pl-5 text-black/60">Jul 06, 2026</td><td class="py-3 text-right">28</td><td class="py-3 text-right font-semibold">$3,215</td><td class="py-3 text-right text-danger">-$146</td><td class="py-3 pr-5 text-right font-semibold">$3,069</td></tr>
+            <tr><td class="py-3 pl-5 text-black/60">Jul 05, 2026</td><td class="py-3 text-right">40</td><td class="py-3 text-right font-semibold">$4,812</td><td class="py-3 text-right text-danger">$0</td><td class="py-3 pr-5 text-right font-semibold">$4,812</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+  const mobileSidebarBtn = document.getElementById('mobileSidebarBtn');
+  const collapseSidebarBtn = document.getElementById('collapseSidebarBtn');
+  function openMobileSidebar() {
+    sidebar.classList.remove('-translate-x-full');
+    sidebarOverlay.classList.remove('invisible', 'pointer-events-none');
+    requestAnimationFrame(() => sidebarOverlay.classList.add('bg-black/40'));
+  }
+  function closeMobileSidebar() {
+    sidebar.classList.add('-translate-x-full');
+    sidebarOverlay.classList.remove('bg-black/40');
+    sidebarOverlay.classList.add('pointer-events-none');
+    setTimeout(() => sidebarOverlay.classList.add('invisible'), 300);
+  }
+  mobileSidebarBtn.addEventListener('click', openMobileSidebar);
+  sidebarOverlay.addEventListener('click', closeMobileSidebar);
+  collapseSidebarBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('sidebar-collapsed');
+    sidebar.classList.toggle('w-72');
+    sidebar.classList.toggle('w-20');
+  });
+
+  const dropdowns = [['quickActionsBtn','quickActionsMenu'],['notifBtn','notifMenu'],['msgBtn','msgMenu'],['profileBtn','profileMenu']];
+  dropdowns.forEach(([btnId, menuId]) => {
+    const btn = document.getElementById(btnId);
+    const menu = document.getElementById(menuId);
+    if (!btn || !menu) return;
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = !menu.classList.contains('hidden');
+      dropdowns.forEach(([, mId]) => document.getElementById(mId)?.classList.add('hidden'));
+      menu.classList.toggle('hidden', isOpen);
+    });
+  });
+  document.addEventListener('click', () => dropdowns.forEach(([, mId]) => document.getElementById(mId)?.classList.add('hidden')));
+
+  document.getElementById('themeToggleBtn').addEventListener('click', function () {
+    const icon = this.querySelector('i');
+    icon.classList.toggle('fa-moon');
+    icon.classList.toggle('fa-sun');
+  });
+</script>
+
+</body>
+</html>

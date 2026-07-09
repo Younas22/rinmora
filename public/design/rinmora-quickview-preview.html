@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quick View — Rinmora</title>
+<meta name="description" content="Rinmora premium product Quick View modal component.">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: '#CFBAA5',
+          'primary-dark': '#b89e84',
+          ink: '#000000',
+        },
+        fontFamily: {
+          sans: ['Poppins', 'sans-serif'],
+          body: ['Manrope', 'sans-serif'],
+        },
+        borderRadius: {
+          '4xl': '2rem',
+          '5xl': '2.5rem',
+        },
+        boxShadow: {
+          soft: '0 20px 60px -15px rgba(0,0,0,0.15)',
+          card: '0 10px 40px -12px rgba(0,0,0,0.12)',
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Manrope', sans-serif; }
+  .font-display { font-family: 'Poppins', sans-serif; }
+
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+
+  .img-zoom { overflow: hidden; }
+  .img-zoom img { transition: transform .6s cubic-bezier(.16,1,.3,1); }
+  .img-zoom:hover img { transform: scale(1.06); }
+
+  .btn-ripple { position: relative; overflow: hidden; }
+  .btn-ripple span.ripple {
+    position: absolute; border-radius: 9999px; transform: scale(0);
+    animation: ripple .6s linear; background: rgba(0,0,0,0.15);
+    pointer-events: none;
+  }
+  @keyframes ripple { to { transform: scale(3); opacity: 0; } }
+</style>
+</head>
+
+<body class="bg-white text-ink antialiased">
+
+<!-- =========================================================
+     DEMO BACKDROP (for preview purposes only)
+========================================================== -->
+<main class="max-w-5xl mx-auto px-5 md:px-8 py-16 md:py-24">
+  <div class="text-center max-w-md mx-auto mb-12">
+    <span class="font-display text-xs tracking-[0.25em] uppercase text-primary-dark font-semibold">Component Preview</span>
+    <h1 class="font-display text-2xl md:text-3xl font-semibold mt-2">Product Quick View Modal</h1>
+    <p class="text-black/50 text-sm mt-3">Click "Quick View" on the sample card below to open the modal component.</p>
+  </div>
+
+  <div class="max-w-xs mx-auto">
+    <article class="group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col">
+      <div class="relative aspect-[4/5] overflow-hidden">
+        <img src="https://picsum.photos/seed/qv-bella-a/500/620" alt="Bella Shoulder Bag" class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:opacity-0 group-hover:scale-105">
+        <img src="https://picsum.photos/seed/qv-bella-b/500/620" alt="" class="absolute inset-0 w-full h-full object-cover opacity-0 scale-105 transition-all duration-500 group-hover:opacity-100 group-hover:scale-100">
+        <span class="absolute top-3 left-3 z-10 bg-ink text-white text-[10px] font-display font-semibold tracking-wide uppercase px-3 py-1 rounded-full">-25%</span>
+        <button aria-label="Add to wishlist" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 grid place-items-center hover:bg-primary transition">
+          <i class="fa-regular fa-heart text-xs"></i>
+        </button>
+        <button id="openQuickView" class="absolute bottom-0 inset-x-0 z-10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/95 backdrop-blur text-center text-xs font-display font-semibold tracking-wide uppercase py-2.5">
+          Quick View
+        </button>
+      </div>
+      <div class="p-4 md:p-5 flex flex-col gap-1">
+        <p class="text-[11px] uppercase tracking-wide text-black/40 font-medium">Shoulder Bag</p>
+        <h3 class="font-display text-sm md:text-base font-medium">Bella Shoulder Bag</h3>
+        <div class="text-primary-dark text-xs">★★★★★</div>
+        <div class="flex items-baseline gap-2 mt-1">
+          <span class="font-display font-semibold text-sm md:text-base">$132.00</span>
+          <span class="text-black/40 text-xs line-through">$176.00</span>
+        </div>
+        <button class="btn-ripple mt-2 w-full bg-ink text-white text-xs font-display font-semibold tracking-wide uppercase py-3 rounded-full hover:bg-black/80 transition">Add to Cart</button>
+      </div>
+    </article>
+  </div>
+</main>
+
+<!-- =========================================================
+     QUICK VIEW MODAL (reusable component)
+========================================================== -->
+<div id="quickViewModal" class="fixed inset-0 z-[70] invisible pointer-events-none" role="dialog" aria-modal="true" aria-labelledby="qvProductName">
+
+  <!-- Overlay -->
+  <div id="qvOverlay" class="absolute inset-0 bg-black/0 transition-colors duration-300"></div>
+
+  <!-- Modal wrapper (centers on desktop, bottom-sheet on mobile) -->
+  <div class="relative h-full flex items-end sm:items-center justify-center p-0 sm:p-6">
+    <div id="qvPanel" class="w-full sm:max-w-[960px] max-h-[92vh] sm:max-h-[88vh] overflow-y-auto bg-white rounded-t-4xl sm:rounded-4xl shadow-soft opacity-0 translate-y-6 sm:translate-y-0 sm:scale-95 transition-all duration-300 ease-out">
+
+      <!-- Modal Header -->
+      <div class="sticky top-0 z-10 bg-white/95 backdrop-blur-md flex items-center justify-between px-6 md:px-8 py-5 border-b border-black/5">
+        <h2 id="qvProductName" class="font-display text-base md:text-lg font-semibold truncate pr-4">Bella Shoulder Bag</h2>
+        <button id="qvCloseBtn" aria-label="Close quick view" class="shrink-0 w-9 h-9 grid place-items-center rounded-full hover:bg-black/5 transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="grid md:grid-cols-2 gap-8 md:gap-10 p-6 md:p-8">
+
+        <!-- ============ LEFT: GALLERY ============ -->
+        <div>
+          <div id="qvMainImageWrap" class="img-zoom relative aspect-[4/5] rounded-3xl overflow-hidden bg-black/[0.03]">
+            <img id="qvMainImage" src="https://picsum.photos/seed/qv-bella-main/700/860" alt="Bella Shoulder Bag" class="w-full h-full object-cover">
+          </div>
+
+          <div class="grid grid-cols-4 gap-3 mt-4">
+            <button class="qv-thumb aspect-square rounded-2xl overflow-hidden ring-2 ring-primary-dark transition" data-src="https://picsum.photos/seed/qv-bella-main/700/860">
+              <img src="https://picsum.photos/seed/qv-bella-main/200/200" alt="Bella Shoulder Bag view 1" class="w-full h-full object-cover">
+            </button>
+            <button class="qv-thumb aspect-square rounded-2xl overflow-hidden ring-2 ring-transparent hover:ring-black/15 transition" data-src="https://picsum.photos/seed/qv-bella-2/700/860">
+              <img src="https://picsum.photos/seed/qv-bella-2/200/200" alt="Bella Shoulder Bag view 2" class="w-full h-full object-cover">
+            </button>
+            <button class="qv-thumb aspect-square rounded-2xl overflow-hidden ring-2 ring-transparent hover:ring-black/15 transition" data-src="https://picsum.photos/seed/qv-bella-3/700/860">
+              <img src="https://picsum.photos/seed/qv-bella-3/200/200" alt="Bella Shoulder Bag view 3" class="w-full h-full object-cover">
+            </button>
+            <button class="qv-thumb aspect-square rounded-2xl overflow-hidden ring-2 ring-transparent hover:ring-black/15 transition" data-src="https://picsum.photos/seed/qv-bella-4/700/860">
+              <img src="https://picsum.photos/seed/qv-bella-4/200/200" alt="Bella Shoulder Bag view 4" class="w-full h-full object-cover">
+            </button>
+          </div>
+        </div>
+
+        <!-- ============ RIGHT: DETAILS ============ -->
+        <div class="flex flex-col">
+
+          <p class="text-[11px] uppercase tracking-wide text-black/40 font-medium mb-1">Shoulder Bag</p>
+          <h3 class="font-display text-2xl font-semibold mb-2">Bella Shoulder Bag</h3>
+
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-primary-dark text-sm">★★★★★</span>
+            <span class="text-xs text-black/45">(128 Reviews)</span>
+          </div>
+
+          <div class="flex items-center gap-3 mb-4">
+            <span class="font-display text-2xl font-semibold">$132.00</span>
+            <span class="text-black/35 text-base line-through">$176.00</span>
+            <span class="bg-ink text-white text-[10px] font-display font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full">-25%</span>
+          </div>
+
+          <p class="text-black/60 text-sm leading-relaxed mb-5">
+            Crafted from premium vegan leather with polished gold-tone hardware, the Bella Shoulder Bag pairs everyday versatility with understated elegance.
+          </p>
+
+          <dl class="grid grid-cols-2 gap-y-2 text-xs text-black/55 mb-6">
+            <div class="flex items-center gap-1.5">
+              <dt class="sr-only">Availability</dt>
+              <span class="w-1.5 h-1.5 rounded-full bg-green-600"></span>
+              <dd>In Stock</dd>
+            </div>
+            <div><dt class="inline text-black/40">SKU:</dt> <dd class="inline">RIN-BLS-204</dd></div>
+            <div><dt class="inline text-black/40">Category:</dt> <dd class="inline">Shoulder Bags</dd></div>
+            <div><dt class="inline text-black/40">Brand:</dt> <dd class="inline">Rinmora</dd></div>
+          </dl>
+
+          <!-- Color -->
+          <div class="mb-5">
+            <p class="font-display text-xs font-semibold uppercase tracking-wide mb-3">Color — <span class="font-normal normal-case text-black/45">Black</span></p>
+            <div class="flex items-center gap-3">
+              <button aria-label="Black" class="qv-color w-8 h-8 rounded-full bg-black ring-2 ring-offset-2 ring-ink"></button>
+              <button aria-label="Cream" class="qv-color w-8 h-8 rounded-full bg-[#F5F0E6] border border-black/10 ring-2 ring-offset-2 ring-transparent"></button>
+              <button aria-label="Brown" class="qv-color w-8 h-8 rounded-full bg-[#6B4A32] ring-2 ring-offset-2 ring-transparent"></button>
+              <button aria-label="Pink" class="qv-color w-8 h-8 rounded-full bg-[#E7C7C2] ring-2 ring-offset-2 ring-transparent"></button>
+              <button aria-label="Beige" class="qv-color w-8 h-8 rounded-full bg-[#E8DCC8] ring-2 ring-offset-2 ring-transparent"></button>
+            </div>
+          </div>
+
+          <!-- Size -->
+          <div class="mb-6">
+            <p class="font-display text-xs font-semibold uppercase tracking-wide mb-3">Size</p>
+            <div class="flex items-center gap-2">
+              <button class="qv-size px-5 py-2 rounded-full border border-black/10 text-sm font-display font-medium hover:bg-black/5 transition">Mini</button>
+              <button class="qv-size px-5 py-2 rounded-full bg-primary text-ink text-sm font-display font-semibold transition">Medium</button>
+              <button class="qv-size px-5 py-2 rounded-full border border-black/10 text-sm font-display font-medium hover:bg-black/5 transition">Large</button>
+            </div>
+          </div>
+
+          <!-- Quantity -->
+          <div class="mb-6">
+            <p class="font-display text-xs font-semibold uppercase tracking-wide mb-3">Quantity</p>
+            <div class="inline-flex items-center gap-1 border border-black/10 rounded-full p-1">
+              <button id="qvQtyMinus" aria-label="Decrease quantity" class="w-9 h-9 rounded-full grid place-items-center hover:bg-black/5 transition">
+                <i class="fa-solid fa-minus text-xs"></i>
+              </button>
+              <span id="qvQtyValue" class="w-10 text-center font-display font-semibold text-sm select-none">1</span>
+              <button id="qvQtyPlus" aria-label="Increase quantity" class="w-9 h-9 rounded-full grid place-items-center hover:bg-black/5 transition">
+                <i class="fa-solid fa-plus text-xs"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex flex-wrap items-center gap-3 mb-7">
+            <button class="btn-ripple flex-1 min-w-[140px] bg-ink text-white font-display font-semibold text-sm tracking-wide uppercase py-3.5 rounded-full hover:bg-black/80 transition">
+              Add to Cart
+            </button>
+            <button class="btn-ripple flex-1 min-w-[140px] bg-primary text-ink font-display font-semibold text-sm tracking-wide uppercase py-3.5 rounded-full hover:bg-primary-dark transition">
+              Buy Now
+            </button>
+            <button aria-label="Add to wishlist" class="qv-wishlist w-12 h-12 shrink-0 rounded-full border border-black/10 grid place-items-center hover:bg-black/5 transition">
+              <i class="fa-regular fa-heart"></i>
+            </button>
+            <button aria-label="Share product" class="w-12 h-12 shrink-0 rounded-full border border-black/10 grid place-items-center hover:bg-black/5 transition">
+              <i class="fa-solid fa-share-nodes"></i>
+            </button>
+          </div>
+
+          <!-- Delivery trust badges -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 py-5 border-t border-black/5 text-xs text-black/60">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-check text-primary-dark"></i>
+              <span>Premium Quality</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-check text-primary-dark"></i>
+              <span>Cash on Delivery</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-check text-primary-dark"></i>
+              <span>Fast Shipping</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-check text-primary-dark"></i>
+              <span>Easy Returns</span>
+            </div>
+          </div>
+
+          <!-- Product Highlights -->
+          <div class="grid grid-cols-2 gap-y-3 gap-x-4 py-5 border-t border-black/5 text-xs text-black/60">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-gem text-primary-dark text-sm"></i>
+              <span>Premium Material</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-feather text-primary-dark text-sm"></i>
+              <span>Lightweight</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-cloud-rain text-primary-dark text-sm"></i>
+              <span>Water Resistant</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-shapes text-primary-dark text-sm"></i>
+              <span>Modern Design</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-gift text-primary-dark text-sm"></i>
+              <span>Perfect Gift</span>
+            </div>
+          </div>
+
+          <!-- Footer Link -->
+          <a href="#" class="inline-flex items-center gap-1.5 font-display text-xs font-semibold uppercase tracking-wide text-black/60 hover:text-ink transition pt-5 border-t border-black/5">
+            View Full Product Details
+            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const openQuickView = document.getElementById('openQuickView');
+  const qvModal = document.getElementById('quickViewModal');
+  const qvOverlay = document.getElementById('qvOverlay');
+  const qvPanel = document.getElementById('qvPanel');
+  const qvCloseBtn = document.getElementById('qvCloseBtn');
+
+  function openQV() {
+    qvModal.classList.remove('invisible', 'pointer-events-none');
+    requestAnimationFrame(() => {
+      qvOverlay.classList.remove('bg-black/0');
+      qvOverlay.classList.add('bg-black/50');
+      qvPanel.classList.remove('opacity-0', 'translate-y-6', 'sm:scale-95');
+      qvPanel.classList.add('opacity-100', 'translate-y-0', 'sm:scale-100');
+    });
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeQV() {
+    qvOverlay.classList.remove('bg-black/50');
+    qvOverlay.classList.add('bg-black/0');
+    qvPanel.classList.add('opacity-0', 'translate-y-6', 'sm:scale-95');
+    qvPanel.classList.remove('opacity-100', 'translate-y-0', 'sm:scale-100');
+    qvModal.classList.add('pointer-events-none');
+    document.body.style.overflow = '';
+    setTimeout(() => qvModal.classList.add('invisible'), 300);
+  }
+
+  openQuickView.addEventListener('click', openQV);
+  qvCloseBtn.addEventListener('click', closeQV);
+  qvOverlay.addEventListener('click', closeQV);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeQV();
+  });
+
+  const qvMainImage = document.getElementById('qvMainImage');
+  document.querySelectorAll('.qv-thumb').forEach(thumb => {
+    thumb.addEventListener('click', function () {
+      qvMainImage.src = this.dataset.src;
+      document.querySelectorAll('.qv-thumb').forEach(t => t.classList.remove('ring-primary-dark'));
+      document.querySelectorAll('.qv-thumb').forEach(t => t.classList.add('ring-transparent'));
+      this.classList.remove('ring-transparent');
+      this.classList.add('ring-primary-dark');
+    });
+  });
+
+  document.querySelectorAll('.qv-color').forEach(swatch => {
+    swatch.addEventListener('click', function () {
+      document.querySelectorAll('.qv-color').forEach(s => s.classList.remove('ring-ink'));
+      document.querySelectorAll('.qv-color').forEach(s => s.classList.add('ring-transparent'));
+      this.classList.remove('ring-transparent');
+      this.classList.add('ring-ink');
+    });
+  });
+
+  document.querySelectorAll('.qv-size').forEach(size => {
+    size.addEventListener('click', function () {
+      document.querySelectorAll('.qv-size').forEach(s => {
+        s.classList.remove('bg-primary', 'text-ink', 'font-semibold');
+        s.classList.add('border', 'border-black/10', 'font-medium');
+      });
+      this.classList.add('bg-primary', 'text-ink', 'font-semibold');
+      this.classList.remove('border', 'border-black/10', 'font-medium');
+    });
+  });
+
+  const qvQtyValue = document.getElementById('qvQtyValue');
+  document.getElementById('qvQtyMinus').addEventListener('click', () => {
+    const current = parseInt(qvQtyValue.textContent, 10);
+    if (current > 1) qvQtyValue.textContent = current - 1;
+  });
+  document.getElementById('qvQtyPlus').addEventListener('click', () => {
+    const current = parseInt(qvQtyValue.textContent, 10);
+    qvQtyValue.textContent = current + 1;
+  });
+
+  document.querySelectorAll('.qv-wishlist, [aria-label="Add to wishlist"]').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const icon = this.querySelector('i');
+      icon.classList.toggle('fa-regular');
+      icon.classList.toggle('fa-solid');
+      icon.classList.toggle('text-primary-dark');
+    });
+  });
+
+  document.querySelectorAll('.btn-ripple').forEach(btn => {
+    btn.addEventListener('click', function (e) {
+      const rect = this.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      const size = Math.max(rect.width, rect.height);
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+      ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+      this.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 650);
+    });
+  });
+</script>
+
+</body>
+</html>

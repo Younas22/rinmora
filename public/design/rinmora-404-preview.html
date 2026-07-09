@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page Not Found — Rinmora</title>
+<meta name="description" content="The page you're looking for doesn't exist or may have been moved.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: { primary: '#CFBAA5', 'primary-dark': '#b89e84', ink: '#000000' },
+        fontFamily: { sans: ['Poppins', 'sans-serif'], body: ['Manrope', 'sans-serif'] },
+        borderRadius: { '4xl': '2rem', '5xl': '2.5rem' },
+        boxShadow: { soft: '0 20px 60px -15px rgba(0,0,0,0.15)', card: '0 10px 40px -12px rgba(0,0,0,0.12)' },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Manrope', sans-serif; }
+  .font-display { font-family: 'Poppins', sans-serif; }
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+  .snap-row { scroll-snap-type: x mandatory; }
+  .snap-item { scroll-snap-align: start; }
+  .img-zoom { overflow: hidden; }
+  .img-zoom img { transition: transform .6s cubic-bezier(.16,1,.3,1); }
+  .img-zoom:hover img { transform: scale(1.06); }
+  .fade-up { animation: fadeUp .7s cubic-bezier(.16,1,.3,1) both; }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(20px);} to {opacity:1; transform:translateY(0);} }
+  .btn-ripple { position: relative; overflow: hidden; }
+  .btn-ripple span.ripple { position: absolute; border-radius: 9999px; transform: scale(0); animation: ripple .6s linear; background: rgba(0,0,0,0.15); pointer-events: none; }
+  @keyframes ripple { to { transform: scale(3); opacity: 0; } }
+  @keyframes floatBag { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  .float-bag { animation: floatBag 4s ease-in-out infinite; }
+</style>
+</head>
+
+<body class="bg-white text-ink antialiased">
+
+<!-- =========================================================
+     HEADER
+========================================================== -->
+<header id="site-header" class="fixed top-0 inset-x-0 z-50 bg-primary border-b border-black/10 lg:bg-white/95 lg:backdrop-blur-md lg:border-black/5">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10">
+    <div class="flex items-center justify-between h-16 md:h-20">
+      <div class="flex items-center gap-2">
+        <button id="menuBtn" aria-label="Open menu" class="lg:hidden w-10 h-10 grid place-items-center rounded-full hover:bg-black/10 transition">
+          <i class="fa-solid fa-bars text-lg"></i>
+        </button>
+        <nav class="hidden lg:flex items-center gap-8 font-display text-[13px] tracking-wide uppercase font-medium">
+          <a href="rinmora-shop-preview.html" class="hover:text-primary-dark transition">Shop</a>
+          <a href="rinmora-categories-preview.html" class="hover:text-primary-dark transition">Categories</a>
+          <a href="rinmora-about-preview.html" class="hover:text-primary-dark transition">About</a>
+          <a href="rinmora-contact-preview.html" class="hover:text-primary-dark transition">Contact</a>
+        </nav>
+      </div>
+
+      <a href="rinmora-home-preview.html" class="absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 select-none">
+        <img src="../logo-01.png" alt="Rinmora" class="h-12 md:h-16 w-auto">
+      </a>
+
+      <div class="flex items-center gap-1 md:gap-2">
+        <a href="rinmora-search-preview.html" aria-label="Search" class="w-10 h-10 grid place-items-center rounded-full hover:bg-black/10 transition">
+          <i class="fa-solid fa-magnifying-glass text-[15px]"></i>
+        </a>
+        <a href="rinmora-wishlist-preview.html" aria-label="Wishlist" class="hidden sm:grid w-10 h-10 place-items-center rounded-full hover:bg-black/10 transition">
+          <i class="fa-regular fa-heart text-[15px]"></i>
+        </a>
+        <button aria-label="Shopping bag" class="relative w-10 h-10 grid place-items-center rounded-full hover:bg-black/10 transition">
+          <i class="fa-solid fa-bag-shopping text-[15px]"></i>
+          <span class="absolute top-1 right-1 bg-ink text-white text-[10px] font-bold w-4 h-4 rounded-full grid place-items-center">0</span>
+        </button>
+        <a href="rinmora-login-preview.html" aria-label="Account" class="w-10 h-10 grid place-items-center rounded-full hover:bg-black/10 transition">
+          <i class="fa-regular fa-user text-[15px]"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu drawer -->
+  <div id="mobileMenu" class="lg:hidden fixed inset-0 z-[60] invisible pointer-events-none">
+    <div id="menuOverlay" class="absolute inset-0 z-0 bg-black/0 transition-colors duration-300"></div>
+    <div id="menuPanel" class="absolute top-0 left-0 z-10 h-full w-[80%] max-w-xs bg-primary shadow-soft px-7 pt-7 pb-10 flex flex-col gap-1 -translate-x-full transition-transform duration-300 ease-out">
+      <div class="flex items-center justify-between mb-8">
+        <img src="../logo-01.png" alt="Rinmora" class="h-10 w-auto">
+        <button id="closeMenuBtn" aria-label="Close menu" class="w-10 h-10 grid place-items-center rounded-full hover:bg-black/10 transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div class="flex flex-col gap-3">
+        <a href="rinmora-home-preview.html" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">Home</a>
+        <a href="rinmora-shop-preview.html" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">Shop</a>
+        <a href="rinmora-categories-preview.html" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">Categories</a>
+        <a href="rinmora-contact-preview.html" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">Contact Us</a>
+        <a href="rinmora-faq-preview.html" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">FAQ</a>
+      </div>
+      <div class="mt-auto flex items-center gap-4 pt-6">
+        <i class="fa-brands fa-instagram text-xl"></i>
+        <i class="fa-brands fa-facebook text-xl"></i>
+        <i class="fa-brands fa-tiktok text-xl"></i>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="pt-16 md:pt-20">
+
+  <!-- =========================================================
+       404 HERO
+  ========================================================== -->
+  <section class="relative overflow-hidden">
+    <div class="absolute -top-16 -right-16 w-64 h-64 md:w-96 md:h-96 rounded-full bg-primary/20 blur-2xl"></div>
+    <div class="absolute -bottom-20 -left-16 w-64 h-64 rounded-full bg-primary/15 blur-2xl"></div>
+
+    <div class="relative max-w-2xl mx-auto px-5 md:px-8 pt-14 md:pt-20 pb-12 text-center fade-up">
+      <div class="w-40 h-40 md:w-52 md:h-52 mx-auto mb-8 rounded-full bg-primary/15 grid place-items-center">
+        <i class="fa-solid fa-bag-shopping float-bag text-6xl md:text-7xl text-primary-dark"></i>
+      </div>
+
+      <span class="font-display text-xs tracking-[0.25em] uppercase text-primary-dark font-semibold">Error 404</span>
+      <h1 class="font-display text-4xl md:text-6xl font-semibold mt-3">Oops!</h1>
+      <h2 class="font-display text-xl md:text-2xl font-semibold mt-2">We Couldn't Find That Page</h2>
+      <p class="text-black/50 text-sm md:text-base mt-4 max-w-md mx-auto">The page you're looking for doesn't exist or may have been moved. Let's get you back to something beautiful.</p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-9">
+        <a href="rinmora-home-preview.html" class="btn-ripple w-full sm:w-auto bg-primary text-ink font-display font-semibold text-sm uppercase tracking-wide px-8 py-4 rounded-full hover:bg-primary-dark transition">
+          Go Home
+        </a>
+        <a href="rinmora-shop-preview.html" class="w-full sm:w-auto border border-ink/15 font-display font-semibold text-sm uppercase tracking-wide px-8 py-4 rounded-full hover:bg-black/5 transition">
+          Continue Shopping
+        </a>
+      </div>
+
+      <div class="relative max-w-sm mx-auto mt-6">
+        <i class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-black/30 text-sm"></i>
+        <label for="notfound-search" class="sr-only">Search products</label>
+        <input id="notfound-search" type="text" placeholder="Search products..." class="w-full pl-12 pr-5 py-3.5 rounded-full border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       FEATURED PRODUCTS
+  ========================================================== -->
+  <section class="bg-black/[0.02] py-16 md:py-20">
+    <div class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10">
+      <h2 class="font-display text-xl md:text-2xl font-semibold text-center mb-8">Featured Products</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        <article class="group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col">
+          <div class="img-zoom aspect-[4/5] overflow-hidden">
+            <img src="https://picsum.photos/seed/404-milano/400/500" alt="Milano Leather Tote" class="w-full h-full object-cover">
+          </div>
+          <div class="p-4 flex flex-col gap-1">
+            <h3 class="font-display text-sm font-medium">Milano Leather Tote</h3>
+            <span class="font-display font-semibold text-sm">$118.00</span>
+          </div>
+        </article>
+        <article class="group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col">
+          <div class="img-zoom aspect-[4/5] overflow-hidden">
+            <img src="https://picsum.photos/seed/404-luna/400/500" alt="Luna Crossbody" class="w-full h-full object-cover">
+          </div>
+          <div class="p-4 flex flex-col gap-1">
+            <h3 class="font-display text-sm font-medium">Luna Crossbody</h3>
+            <span class="font-display font-semibold text-sm">$74.00</span>
+          </div>
+        </article>
+        <article class="group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col">
+          <div class="img-zoom aspect-[4/5] overflow-hidden">
+            <img src="https://picsum.photos/seed/404-grace/400/500" alt="Grace Everyday Tote" class="w-full h-full object-cover">
+          </div>
+          <div class="p-4 flex flex-col gap-1">
+            <h3 class="font-display text-sm font-medium">Grace Everyday Tote</h3>
+            <span class="font-display font-semibold text-sm">$104.00</span>
+          </div>
+        </article>
+        <article class="group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col">
+          <div class="img-zoom aspect-[4/5] overflow-hidden">
+            <img src="https://picsum.photos/seed/404-sofia/400/500" alt="Sofia Clutch" class="w-full h-full object-cover">
+          </div>
+          <div class="p-4 flex flex-col gap-1">
+            <h3 class="font-display text-sm font-medium">Sofia Clutch</h3>
+            <span class="font-display font-semibold text-sm">$62.00</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       TRENDING CATEGORIES
+  ========================================================== -->
+  <section class="py-16 md:py-20">
+    <div class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10">
+      <h2 class="font-display text-xl md:text-2xl font-semibold text-center mb-8">Trending Categories</h2>
+      <div class="flex gap-4 overflow-x-auto snap-row -mx-5 px-5 md:mx-0 md:px-0 md:justify-center md:flex-wrap">
+        <a href="rinmora-shop-preview.html" class="snap-item shrink-0 flex flex-col items-center gap-3 w-28">
+          <div class="w-24 h-24 rounded-full overflow-hidden shadow-card"><img src="https://picsum.photos/seed/404-cat-tote/200/200" alt="Tote Bags" class="w-full h-full object-cover"></div>
+          <p class="font-display text-xs font-medium">Tote Bags</p>
+        </a>
+        <a href="rinmora-shop-preview.html" class="snap-item shrink-0 flex flex-col items-center gap-3 w-28">
+          <div class="w-24 h-24 rounded-full overflow-hidden shadow-card"><img src="https://picsum.photos/seed/404-cat-cross/200/200" alt="Crossbody Bags" class="w-full h-full object-cover"></div>
+          <p class="font-display text-xs font-medium">Crossbody</p>
+        </a>
+        <a href="rinmora-shop-preview.html" class="snap-item shrink-0 flex flex-col items-center gap-3 w-28">
+          <div class="w-24 h-24 rounded-full overflow-hidden shadow-card"><img src="https://picsum.photos/seed/404-cat-mini/200/200" alt="Mini Bags" class="w-full h-full object-cover"></div>
+          <p class="font-display text-xs font-medium">Mini Bags</p>
+        </a>
+        <a href="rinmora-shop-preview.html" class="snap-item shrink-0 flex flex-col items-center gap-3 w-28">
+          <div class="w-24 h-24 rounded-full overflow-hidden shadow-card"><img src="https://picsum.photos/seed/404-cat-clutch/200/200" alt="Clutches" class="w-full h-full object-cover"></div>
+          <p class="font-display text-xs font-medium">Clutches</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- =========================================================
+     FOOTER
+========================================================== -->
+<footer class="border-t border-black/5">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10 py-14 md:py-16">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-10">
+      <div class="col-span-2 md:col-span-2">
+        <img src="../logo-01.png" alt="Rinmora" class="h-10 w-auto mb-4">
+        <p class="text-black/50 text-sm max-w-xs">Premium handbags designed for confident women. Elegance you can carry, every day.</p>
+        <div class="flex items-center gap-3 mt-6">
+          <a href="#" aria-label="Instagram" class="w-10 h-10 rounded-full bg-black/[0.04] grid place-items-center hover:bg-primary transition"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-full bg-black/[0.04] grid place-items-center hover:bg-primary transition"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" aria-label="TikTok" class="w-10 h-10 rounded-full bg-black/[0.04] grid place-items-center hover:bg-primary transition"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div>
+        <h3 class="font-display font-semibold text-sm mb-4 uppercase tracking-wide">Shop</h3>
+        <ul class="space-y-3 text-sm text-black/55">
+          <li><a href="rinmora-shop-preview.html" class="hover:text-ink transition">Shop All</a></li>
+          <li><a href="rinmora-categories-preview.html" class="hover:text-ink transition">Categories</a></li>
+          <li><a href="#" class="hover:text-ink transition">New Arrivals</a></li>
+          <li><a href="rinmora-about-preview.html" class="hover:text-ink transition">About Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-display font-semibold text-sm mb-4 uppercase tracking-wide">Support</h3>
+        <ul class="space-y-3 text-sm text-black/55">
+          <li><a href="rinmora-contact-preview.html" class="hover:text-ink transition">Contact Us</a></li>
+          <li><a href="rinmora-faq-preview.html" class="hover:text-ink transition">FAQs</a></li>
+          <li><a href="rinmora-orders-preview.html" class="hover:text-ink transition">Track Order</a></li>
+          <li><a href="rinmora-returns-preview.html" class="hover:text-ink transition">Returns &amp; Refunds</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-display font-semibold text-sm mb-4 uppercase tracking-wide">Policies</h3>
+        <ul class="space-y-3 text-sm text-black/55">
+          <li><a href="rinmora-privacy-policy-preview.html" class="hover:text-ink transition">Privacy Policy</a></li>
+          <li><a href="rinmora-terms-preview.html" class="hover:text-ink transition">Terms of Service</a></li>
+          <li><a href="rinmora-returns-preview.html" class="hover:text-ink transition">Return Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-black/5 mt-10 pt-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-5">
+        <div>
+          <p class="font-display font-semibold text-sm">Stay in Style</p>
+          <p class="text-black/45 text-xs mt-1">Get exclusive offers and new arrivals in your inbox.</p>
+        </div>
+        <form class="flex w-full md:w-auto gap-2" onsubmit="return false;">
+          <label for="footer-email" class="sr-only">Email address</label>
+          <input id="footer-email" type="email" placeholder="Enter your email" class="w-full md:w-64 px-5 py-3 rounded-full border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+          <button type="submit" class="shrink-0 bg-ink text-white font-display font-semibold text-xs uppercase tracking-wide px-5 py-3 rounded-full hover:bg-black/80 transition">Subscribe</button>
+        </form>
+      </div>
+    </div>
+    <div class="border-t border-black/5 mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-black/40">
+      <p>&copy; 2026 Rinmora. All rights reserved.</p>
+      <div class="flex items-center gap-3 text-base text-black/30">
+        <i class="fa-brands fa-cc-visa"></i>
+        <i class="fa-brands fa-cc-mastercard"></i>
+        <i class="fa-brands fa-cc-paypal"></i>
+        <i class="fa-solid fa-money-bill-wave"></i>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const closeMenuBtn = document.getElementById('closeMenuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const menuOverlay = document.getElementById('menuOverlay');
+  const menuPanel = document.getElementById('menuPanel');
+  function openMenu() {
+    mobileMenu.classList.remove('invisible', 'pointer-events-none');
+    requestAnimationFrame(() => {
+      menuPanel.classList.remove('-translate-x-full');
+      menuOverlay.classList.remove('bg-black/0');
+      menuOverlay.classList.add('bg-black/50');
+    });
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    menuPanel.classList.add('-translate-x-full');
+    menuOverlay.classList.remove('bg-black/50');
+    menuOverlay.classList.add('bg-black/0');
+    mobileMenu.classList.add('pointer-events-none');
+    document.body.style.overflow = '';
+    setTimeout(() => mobileMenu.classList.add('invisible'), 300);
+  }
+  menuBtn.addEventListener('click', openMenu);
+  closeMenuBtn.addEventListener('click', closeMenu);
+  menuOverlay.addEventListener('click', closeMenu);
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+  document.querySelectorAll('.btn-ripple').forEach(btn => {
+    btn.addEventListener('click', function (e) {
+      const rect = this.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      const size = Math.max(rect.width, rect.height);
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+      ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+      this.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 650);
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rinmora — Elegance You Can Carry</title>
+<meta name="description" content="Rinmora — Premium handbags designed for confident women.">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: '#CFBAA5',
+          'primary-dark': '#b89e84',
+          ink: '#000000',
+        },
+        fontFamily: {
+          sans: ['Poppins', 'sans-serif'],
+          body: ['Manrope', 'sans-serif'],
+        },
+        borderRadius: {
+          '4xl': '2rem',
+          '5xl': '2.5rem',
+        },
+        boxShadow: {
+          soft: '0 20px 60px -15px rgba(0,0,0,0.15)',
+          card: '0 10px 40px -12px rgba(0,0,0,0.12)',
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Manrope', sans-serif; }
+  .font-display { font-family: 'Poppins', sans-serif; }
+
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+
+  .snap-row { scroll-snap-type: x mandatory; }
+  .snap-item { scroll-snap-align: start; }
+
+  .img-zoom { overflow: hidden; }
+  .img-zoom img { transition: transform .7s cubic-bezier(.16,1,.3,1); }
+  .img-zoom:hover img { transform: scale(1.08); }
+
+  .btn-ripple { position: relative; overflow: hidden; }
+  .btn-ripple span.ripple {
+    position: absolute; border-radius: 9999px; transform: scale(0);
+    animation: ripple .6s linear; background: rgba(0,0,0,0.15);
+    pointer-events: none;
+  }
+  @keyframes ripple { to { transform: scale(3); opacity: 0; } }
+
+  .fade-up { animation: fadeUp .8s cubic-bezier(.16,1,.3,1) both; }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(24px);} to {opacity:1; transform:translateY(0);} }
+
+  [x-cloak] { display: none !important; }
+</style>
+</head>
+
+<body class="bg-white text-ink antialiased">
+
+<!-- =========================================================
+     HEADER
+========================================================== -->
+<header id="site-header" class="fixed top-0 inset-x-0 z-50 bg-primary border-b border-black/10 lg:bg-white/95 lg:backdrop-blur-md lg:border-black/5">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10">
+    <div class="flex items-center justify-between h-16 md:h-20">
+
+      <!-- Hamburger (mobile) / Left nav (desktop) -->
+      <div class="flex items-center gap-2">
+        <button id="menuBtn" aria-label="Open menu" class="lg:hidden w-10 h-10 grid place-items-center rounded-full hover:bg-black/5 transition">
+          <i class="fa-solid fa-bars text-lg"></i>
+        </button>
+
+        <nav class="hidden lg:flex items-center gap-8 font-display text-[13px] tracking-wide uppercase font-medium">
+          <a href="#categories" class="hover:text-primary-dark transition">Shop</a>
+          <a href="#reels" class="hover:text-primary-dark transition">Reels</a>
+          <a href="#bestsellers" class="hover:text-primary-dark transition">Best Sellers</a>
+          <a href="#promo" class="hover:text-primary-dark transition">New Arrivals</a>
+          <a href="#reviews" class="hover:text-primary-dark transition">Reviews</a>
+        </nav>
+      </div>
+
+      <!-- Logo -->
+      <a href="#" class="absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 select-none">
+        <img src="../logo-01.png" alt="Rinmora" class="h-14 md:h-20 w-auto">
+      </a>
+
+      <!-- Icons -->
+      <div class="flex items-center gap-1 md:gap-2">
+        <button aria-label="Search" class="w-10 h-10 grid place-items-center rounded-full hover:bg-black/5 transition">
+          <i class="fa-solid fa-magnifying-glass text-[15px]"></i>
+        </button>
+        <button aria-label="Wishlist" class="hidden sm:grid w-10 h-10 place-items-center rounded-full hover:bg-black/5 transition">
+          <i class="fa-regular fa-heart text-[15px]"></i>
+        </button>
+        <button aria-label="Shopping bag" class="relative w-10 h-10 grid place-items-center rounded-full hover:bg-black/5 transition">
+          <i class="fa-solid fa-bag-shopping text-[15px]"></i>
+          <span class="absolute top-1 right-1 bg-primary text-ink text-[10px] font-bold w-4 h-4 rounded-full grid place-items-center">2</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu drawer -->
+  <div id="mobileMenu" class="lg:hidden fixed inset-0 z-[60] invisible pointer-events-none">
+    <div id="menuOverlay" class="absolute inset-0 z-0 bg-black/0 transition-colors duration-300"></div>
+    <div id="menuPanel" class="absolute top-0 left-0 z-10 h-full w-[80%] max-w-xs bg-primary shadow-soft px-7 pt-7 pb-10 flex flex-col gap-1 -translate-x-full transition-transform duration-300 ease-out">
+      <div class="flex items-center justify-between mb-8">
+        <img src="../logo-01.png" alt="Rinmora" class="h-12 w-auto">
+        <button id="closeMenuBtn" aria-label="Close menu" class="w-10 h-10 grid place-items-center rounded-full hover:bg-black/5 transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <a href="#categories" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">Shop</a>
+        <a href="#reels" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">Reels</a>
+        <a href="#bestsellers" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">Best Sellers</a>
+        <a href="#promo" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">New Arrivals</a>
+        <a href="#reviews" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">Reviews</a>
+        <a href="#" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">Wishlist</a>
+        <a href="#" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">Contact Us</a>
+      </div>
+
+      <div class="mt-auto flex items-center gap-4 pt-6">
+        <i class="fa-brands fa-instagram text-xl"></i>
+        <i class="fa-brands fa-facebook text-xl"></i>
+        <i class="fa-brands fa-tiktok text-xl"></i>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="pt-16 md:pt-20">
+
+  <!-- =========================================================
+       REELS
+  ========================================================== -->
+  <section id="reels" class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10 pt-5 pb-2 md:pt-7 md:pb-3">
+    <div class="flex gap-5 md:gap-8 overflow-x-auto snap-row -mx-5 px-5 md:mx-0 md:px-0 md:justify-center">
+
+      <button type="button" class="reel-trigger snap-item shrink-0 flex flex-col items-center gap-2" data-reel-index="0">
+        <span class="w-20 h-20 md:w-[5.75rem] md:h-[5.75rem] rounded-full p-[3px] bg-gradient-to-tr from-primary-dark via-primary to-[#6b3a53]">
+          <span class="block w-full h-full rounded-full overflow-hidden ring-[3px] ring-white">
+            <img src="https://picsum.photos/seed/reel-bestsellers/200/200" alt="Best Sellers reel" class="w-full h-full object-cover">
+          </span>
+        </span>
+        <p class="font-display text-xs font-medium text-center max-w-[5.5rem] leading-tight">Best Sellers</p>
+      </button>
+
+      <button type="button" class="reel-trigger snap-item shrink-0 flex flex-col items-center gap-2" data-reel-index="1">
+        <span class="w-20 h-20 md:w-[5.75rem] md:h-[5.75rem] rounded-full p-[3px] bg-gradient-to-tr from-primary-dark via-primary to-[#6b3a53]">
+          <span class="block w-full h-full rounded-full overflow-hidden ring-[3px] ring-white">
+            <img src="https://picsum.photos/seed/reel-handbags/200/200" alt="Hand Bags reel" class="w-full h-full object-cover">
+          </span>
+        </span>
+        <p class="font-display text-xs font-medium text-center max-w-[5.5rem] leading-tight">Hand Bags</p>
+      </button>
+
+      <button type="button" class="reel-trigger snap-item shrink-0 flex flex-col items-center gap-2" data-reel-index="2">
+        <span class="w-20 h-20 md:w-[5.75rem] md:h-[5.75rem] rounded-full p-[3px] bg-gradient-to-tr from-primary-dark via-primary to-[#6b3a53]">
+          <span class="block w-full h-full rounded-full overflow-hidden ring-[3px] ring-white">
+            <img src="https://picsum.photos/seed/reel-tote/200/200" alt="Tote Bags reel" class="w-full h-full object-cover">
+          </span>
+        </span>
+        <p class="font-display text-xs font-medium text-center max-w-[5.5rem] leading-tight">TOTE Bags</p>
+      </button>
+
+      <button type="button" class="reel-trigger snap-item shrink-0 flex flex-col items-center gap-2" data-reel-index="3">
+        <span class="w-20 h-20 md:w-[5.75rem] md:h-[5.75rem] rounded-full p-[3px] bg-gradient-to-tr from-primary-dark via-primary to-[#6b3a53]">
+          <span class="block w-full h-full rounded-full overflow-hidden ring-[3px] ring-white">
+            <img src="https://picsum.photos/seed/reel-duffle/200/200" alt="Duffle Bag reel" class="w-full h-full object-cover">
+          </span>
+        </span>
+        <p class="font-display text-xs font-medium text-center max-w-[5.5rem] leading-tight">Duffle Bag/ Hand carry</p>
+      </button>
+
+      <button type="button" class="reel-trigger snap-item shrink-0 flex flex-col items-center gap-2" data-reel-index="4">
+        <span class="w-20 h-20 md:w-[5.75rem] md:h-[5.75rem] rounded-full p-[3px] bg-gradient-to-tr from-primary-dark via-primary to-[#6b3a53]">
+          <span class="block w-full h-full rounded-full overflow-hidden ring-[3px] ring-white">
+            <img src="https://picsum.photos/seed/reel-laptop/200/200" alt="Laptop Bags reel" class="w-full h-full object-cover">
+          </span>
+        </span>
+        <p class="font-display text-xs font-medium text-center max-w-[5.5rem] leading-tight">Laptop Bags</p>
+      </button>
+
+      <button type="button" class="reel-trigger snap-item shrink-0 flex flex-col items-center gap-2" data-reel-index="5">
+        <span class="w-20 h-20 md:w-[5.75rem] md:h-[5.75rem] rounded-full p-[3px] bg-gradient-to-tr from-primary-dark via-primary to-[#6b3a53]">
+          <span class="block w-full h-full rounded-full overflow-hidden ring-[3px] ring-white">
+            <img src="https://picsum.photos/seed/reel-belt/200/200" alt="Belt and Crossbody bag reel" class="w-full h-full object-cover">
+          </span>
+        </span>
+        <p class="font-display text-xs font-medium text-center max-w-[5.5rem] leading-tight">Belt &amp; Crossbody bag</p>
+      </button>
+
+    </div>
+  </section>
+
+  <!-- =========================================================
+       HERO
+  ========================================================== -->
+  <section class="relative overflow-hidden bg-white">
+    <div class="absolute -top-24 -right-24 w-72 h-72 md:w-[30rem] md:h-[30rem] rounded-full bg-primary/20 blur-2xl"></div>
+    <div class="absolute -bottom-32 -left-20 w-72 h-72 md:w-[26rem] md:h-[26rem] rounded-full bg-primary/15 blur-2xl"></div>
+
+    <div class="relative max-w-7xl mx-auto px-5 md:px-8 lg:px-10 pt-8 md:pt-14 lg:pt-20 pb-10 md:pb-16">
+      <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+
+        <div class="fade-up order-2 lg:order-1 text-center lg:text-left">
+          <span class="inline-block font-display text-xs tracking-[0.25em] uppercase text-primary-dark font-semibold mb-4">
+            Signature Collection
+          </span>
+          <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] mb-5">
+            Elegance You<br class="hidden sm:block"> Can Carry.
+          </h1>
+          <p class="text-base md:text-lg text-black/60 max-w-md mx-auto lg:mx-0 mb-8">
+            Premium handbags designed for confident women. Crafted from the finest materials for every chapter of your story.
+          </p>
+
+          <div class="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
+            <a href="#bestsellers" class="btn-ripple w-full sm:w-auto text-center bg-primary hover:bg-primary-dark transition-colors font-display font-semibold text-sm tracking-wide uppercase px-9 py-4 rounded-full shadow-card">
+              Shop Now
+            </a>
+            <a href="#promo" class="w-full sm:w-auto text-center border border-ink/80 hover:bg-ink hover:text-white transition-colors font-display font-semibold text-sm tracking-wide uppercase px-9 py-4 rounded-full">
+              New Collection
+            </a>
+          </div>
+        </div>
+
+        <div class="order-1 lg:order-2 relative">
+          <div class="relative mx-auto max-w-sm lg:max-w-none aspect-[4/5] rounded-4xl overflow-hidden shadow-soft img-zoom">
+            <img src="https://picsum.photos/seed/rinmora-hero/900/1100" alt="Rinmora signature handbag" class="w-full h-full object-cover">
+          </div>
+          <div class="hidden md:flex absolute -bottom-6 -left-6 bg-white rounded-3xl shadow-card px-6 py-4 items-center gap-3">
+            <div class="w-11 h-11 rounded-full bg-primary/30 grid place-items-center">
+              <i class="fa-solid fa-star text-primary-dark"></i>
+            </div>
+            <div>
+              <p class="font-display font-semibold text-sm leading-none">4.9 / 5.0</p>
+              <p class="text-xs text-black/50 mt-1">2,400+ reviews</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       TRUST BAR
+  ========================================================== -->
+  <section class="border-y border-black/5 bg-white">
+    <div class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10 py-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-4 text-center">
+        <div class="flex flex-col items-center gap-2">
+          <i class="fa-solid fa-gem text-primary-dark text-lg"></i>
+          <p class="font-display text-xs md:text-sm font-medium tracking-wide">Premium Quality</p>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+          <i class="fa-solid fa-truck-fast text-primary-dark text-lg"></i>
+          <p class="font-display text-xs md:text-sm font-medium tracking-wide">Fast Shipping</p>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+          <i class="fa-solid fa-money-bill-wave text-primary-dark text-lg"></i>
+          <p class="font-display text-xs md:text-sm font-medium tracking-wide">Cash on Delivery</p>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+          <i class="fa-solid fa-rotate-left text-primary-dark text-lg"></i>
+          <p class="font-display text-xs md:text-sm font-medium tracking-wide">Easy Returns</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       FEATURED CATEGORIES
+  ========================================================== -->
+  <section id="categories" class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10 py-16 md:py-24">
+    <div class="flex items-end justify-between mb-10 md:mb-14">
+      <div>
+        <span class="font-display text-xs tracking-[0.25em] uppercase text-primary-dark font-semibold">Explore</span>
+        <h2 class="font-display text-2xl md:text-4xl font-semibold mt-2">Shop by Category</h2>
+      </div>
+    </div>
+
+    <div class="flex md:grid md:grid-cols-6 gap-6 md:gap-6 overflow-x-auto snap-row -mx-5 px-5 md:mx-0 md:px-0 md:overflow-visible">
+      <!-- repeat item -->
+      <a href="#" class="snap-item shrink-0 w-32 md:w-auto flex flex-col items-center gap-4 group">
+        <div class="w-32 h-32 md:w-full md:h-auto md:aspect-square rounded-full overflow-hidden shadow-card img-zoom">
+          <img src="https://picsum.photos/seed/tote-bags/400/400" alt="Tote Bags" class="w-full h-full object-cover">
+        </div>
+        <p class="font-display text-sm font-medium text-center">Tote Bags</p>
+      </a>
+      <a href="#" class="snap-item shrink-0 w-32 md:w-auto flex flex-col items-center gap-4 group">
+        <div class="w-32 h-32 md:w-full md:h-auto md:aspect-square rounded-full overflow-hidden shadow-card img-zoom">
+          <img src="https://picsum.photos/seed/crossbody-bags/400/400" alt="Crossbody Bags" class="w-full h-full object-cover">
+        </div>
+        <p class="font-display text-sm font-medium text-center">Crossbody</p>
+      </a>
+      <a href="#" class="snap-item shrink-0 w-32 md:w-auto flex flex-col items-center gap-4 group">
+        <div class="w-32 h-32 md:w-full md:h-auto md:aspect-square rounded-full overflow-hidden shadow-card img-zoom">
+          <img src="https://picsum.photos/seed/shoulder-bags/400/400" alt="Shoulder Bags" class="w-full h-full object-cover">
+        </div>
+        <p class="font-display text-sm font-medium text-center">Shoulder Bags</p>
+      </a>
+      <a href="#" class="snap-item shrink-0 w-32 md:w-auto flex flex-col items-center gap-4 group">
+        <div class="w-32 h-32 md:w-full md:h-auto md:aspect-square rounded-full overflow-hidden shadow-card img-zoom">
+          <img src="https://picsum.photos/seed/clutch-bags/400/400" alt="Clutches" class="w-full h-full object-cover">
+        </div>
+        <p class="font-display text-sm font-medium text-center">Clutches</p>
+      </a>
+      <a href="#" class="snap-item shrink-0 w-32 md:w-auto flex flex-col items-center gap-4 group">
+        <div class="w-32 h-32 md:w-full md:h-auto md:aspect-square rounded-full overflow-hidden shadow-card img-zoom">
+          <img src="https://picsum.photos/seed/mini-bags/400/400" alt="Mini Bags" class="w-full h-full object-cover">
+        </div>
+        <p class="font-display text-sm font-medium text-center">Mini Bags</p>
+      </a>
+      <a href="#" class="snap-item shrink-0 w-32 md:w-auto flex flex-col items-center gap-4 group">
+        <div class="w-32 h-32 md:w-full md:h-auto md:aspect-square rounded-full overflow-hidden shadow-card img-zoom">
+          <img src="https://picsum.photos/seed/backpack-bags/400/400" alt="Backpacks" class="w-full h-full object-cover">
+        </div>
+        <p class="font-display text-sm font-medium text-center">Backpacks</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       BEST SELLERS
+  ========================================================== -->
+  <section id="bestsellers" class="bg-black/[0.02] py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10">
+      <div class="flex items-end justify-between mb-10 md:mb-14">
+        <div>
+          <span class="font-display text-xs tracking-[0.25em] uppercase text-primary-dark font-semibold">Most Loved</span>
+          <h2 class="font-display text-2xl md:text-4xl font-semibold mt-2">Best Sellers</h2>
+        </div>
+        <a href="#" class="hidden md:inline-block font-display text-sm font-semibold underline underline-offset-4 hover:text-primary-dark transition">View All</a>
+      </div>
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-7">
+
+        <!-- Product Card -->
+        <article class="group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col">
+          <div class="relative img-zoom aspect-[4/5]">
+            <img src="https://picsum.photos/seed/product-aurora/500/620" alt="Aurora Tote Bag" class="w-full h-full object-cover">
+            <span class="absolute top-3 left-3 bg-ink text-white text-[10px] font-display font-semibold tracking-wide uppercase px-3 py-1 rounded-full">-25%</span>
+            <button aria-label="Add to wishlist" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 grid place-items-center hover:bg-primary transition">
+              <i class="fa-regular fa-heart text-xs"></i>
+            </button>
+            <button class="absolute bottom-0 inset-x-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/95 backdrop-blur text-center text-xs font-display font-semibold tracking-wide uppercase py-2.5">
+              Quick View
+            </button>
+          </div>
+          <div class="p-4 md:p-5 flex flex-col gap-1.5">
+            <h3 class="font-display text-sm md:text-base font-medium">Aurora Tote Bag</h3>
+            <div class="text-primary-dark text-xs">★★★★★</div>
+            <div class="flex items-baseline gap-2">
+              <span class="font-display font-semibold text-sm md:text-base">$89.00</span>
+              <span class="text-black/40 text-xs line-through">$119.00</span>
+            </div>
+            <button class="btn-ripple mt-2 w-full bg-ink text-white text-xs font-display font-semibold tracking-wide uppercase py-3 rounded-full hover:bg-black/80 transition">
+              Add to Cart
+            </button>
+          </div>
+        </article>
+
+        <!-- Product Card -->
+        <article class="group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col">
+          <div class="relative img-zoom aspect-[4/5]">
+            <img src="https://picsum.photos/seed/product-luna/500/620" alt="Luna Crossbody Bag" class="w-full h-full object-cover">
+            <span class="absolute top-3 left-3 bg-ink text-white text-[10px] font-display font-semibold tracking-wide uppercase px-3 py-1 rounded-full">-15%</span>
+            <button aria-label="Add to wishlist" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 grid place-items-center hover:bg-primary transition">
+              <i class="fa-regular fa-heart text-xs"></i>
+            </button>
+            <button class="absolute bottom-0 inset-x-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/95 backdrop-blur text-center text-xs font-display font-semibold tracking-wide uppercase py-2.5">
+              Quick View
+            </button>
+          </div>
+          <div class="p-4 md:p-5 flex flex-col gap-1.5">
+            <h3 class="font-display text-sm md:text-base font-medium">Luna Crossbody Bag</h3>
+            <div class="text-primary-dark text-xs">★★★★★</div>
+            <div class="flex items-baseline gap-2">
+              <span class="font-display font-semibold text-sm md:text-base">$74.00</span>
+              <span class="text-black/40 text-xs line-through">$87.00</span>
+            </div>
+            <button class="btn-ripple mt-2 w-full bg-ink text-white text-xs font-display font-semibold tracking-wide uppercase py-3 rounded-full hover:bg-black/80 transition">
+              Add to Cart
+            </button>
+          </div>
+        </article>
+
+        <!-- Product Card -->
+        <article class="group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col">
+          <div class="relative img-zoom aspect-[4/5]">
+            <img src="https://picsum.photos/seed/product-celine/500/620" alt="Celine Shoulder Bag" class="w-full h-full object-cover">
+            <span class="absolute top-3 left-3 bg-primary text-ink text-[10px] font-display font-semibold tracking-wide uppercase px-3 py-1 rounded-full">New</span>
+            <button aria-label="Add to wishlist" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 grid place-items-center hover:bg-primary transition">
+              <i class="fa-regular fa-heart text-xs"></i>
+            </button>
+            <button class="absolute bottom-0 inset-x-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/95 backdrop-blur text-center text-xs font-display font-semibold tracking-wide uppercase py-2.5">
+              Quick View
+            </button>
+          </div>
+          <div class="p-4 md:p-5 flex flex-col gap-1.5">
+            <h3 class="font-display text-sm md:text-base font-medium">Celine Shoulder Bag</h3>
+            <div class="text-primary-dark text-xs">★★★★★</div>
+            <div class="flex items-baseline gap-2">
+              <span class="font-display font-semibold text-sm md:text-base">$132.00</span>
+            </div>
+            <button class="btn-ripple mt-2 w-full bg-ink text-white text-xs font-display font-semibold tracking-wide uppercase py-3 rounded-full hover:bg-black/80 transition">
+              Add to Cart
+            </button>
+          </div>
+        </article>
+
+        <!-- Product Card -->
+        <article class="group bg-white rounded-3xl shadow-card overflow-hidden flex flex-col">
+          <div class="relative img-zoom aspect-[4/5]">
+            <img src="https://picsum.photos/seed/product-noor/500/620" alt="Noor Clutch" class="w-full h-full object-cover">
+            <span class="absolute top-3 left-3 bg-ink text-white text-[10px] font-display font-semibold tracking-wide uppercase px-3 py-1 rounded-full">-30%</span>
+            <button aria-label="Add to wishlist" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 grid place-items-center hover:bg-primary transition">
+              <i class="fa-regular fa-heart text-xs"></i>
+            </button>
+            <button class="absolute bottom-0 inset-x-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/95 backdrop-blur text-center text-xs font-display font-semibold tracking-wide uppercase py-2.5">
+              Quick View
+            </button>
+          </div>
+          <div class="p-4 md:p-5 flex flex-col gap-1.5">
+            <h3 class="font-display text-sm md:text-base font-medium">Noor Evening Clutch</h3>
+            <div class="text-primary-dark text-xs">★★★★★</div>
+            <div class="flex items-baseline gap-2">
+              <span class="font-display font-semibold text-sm md:text-base">$58.00</span>
+              <span class="text-black/40 text-xs line-through">$82.00</span>
+            </div>
+            <button class="btn-ripple mt-2 w-full bg-ink text-white text-xs font-display font-semibold tracking-wide uppercase py-3 rounded-full hover:bg-black/80 transition">
+              Add to Cart
+            </button>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="mt-8 text-center md:hidden">
+        <a href="#" class="font-display text-sm font-semibold underline underline-offset-4">View All Products</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       PROMOTIONAL BANNER
+  ========================================================== -->
+  <section id="promo" class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10 py-16 md:py-24">
+    <div class="grid lg:grid-cols-2 rounded-4xl overflow-hidden shadow-soft">
+      <div class="img-zoom aspect-[4/3] lg:aspect-auto">
+        <img src="https://picsum.photos/seed/rinmora-season/900/900" alt="New Season Collection" class="w-full h-full object-cover">
+      </div>
+      <div class="bg-primary/15 flex items-center">
+        <div class="p-8 md:p-12 lg:p-16">
+          <span class="font-display text-xs tracking-[0.25em] uppercase text-primary-dark font-semibold">Fall / Winter</span>
+          <h2 class="font-display text-3xl md:text-4xl font-semibold mt-3 mb-4 leading-tight">
+            New Season<br>Collection
+          </h2>
+          <p class="text-black/60 max-w-sm mb-8">
+            Discover handcrafted silhouettes in rich textures, designed to move effortlessly from day to evening.
+          </p>
+          <a href="#" class="btn-ripple inline-block bg-ink text-white font-display font-semibold text-sm tracking-wide uppercase px-9 py-4 rounded-full hover:bg-black/80 transition">
+            Explore Collection
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       WHY CHOOSE RINMORA
+  ========================================================== -->
+  <section class="bg-black/[0.02] py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10">
+      <div class="text-center mb-12 md:mb-16">
+        <span class="font-display text-xs tracking-[0.25em] uppercase text-primary-dark font-semibold">The Rinmora Promise</span>
+        <h2 class="font-display text-2xl md:text-4xl font-semibold mt-2">Why Choose Rinmora</h2>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-5 md:gap-8">
+        <div class="bg-white rounded-3xl shadow-card p-6 md:p-8 flex flex-col items-center text-center gap-3">
+          <div class="w-14 h-14 rounded-full bg-primary/25 grid place-items-center">
+            <i class="fa-solid fa-gem text-primary-dark text-lg"></i>
+          </div>
+          <h3 class="font-display font-semibold text-sm md:text-base">Premium Materials</h3>
+          <p class="text-black/50 text-xs md:text-sm">Sourced leather and hardware built to last a lifetime.</p>
+        </div>
+        <div class="bg-white rounded-3xl shadow-card p-6 md:p-8 flex flex-col items-center text-center gap-3">
+          <div class="w-14 h-14 rounded-full bg-primary/25 grid place-items-center">
+            <i class="fa-solid fa-shapes text-primary-dark text-lg"></i>
+          </div>
+          <h3 class="font-display font-semibold text-sm md:text-base">Modern Designs</h3>
+          <p class="text-black/50 text-xs md:text-sm">Timeless silhouettes shaped by contemporary style.</p>
+        </div>
+        <div class="bg-white rounded-3xl shadow-card p-6 md:p-8 flex flex-col items-center text-center gap-3">
+          <div class="w-14 h-14 rounded-full bg-primary/25 grid place-items-center">
+            <i class="fa-solid fa-tags text-primary-dark text-lg"></i>
+          </div>
+          <h3 class="font-display font-semibold text-sm md:text-base">Affordable Luxury</h3>
+          <p class="text-black/50 text-xs md:text-sm">Designer quality, priced for the everyday woman.</p>
+        </div>
+        <div class="bg-white rounded-3xl shadow-card p-6 md:p-8 flex flex-col items-center text-center gap-3">
+          <div class="w-14 h-14 rounded-full bg-primary/25 grid place-items-center">
+            <i class="fa-solid fa-lock text-primary-dark text-lg"></i>
+          </div>
+          <h3 class="font-display font-semibold text-sm md:text-base">Secure Checkout</h3>
+          <p class="text-black/50 text-xs md:text-sm">Your information is always protected and private.</p>
+        </div>
+        <div class="bg-white rounded-3xl shadow-card p-6 md:p-8 flex flex-col items-center text-center gap-3">
+          <div class="w-14 h-14 rounded-full bg-primary/25 grid place-items-center">
+            <i class="fa-solid fa-truck-fast text-primary-dark text-lg"></i>
+          </div>
+          <h3 class="font-display font-semibold text-sm md:text-base">Fast Delivery</h3>
+          <p class="text-black/50 text-xs md:text-sm">Nationwide dispatch within 24-48 hours.</p>
+        </div>
+        <div class="bg-white rounded-3xl shadow-card p-6 md:p-8 flex flex-col items-center text-center gap-3">
+          <div class="w-14 h-14 rounded-full bg-primary/25 grid place-items-center">
+            <i class="fa-solid fa-heart-circle-check text-primary-dark text-lg"></i>
+          </div>
+          <h3 class="font-display font-semibold text-sm md:text-base">Customer Satisfaction</h3>
+          <p class="text-black/50 text-xs md:text-sm">Loved by thousands of women, every single day.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       CUSTOMER REVIEWS
+  ========================================================== -->
+  <section id="reviews" class="py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10">
+      <div class="text-center mb-12 md:mb-14">
+        <span class="font-display text-xs tracking-[0.25em] uppercase text-primary-dark font-semibold">Testimonials</span>
+        <h2 class="font-display text-2xl md:text-4xl font-semibold mt-2">Loved By Our Customers</h2>
+      </div>
+
+      <div class="flex gap-5 md:gap-7 overflow-x-auto snap-row -mx-5 px-5 md:mx-0 md:px-0 md:grid md:grid-cols-3">
+        <figure class="snap-item shrink-0 w-[85%] sm:w-[60%] md:w-auto bg-black/[0.02] rounded-3xl p-7 md:p-8 flex flex-col gap-4">
+          <div class="flex items-center gap-4">
+            <img src="https://picsum.photos/seed/customer-sana/80/80" alt="Sana K." class="w-12 h-12 rounded-full object-cover">
+            <div>
+              <figcaption class="font-display font-semibold text-sm">Sana K.</figcaption>
+              <div class="text-primary-dark text-xs">★★★★★</div>
+            </div>
+          </div>
+          <blockquote class="text-black/60 text-sm leading-relaxed">
+            "The quality is beyond what I expected for the price. My Aurora Tote gets compliments everywhere I go."
+          </blockquote>
+        </figure>
+
+        <figure class="snap-item shrink-0 w-[85%] sm:w-[60%] md:w-auto bg-black/[0.02] rounded-3xl p-7 md:p-8 flex flex-col gap-4">
+          <div class="flex items-center gap-4">
+            <img src="https://picsum.photos/seed/customer-amina/80/80" alt="Amina R." class="w-12 h-12 rounded-full object-cover">
+            <div>
+              <figcaption class="font-display font-semibold text-sm">Amina R.</figcaption>
+              <div class="text-primary-dark text-xs">★★★★★</div>
+            </div>
+          </div>
+          <blockquote class="text-black/60 text-sm leading-relaxed">
+            "Fast delivery and the packaging felt so premium. Rinmora is now my go-to for gifts."
+          </blockquote>
+        </figure>
+
+        <figure class="snap-item shrink-0 w-[85%] sm:w-[60%] md:w-auto bg-black/[0.02] rounded-3xl p-7 md:p-8 flex flex-col gap-4">
+          <div class="flex items-center gap-4">
+            <img src="https://picsum.photos/seed/customer-hira/80/80" alt="Hira M." class="w-12 h-12 rounded-full object-cover">
+            <div>
+              <figcaption class="font-display font-semibold text-sm">Hira M.</figcaption>
+              <div class="text-primary-dark text-xs">★★★★★</div>
+            </div>
+          </div>
+          <blockquote class="text-black/60 text-sm leading-relaxed">
+            "Elegant, sturdy, and so lightweight. The Luna Crossbody fits perfectly into my everyday routine."
+          </blockquote>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       INSTAGRAM GALLERY
+  ========================================================== -->
+  <section class="bg-black/[0.02] py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10">
+      <div class="text-center mb-10 md:mb-12">
+        <span class="font-display text-xs tracking-[0.25em] uppercase text-primary-dark font-semibold">Follow The Story</span>
+        <h2 class="font-display text-2xl md:text-4xl font-semibold mt-2">@Rinmora on Instagram</h2>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2 md:gap-4 mb-10">
+        <div class="img-zoom aspect-square rounded-2xl overflow-hidden"><img src="https://picsum.photos/seed/insta-1/400/400" alt="Instagram post" class="w-full h-full object-cover"></div>
+        <div class="img-zoom aspect-square rounded-2xl overflow-hidden"><img src="https://picsum.photos/seed/insta-2/400/400" alt="Instagram post" class="w-full h-full object-cover"></div>
+        <div class="img-zoom aspect-square rounded-2xl overflow-hidden"><img src="https://picsum.photos/seed/insta-3/400/400" alt="Instagram post" class="w-full h-full object-cover"></div>
+        <div class="img-zoom aspect-square rounded-2xl overflow-hidden"><img src="https://picsum.photos/seed/insta-4/400/400" alt="Instagram post" class="w-full h-full object-cover"></div>
+        <div class="img-zoom aspect-square rounded-2xl overflow-hidden"><img src="https://picsum.photos/seed/insta-5/400/400" alt="Instagram post" class="w-full h-full object-cover"></div>
+        <div class="img-zoom aspect-square rounded-2xl overflow-hidden"><img src="https://picsum.photos/seed/insta-6/400/400" alt="Instagram post" class="w-full h-full object-cover"></div>
+      </div>
+
+      <div class="text-center">
+        <a href="#" class="btn-ripple inline-block bg-ink text-white font-display font-semibold text-sm tracking-wide uppercase px-9 py-4 rounded-full hover:bg-black/80 transition">
+          Follow @Rinmora
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       NEWSLETTER
+  ========================================================== -->
+  <section class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10 py-16 md:py-24">
+    <div class="relative rounded-4xl bg-ink text-white overflow-hidden">
+      <div class="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-primary/20 blur-2xl"></div>
+      <div class="relative px-8 py-14 md:py-20 text-center max-w-xl mx-auto">
+        <h2 class="font-display text-2xl md:text-4xl font-semibold mb-3">Stay in Style</h2>
+        <p class="text-white/60 mb-8 text-sm md:text-base">
+          Subscribe for early access to new arrivals, private sales, and styling edits.
+        </p>
+        <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onsubmit="return false;">
+          <label for="newsletter-email" class="sr-only">Email address</label>
+          <input id="newsletter-email" type="email" required placeholder="Enter your email"
+            class="w-full px-6 py-4 rounded-full text-ink text-sm outline-none focus:ring-2 focus:ring-primary bg-white">
+          <button type="submit" class="btn-ripple shrink-0 bg-primary text-ink font-display font-semibold text-sm tracking-wide uppercase px-8 py-4 rounded-full hover:bg-primary-dark transition">
+            Subscribe
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- =========================================================
+     FOOTER
+========================================================== -->
+<footer class="border-t border-black/5">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10 py-14 md:py-16">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
+      <div class="col-span-2 md:col-span-1">
+        <img src="../logo-01.png" alt="Rinmora" class="h-12 w-auto mb-4">
+        <p class="text-black/50 text-sm max-w-xs">
+          Premium handbags designed for confident women. Elegance you can carry, every day.
+        </p>
+        <div class="flex items-center gap-3 mt-6">
+          <a href="#" aria-label="Instagram" class="w-10 h-10 rounded-full bg-black/[0.04] grid place-items-center hover:bg-primary transition"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-full bg-black/[0.04] grid place-items-center hover:bg-primary transition"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" aria-label="TikTok" class="w-10 h-10 rounded-full bg-black/[0.04] grid place-items-center hover:bg-primary transition"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="font-display font-semibold text-sm mb-4 uppercase tracking-wide">Quick Links</h3>
+        <ul class="space-y-3 text-sm text-black/55">
+          <li><a href="#" class="hover:text-ink transition">Shop All</a></li>
+          <li><a href="#" class="hover:text-ink transition">Best Sellers</a></li>
+          <li><a href="#" class="hover:text-ink transition">New Arrivals</a></li>
+          <li><a href="#" class="hover:text-ink transition">About Us</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="font-display font-semibold text-sm mb-4 uppercase tracking-wide">Customer Support</h3>
+        <ul class="space-y-3 text-sm text-black/55">
+          <li><a href="#" class="hover:text-ink transition">Contact Us</a></li>
+          <li><a href="#" class="hover:text-ink transition">FAQs</a></li>
+          <li><a href="#" class="hover:text-ink transition">Track Order</a></li>
+          <li><a href="#" class="hover:text-ink transition">Shipping Info</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="font-display font-semibold text-sm mb-4 uppercase tracking-wide">Policies</h3>
+        <ul class="space-y-3 text-sm text-black/55">
+          <li><a href="#" class="hover:text-ink transition">Privacy Policy</a></li>
+          <li><a href="#" class="hover:text-ink transition">Terms of Service</a></li>
+          <li><a href="#" class="hover:text-ink transition">Return Policy</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-black/5 mt-12 pt-6 text-center text-xs text-black/40">
+      &copy; 2026 Rinmora. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<!-- =========================================================
+     REEL VIEWER (story/video shopping modal)
+========================================================== -->
+<div id="reelViewer" class="fixed inset-0 z-[80] invisible pointer-events-none opacity-0 bg-black transition-opacity duration-300 overflow-hidden">
+
+  <button id="reelClose" aria-label="Close reel" class="hidden md:grid absolute top-4 right-4 z-30 w-10 h-10 rounded-full bg-white place-items-center shadow-card hover:bg-primary transition">
+    <i class="fa-solid fa-xmark text-base"></i>
+  </button>
+
+  <div class="w-full h-full flex items-center justify-center gap-3 lg:gap-4">
+
+    <!-- prev reel peek (large screens only) -->
+    <button id="reelPeekPrev" aria-label="Open previous reel" class="hidden lg:block relative w-36 xl:w-44 h-[92vh] rounded-[1.75rem] overflow-hidden shrink-0 opacity-70 hover:opacity-100 transition">
+      <img id="reelPeekPrevImg" src="" alt="" class="absolute inset-0 w-full h-full object-cover">
+      <span class="absolute inset-0 bg-black/40"></span>
+      <span class="absolute bottom-4 left-1/2 -translate-x-1/2 w-9 h-9 rounded-full overflow-hidden ring-2 ring-white/90">
+        <img id="reelPeekPrevAvatar" src="" alt="" class="w-full h-full object-cover">
+      </span>
+    </button>
+
+    <!-- main frame (outer wrapper does NOT clip, so the nav arrows can sit half-outside it) -->
+    <div class="relative w-full h-full md:w-[430px] md:h-[94vh] shrink-0">
+    <div class="relative w-full h-full md:rounded-[2rem] overflow-hidden bg-black">
+
+      <!-- top overlay: full-width gradient bar on mobile, subtle floating pill on desktop -->
+      <div class="absolute top-0 inset-x-0 z-20 pt-3 pb-12 px-3 bg-gradient-to-b from-black/65 via-black/20 to-transparent md:bg-none md:pt-7">
+
+        <!-- progress bars -->
+        <div id="reelProgress" class="flex gap-1 mb-3"></div>
+
+        <!-- header row -->
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2 min-w-0 md:bg-black/30 md:backdrop-blur md:rounded-full md:pl-1.5 md:pr-3 md:py-1.5">
+            <span class="w-8 h-8 md:w-7 md:h-7 rounded-full overflow-hidden ring-2 ring-white/80 shrink-0">
+              <img id="reelAvatar" src="" alt="" class="w-full h-full object-cover">
+            </span>
+            <p id="reelTitle" class="text-white font-display text-sm md:text-xs font-semibold whitespace-nowrap truncate" style="text-shadow:0 1px 6px rgba(0,0,0,.5)"></p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button aria-label="Share" class="w-9 h-9 rounded-full bg-black/35 backdrop-blur text-white md:bg-white/95 md:backdrop-blur-none md:text-ink grid place-items-center md:shadow hover:bg-black/50 md:hover:bg-primary transition">
+              <i class="fa-solid fa-share-nodes text-xs"></i>
+            </button>
+            <button id="reelMute" aria-label="Toggle sound" class="w-9 h-9 rounded-full bg-black/35 backdrop-blur text-white md:bg-white/95 md:backdrop-blur-none md:text-ink grid place-items-center md:shadow hover:bg-black/50 md:hover:bg-primary transition">
+              <i class="fa-solid fa-volume-high text-xs"></i>
+            </button>
+            <button id="reelCloseMobile" aria-label="Close reel" class="md:hidden w-9 h-9 rounded-full bg-black/35 backdrop-blur text-white grid place-items-center hover:bg-black/50 transition">
+              <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- media -->
+      <img id="reelMedia" src="" alt="" class="w-full h-full object-cover">
+
+      <!-- mobile tap zones (tap left/right to navigate, like IG stories) -->
+      <button id="reelPrevMobile" aria-label="Previous reel" class="md:hidden absolute left-0 top-0 w-1/3 h-full z-10"></button>
+      <button id="reelNextMobile" aria-label="Next reel" class="md:hidden absolute right-0 top-0 w-1/3 h-full z-10"></button>
+
+      <!-- like -->
+      <div class="absolute right-3 bottom-32 md:bottom-36 z-20 flex flex-col items-center gap-1">
+        <button id="reelLike" aria-label="Like this reel" class="w-11 h-11 rounded-full bg-white/95 grid place-items-center shadow-card hover:bg-primary transition">
+          <i class="fa-regular fa-heart text-base"></i>
+        </button>
+        <span id="reelLikeCount" class="text-white text-xs font-display font-semibold" style="text-shadow:0 1px 4px rgba(0,0,0,.6)"></span>
+      </div>
+
+      <!-- shoppable product cards -->
+      <div class="absolute bottom-0 inset-x-0 z-20 bg-gradient-to-t from-black/85 via-black/40 to-transparent pt-16 pb-5 px-3">
+        <div id="reelProducts" class="flex gap-3 overflow-x-auto snap-row"></div>
+      </div>
+
+    </div>
+
+      <!-- nav arrows: live on the non-clipping outer wrapper so the full circle stays visible -->
+      <button id="reelPrev" aria-label="Previous reel" class="hidden md:grid absolute -left-5 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white shadow-card place-items-center hover:bg-primary transition">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+      <button id="reelNext" aria-label="Next reel" class="hidden md:grid absolute -right-5 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white shadow-card place-items-center hover:bg-primary transition">
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+
+    <!-- next reel peek (large screens only) -->
+    <button id="reelPeekNext" aria-label="Open next reel" class="hidden lg:block relative w-36 xl:w-44 h-[92vh] rounded-[1.75rem] overflow-hidden shrink-0 opacity-70 hover:opacity-100 transition">
+      <img id="reelPeekNextImg" src="" alt="" class="absolute inset-0 w-full h-full object-cover">
+      <span class="absolute inset-0 bg-black/40"></span>
+      <span class="absolute bottom-4 left-1/2 -translate-x-1/2 w-9 h-9 rounded-full overflow-hidden ring-2 ring-white/90">
+        <img id="reelPeekNextAvatar" src="" alt="" class="w-full h-full object-cover">
+      </span>
+    </button>
+
+  </div>
+</div>
+
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const closeMenuBtn = document.getElementById('closeMenuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const menuOverlay = document.getElementById('menuOverlay');
+  const menuPanel = document.getElementById('menuPanel');
+
+  function openMenu() {
+    mobileMenu.classList.remove('invisible', 'pointer-events-none');
+    requestAnimationFrame(() => {
+      menuPanel.classList.remove('-translate-x-full');
+      menuOverlay.classList.remove('bg-black/0');
+      menuOverlay.classList.add('bg-black/50');
+    });
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    menuPanel.classList.add('-translate-x-full');
+    menuOverlay.classList.remove('bg-black/50');
+    menuOverlay.classList.add('bg-black/0');
+    mobileMenu.classList.add('pointer-events-none');
+    document.body.style.overflow = '';
+    setTimeout(() => mobileMenu.classList.add('invisible'), 300);
+  }
+
+  menuBtn.addEventListener('click', openMenu);
+  closeMenuBtn.addEventListener('click', closeMenu);
+  menuOverlay.addEventListener('click', closeMenu);
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+  document.querySelectorAll('.btn-ripple').forEach(btn => {
+    btn.addEventListener('click', function (e) {
+      const rect = this.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      const size = Math.max(rect.width, rect.height);
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+      ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+      this.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 650);
+    });
+  });
+
+  document.querySelectorAll('[aria-label="Add to wishlist"], [aria-label="Wishlist"]').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const icon = this.querySelector('i');
+      icon.classList.toggle('fa-regular');
+      icon.classList.toggle('fa-solid');
+      icon.classList.toggle('text-primary-dark');
+    });
+  });
+
+  /* ===========================================================
+     REELS (story-style shoppable video viewer)
+  =========================================================== */
+  const reelsData = [
+    {
+      title: 'Best Sellers',
+      avatar: 'https://picsum.photos/seed/reel-bestsellers/100/100',
+      media: 'https://picsum.photos/seed/reel-media-bestsellers/700/1200',
+      likes: 128,
+      products: [
+        { img: 'https://picsum.photos/seed/p-aurora/120/120', name: 'Aurora Tote Bag', price: 'Rs8,900', oldPrice: 'Rs11,900', discount: '25% OFF' },
+        { img: 'https://picsum.photos/seed/p-luna/120/120', name: 'Luna Crossbody Bag', price: 'Rs7,400', oldPrice: 'Rs8,700', discount: '15% OFF' },
+      ],
+    },
+    {
+      title: 'Hand Bags',
+      avatar: 'https://picsum.photos/seed/reel-handbags/100/100',
+      media: 'https://picsum.photos/seed/reel-media-handbags/700/1200',
+      likes: 96,
+      products: [
+        { img: 'https://picsum.photos/seed/p-celine/120/120', name: 'Celine Shoulder Bag', price: 'Rs13,200', oldPrice: null, discount: 'NEW' },
+        { img: 'https://picsum.photos/seed/p-noor/120/120', name: 'Noor Evening Clutch', price: 'Rs5,800', oldPrice: 'Rs8,200', discount: '30% OFF' },
+      ],
+    },
+    {
+      title: 'TOTE Bags',
+      avatar: 'https://picsum.photos/seed/reel-tote/100/100',
+      media: 'https://picsum.photos/seed/reel-media-tote/700/1200',
+      likes: 72,
+      products: [
+        { img: 'https://picsum.photos/seed/p-teddy/120/120', name: 'Teddy Cross Bag', price: 'Rs2,850', oldPrice: 'Rs6,000', discount: '53% OFF' },
+        { img: 'https://picsum.photos/seed/p-aurora2/120/120', name: 'Aurora Tote Bag', price: 'Rs8,900', oldPrice: 'Rs11,900', discount: '25% OFF' },
+      ],
+    },
+    {
+      title: 'Duffle Bag / Hand carry',
+      avatar: 'https://picsum.photos/seed/reel-duffle/100/100',
+      media: 'https://picsum.photos/seed/reel-media-duffle/700/1200',
+      likes: 54,
+      products: [
+        { img: 'https://picsum.photos/seed/p-duffle/120/120', name: 'Weekender Duffle Bag', price: 'Rs9,600', oldPrice: 'Rs12,500', discount: '23% OFF' },
+      ],
+    },
+    {
+      title: 'Laptop Bags',
+      avatar: 'https://picsum.photos/seed/reel-laptop/100/100',
+      media: 'https://picsum.photos/seed/reel-media-laptop/700/1200',
+      likes: 41,
+      products: [
+        { img: 'https://picsum.photos/seed/p-laptop/120/120', name: 'Executive Laptop Bag', price: 'Rs11,300', oldPrice: null, discount: 'NEW' },
+      ],
+    },
+    {
+      title: 'Belt & Crossbody bag',
+      avatar: 'https://picsum.photos/seed/reel-belt/100/100',
+      media: 'https://picsum.photos/seed/reel-media-belt/700/1200',
+      likes: 63,
+      products: [
+        { img: 'https://picsum.photos/seed/p-belt/120/120', name: 'Belt Bag Mini', price: 'Rs3,400', oldPrice: 'Rs4,900', discount: '31% OFF' },
+        { img: 'https://picsum.photos/seed/p-luna2/120/120', name: 'Luna Crossbody Bag', price: 'Rs7,400', oldPrice: 'Rs8,700', discount: '15% OFF' },
+      ],
+    },
+  ];
+
+  const REEL_DURATION = 4500;
+  let currentReel = 0;
+  let autoplayTimer = null;
+
+  const reelViewer = document.getElementById('reelViewer');
+  const reelProgress = document.getElementById('reelProgress');
+  const reelAvatar = document.getElementById('reelAvatar');
+  const reelTitle = document.getElementById('reelTitle');
+  const reelMedia = document.getElementById('reelMedia');
+  const reelLikeCount = document.getElementById('reelLikeCount');
+  const reelLike = document.getElementById('reelLike');
+  const reelProducts = document.getElementById('reelProducts');
+  const reelPeekPrev = document.getElementById('reelPeekPrev');
+  const reelPeekPrevImg = document.getElementById('reelPeekPrevImg');
+  const reelPeekPrevAvatar = document.getElementById('reelPeekPrevAvatar');
+  const reelPeekNext = document.getElementById('reelPeekNext');
+  const reelPeekNextImg = document.getElementById('reelPeekNextImg');
+  const reelPeekNextAvatar = document.getElementById('reelPeekNextAvatar');
+
+  function buildProgressBars() {
+    reelProgress.innerHTML = '';
+    reelsData.forEach(() => {
+      const track = document.createElement('div');
+      track.className = 'h-[3px] flex-1 rounded-full bg-white/30 overflow-hidden';
+      const fill = document.createElement('div');
+      fill.className = 'h-full bg-white rounded-full';
+      fill.style.width = '0%';
+      track.appendChild(fill);
+      reelProgress.appendChild(track);
+    });
+  }
+
+  function updateProgress() {
+    const fills = reelProgress.querySelectorAll(':scope > div > div');
+    fills.forEach((fill, i) => {
+      fill.style.transition = 'none';
+      if (i < currentReel) {
+        fill.style.width = '100%';
+      } else if (i === currentReel) {
+        fill.style.width = '0%';
+        void fill.offsetWidth;
+        fill.style.transition = `width ${REEL_DURATION}ms linear`;
+        requestAnimationFrame(() => { fill.style.width = '100%'; });
+      } else {
+        fill.style.width = '0%';
+      }
+    });
+  }
+
+  function renderReel(index) {
+    currentReel = (index + reelsData.length) % reelsData.length;
+    const reel = reelsData[currentReel];
+
+    reelAvatar.src = reel.avatar;
+    reelAvatar.alt = reel.title;
+    reelTitle.textContent = reel.title;
+    reelMedia.src = reel.media;
+    reelMedia.alt = reel.title;
+    reelLikeCount.textContent = reel.likes;
+    reelLike.querySelector('i').className = 'fa-regular fa-heart text-base';
+
+    const prevReel = reelsData[(currentReel - 1 + reelsData.length) % reelsData.length];
+    const nextReel = reelsData[(currentReel + 1) % reelsData.length];
+    reelPeekPrevImg.src = prevReel.media;
+    reelPeekPrevImg.alt = prevReel.title;
+    reelPeekPrevAvatar.src = prevReel.avatar;
+    reelPeekPrevAvatar.alt = prevReel.title;
+    reelPeekNextImg.src = nextReel.media;
+    reelPeekNextImg.alt = nextReel.title;
+    reelPeekNextAvatar.src = nextReel.avatar;
+    reelPeekNextAvatar.alt = nextReel.title;
+
+    reelProducts.innerHTML = reel.products.map(p => `
+      <div class="snap-item shrink-0 w-60 bg-white rounded-2xl p-3 flex items-center gap-3 shadow-card">
+        <img src="${p.img}" alt="${p.name}" class="w-12 h-12 rounded-lg object-cover shrink-0">
+        <div class="flex-1 min-w-0">
+          <p class="font-display text-xs font-semibold truncate">${p.name}</p>
+          <div class="flex items-baseline gap-2 mt-0.5">
+            <span class="font-display font-semibold text-sm">${p.price}</span>
+            ${p.oldPrice ? `<span class="text-black/40 text-xs line-through">${p.oldPrice}</span>` : ''}
+          </div>
+          ${p.discount ? `<span class="inline-block mt-0.5 text-[10px] font-semibold text-primary-dark">${p.discount}</span>` : ''}
+        </div>
+        <button class="btn-ripple shrink-0 bg-ink text-white text-[10px] font-display font-semibold tracking-wide uppercase px-3 py-2.5 rounded-full hover:bg-black/80 transition">Add</button>
+      </div>
+    `).join('');
+
+    reelProducts.querySelectorAll('.btn-ripple').forEach(btn => {
+      btn.addEventListener('click', function (e) {
+        const rect = this.getBoundingClientRect();
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        const size = Math.max(rect.width, rect.height);
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+        ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+        this.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 650);
+      });
+    });
+
+    updateProgress();
+    restartAutoplay();
+  }
+
+  function restartAutoplay() {
+    clearTimeout(autoplayTimer);
+    autoplayTimer = setTimeout(() => renderReel(currentReel + 1), REEL_DURATION);
+  }
+
+  function openReel(index) {
+    buildProgressBars();
+    renderReel(index);
+    reelViewer.classList.remove('invisible', 'pointer-events-none');
+    requestAnimationFrame(() => reelViewer.classList.remove('opacity-0'));
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeReel() {
+    clearTimeout(autoplayTimer);
+    reelViewer.classList.add('opacity-0');
+    document.body.style.overflow = '';
+    setTimeout(() => reelViewer.classList.add('invisible', 'pointer-events-none'), 300);
+  }
+
+  document.querySelectorAll('.reel-trigger').forEach(btn => {
+    btn.addEventListener('click', () => openReel(parseInt(btn.dataset.reelIndex, 10)));
+  });
+
+  document.getElementById('reelClose').addEventListener('click', closeReel);
+  document.getElementById('reelCloseMobile').addEventListener('click', closeReel);
+  document.getElementById('reelPrev').addEventListener('click', () => renderReel(currentReel - 1));
+  document.getElementById('reelNext').addEventListener('click', () => renderReel(currentReel + 1));
+  document.getElementById('reelPrevMobile').addEventListener('click', () => renderReel(currentReel - 1));
+  document.getElementById('reelNextMobile').addEventListener('click', () => renderReel(currentReel + 1));
+  reelPeekPrev.addEventListener('click', () => renderReel(currentReel - 1));
+  reelPeekNext.addEventListener('click', () => renderReel(currentReel + 1));
+
+  document.getElementById('reelMute').addEventListener('click', function () {
+    const icon = this.querySelector('i');
+    icon.classList.toggle('fa-volume-high');
+    icon.classList.toggle('fa-volume-xmark');
+  });
+
+  reelLike.addEventListener('click', function () {
+    const icon = this.querySelector('i');
+    let count = parseInt(reelLikeCount.textContent, 10);
+    if (icon.classList.contains('fa-regular')) {
+      icon.classList.remove('fa-regular');
+      icon.classList.add('fa-solid', 'text-primary-dark');
+      reelLikeCount.textContent = count + 1;
+    } else {
+      icon.classList.remove('fa-solid', 'text-primary-dark');
+      icon.classList.add('fa-regular');
+      reelLikeCount.textContent = count - 1;
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (reelViewer.classList.contains('invisible')) return;
+    if (e.key === 'Escape') closeReel();
+    if (e.key === 'ArrowLeft') renderReel(currentReel - 1);
+    if (e.key === 'ArrowRight') renderReel(currentReel + 1);
+  });
+</script>
+
+</body>
+</html>

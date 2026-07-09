@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Kit — Rinmora</title>
+<meta name="description" content="Index of all Rinmora premium UI design pages.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: { primary: '#CFBAA5', 'primary-dark': '#b89e84', ink: '#000000' },
+        fontFamily: { sans: ['Poppins', 'sans-serif'], body: ['Manrope', 'sans-serif'] },
+        borderRadius: { '4xl': '2rem', '5xl': '2.5rem' },
+        boxShadow: { soft: '0 20px 60px -15px rgba(0,0,0,0.15)', card: '0 10px 40px -12px rgba(0,0,0,0.12)' },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Manrope', sans-serif; }
+  .font-display { font-family: 'Poppins', sans-serif; }
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+  .hover-lift { transition: transform .25s ease, box-shadow .25s ease; }
+  .hover-lift:hover { transform: translateY(-3px); }
+</style>
+</head>
+
+<body class="bg-white text-ink antialiased">
+
+<header class="border-b border-black/5">
+  <div class="max-w-6xl mx-auto px-5 md:px-8 py-6 flex items-center justify-between">
+    <img src="../logo-01.png" alt="Rinmora" class="h-11 md:h-12 w-auto">
+    <span class="font-display text-xs font-semibold uppercase tracking-wide text-black/40">Design Kit</span>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-5 md:px-8 py-12 md:py-16">
+
+  <div class="text-center max-w-xl mx-auto mb-14">
+    <span class="font-display text-xs tracking-[0.25em] uppercase text-primary-dark font-semibold">Rinmora</span>
+    <h1 class="font-display text-2xl md:text-4xl font-semibold mt-3">Complete UI Design Kit</h1>
+    <p class="text-black/50 text-sm md:text-base mt-3">Every page below opens in a new tab, in build order.</p>
+  </div>
+
+  <!-- ============ SHOPPING JOURNEY ============ -->
+  <section class="mb-12">
+    <h2 class="font-display text-xs font-semibold uppercase tracking-[0.2em] text-black/40 mb-5">1. Shopping Journey</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      <a href="rinmora-home-preview.html" target="_blank" rel="noopener noreferrer" class="hover-lift bg-white rounded-3xl shadow-card p-5 flex items-center gap-4">
+        <span class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-solid fa-house text-primary-dark text-sm"></i></span>
+        <div class="min-w-0">
+          <p class="font-display text-sm font-semibold">1. Home</p>
+          <p class="text-black/45 text-xs truncate">rinmora-home-preview.html</p>
+        </div>
+      </a>
+
+      <a href="rinmora-shop-preview.html" target="_blank" rel="noopener noreferrer" class="hover-lift bg-white rounded-3xl shadow-card p-5 flex items-center gap-4">
+        <span class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-solid fa-bag-shopping text-primary-dark text-sm"></i></span>
+        <div class="min-w-0">
+          <p class="font-display text-sm font-semibold">2. Shop / Product Listing</p>
+          <p class="text-black/45 text-xs truncate">rinmora-shop-preview.html</p>
+        </div>
+      </a>
+
+      <a href="rinmora-quickview-preview.html" target="_blank" rel="noopener noreferrer" class="hover-lift bg-white rounded-3xl shadow-card p-5 flex items-center gap-4">
+        <span class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-solid fa-eye text-primary-dark text-sm"></i></span>
+        <div class="min-w-0">
+          <p class="font-display text-sm font-semibold">3. Product Quick View</p>
+          <p class="text-black/45 text-xs truncate">rinmora-quickview-preview.html</p>
+        </div>
+      </a>
+
+      <a href="rinmora-cart-preview.html" target="_blank" rel="noopener noreferrer" class="hover-lift bg-white rounded-3xl shadow-card p-5 flex items-center gap-4">
+        <span class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-solid fa-cart-shopping text-primary-dark text-sm"></i></span>
+        <div class="min-w-0">
+          <p class="font-display text-sm font-semibold">4. Shopping Cart</p>
+          <p class="text-black/45 text-xs truncate">rinmora-cart-preview.html</p>
+        </div>
+      </a>
+
+      <a href="rinmora-checkout-preview.html" target="_blank" rel="noopener noreferrer" class="hover-lift bg-white rounded-3xl shadow-card p-5 flex items-center gap-4">
+        <span class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-solid fa-lock text-primary-dark text-sm"></i></span>
+        <div class="min-w-0">
+          <p class="font-display text-sm font-semibold">5. Secure Checkout</p>
+          <p class="text-black/45 text-xs truncate">rinmora-checkout-preview.html</p>
+        </div>
+      </a>
+
+      <a href="rinmora-order-success-preview.html" target="_blank" rel="noopener noreferrer" class="hover-lift bg-white rounded-3xl shadow-card p-5 flex items-center gap-4">
+        <span class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-solid fa-circle-check text-primary-dark text-sm"></i></span>
+        <div class="min-w-0">
+          <p class="font-display text-sm font-semibold">6. Order Success</p>
+          <p class="text-black/45 text-xs truncate">rinmora-order-success-preview.html</p>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ============ CUSTOMER ACCOUNT ============ -->
+  <section class="mb-12">
+    <h2 class="font-display text-xs font-semibold uppercase tracking-[0.2em] text-black/40 mb-5">2. Customer Account</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      <a href="rinmora-orders-preview.html" target="_blank" rel="noopener noreferrer" class="hover-lift bg-white rounded-3xl shadow-card p-5 flex items-center gap-4">
+        <span class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-solid fa-box text-primary-dark text-sm"></i></span>
+        <div class="min-w-0">
+          <p class="font-display text-sm font-semibold">7. My Orders</p>
+          <p class="text-black/45 text-xs truncate">rinmora-orders-preview.html</p>
+        </div>
+      </a>
+
+      <a href="rinmora-login-preview.html" target="_blank" rel="noopener noreferrer" class="hover-lift bg-white rounded-3xl shadow-card p-5 flex items-center gap-4">
+        <span class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-solid fa-right-to-bracket text-primary-dark text-sm"></i></span>
+        <div class="min-w-0">
+          <p class="font-display text-sm font-semibold">8. Login</p>
+          <p class="text-black/45 text-xs truncate">rinmora-login-preview.html</p>
+        </div>
+      </a>
+
+      <a href="rinmora-register-preview.html" target="_blank" rel="noopener noreferrer" class="hover-lift bg-white rounded-3xl shadow-card p-5 flex items-center gap-4">
+        <span class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-solid fa-user-plus text-primary-dark text-sm"></i></span>
+        <div class="min-w-0">
+          <p class="font-display text-sm font-semibold">9. Register</p>
+          <p class="text-black/45 text-xs truncate">rinmora-register-preview.html</p>
+        </div>
+      </a>
+
+      <a href="rinmora-forgot-password-preview.html" target="_blank" rel="noopener noreferrer" class="hover-lift bg-white rounded-3xl shadow-card p-5 flex items-center gap-4">
+        <span class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-solid fa-key text-primary-dark text-sm"></i></span>
+        <div class="min-w-0">
+          <p class="font-display text-sm font-semibold">10. Forgot Password</p>
+          <p class="text-black/45 text-xs truncate">rinmora-forgot-password-preview.html</p>
+        </div>
+      </a>
+
+      <a href="rinmora-account-dashboard-preview.html" target="_blank" rel="noopener noreferrer" class="hover-lift bg-white rounded-3xl shadow-card p-5 flex items-center gap-4">
+        <span class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-solid fa-gauge text-primary-dark text-sm"></i></span>
+        <div class="min-w-0">
+          <p class="font-display text-sm font-semibold">11. My Account Dashboard</p>
+          <p class="text-black/45 text-xs truncate">rinmora-account-dashboard-preview.html</p>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ============ DISCOVERY & STATIC PAGES ============ -->
+  <section>
+    <h2 class="font-display text-xs font-semibold uppercase tracking-[0.2em] text-black/40 mb-5">3. Discovery &amp; Static Pages</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      <a href="rinmora-wishlist-preview.html" target="_blank" rel="noopener noreferrer" class="hover-lift bg-white rounded-3xl shadow-card p-5 flex items-center gap-4">
+        <span class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-regular fa-heart text-primary-dark text-sm"></i></span>
+        <div class="min-w-0">
+          <p class="font-display text-sm font-semibold">12. Wishlist</p>
+          <p class="text-black/45 text-xs truncate">rinmora-wishlist-preview.html</p>
+        </div>
+      </a>
+
+      <a href="rinmora-search-preview.html" target="_blank" rel="noopener noreferrer" class="hover-lift bg-white rounded-3xl shadow-card p-5 flex items-center gap-4">
+        <span class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-solid fa-magnifying-glass text-primary-dark text-sm"></i></span>
+        <div class="min-w-0">
+          <p class="font-display text-sm font-semibold">13. Search Results</p>
+          <p class="text-black/45 text-xs truncate">rinmora-search-preview.html</p>
+        </div>
+      </a>
+
+      <a href="rinmora-categories-preview.html" target="_blank" rel="noopener noreferrer" class="hover-lift bg-white rounded-3xl shadow-card p-5 flex items-center gap-4">
+        <span class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-solid fa-grip text-primary-dark text-sm"></i></span>
+        <div class="min-w-0">
+          <p class="font-display text-sm font-semibold">14. Categories</p>
+          <p class="text-black/45 text-xs truncate">rinmora-categories-preview.html</p>
+        </div>
+      </a>
+
+      <a href="rinmora-about-preview.html" target="_blank" rel="noopener noreferrer" class="hover-lift bg-white rounded-3xl shadow-card p-5 flex items-center gap-4">
+        <span class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-solid fa-book-open text-primary-dark text-sm"></i></span>
+        <div class="min-w-0">
+          <p class="font-display text-sm font-semibold">15. About Us</p>
+          <p class="text-black/45 text-xs truncate">rinmora-about-preview.html</p>
+        </div>
+      </a>
+
+      <a href="rinmora-contact-preview.html" target="_blank" rel="noopener noreferrer" class="hover-lift bg-white rounded-3xl shadow-card p-5 flex items-center gap-4">
+        <span class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-solid fa-envelope text-primary-dark text-sm"></i></span>
+        <div class="min-w-0">
+          <p class="font-display text-sm font-semibold">16. Contact Us</p>
+          <p class="text-black/45 text-xs truncate">rinmora-contact-preview.html</p>
+        </div>
+      </a>
+
+      <a href="rinmora-faq-preview.html" target="_blank" rel="noopener noreferrer" class="hover-lift bg-white rounded-3xl shadow-card p-5 flex items-center gap-4">
+        <span class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-regular fa-circle-question text-primary-dark text-sm"></i></span>
+        <div class="min-w-0">
+          <p class="font-display text-sm font-semibold">17. FAQ</p>
+          <p class="text-black/45 text-xs truncate">rinmora-faq-preview.html</p>
+        </div>
+      </a>
+
+      <a href="rinmora-privacy-policy-preview.html" target="_blank" rel="noopener noreferrer" class="hover-lift bg-white rounded-3xl shadow-card p-5 flex items-center gap-4">
+        <span class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-solid fa-shield-halved text-primary-dark text-sm"></i></span>
+        <div class="min-w-0">
+          <p class="font-display text-sm font-semibold">18. Privacy Policy</p>
+          <p class="text-black/45 text-xs truncate">rinmora-privacy-policy-preview.html</p>
+        </div>
+      </a>
+
+      <a href="rinmora-terms-preview.html" target="_blank" rel="noopener noreferrer" class="hover-lift bg-white rounded-3xl shadow-card p-5 flex items-center gap-4">
+        <span class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-solid fa-scale-balanced text-primary-dark text-sm"></i></span>
+        <div class="min-w-0">
+          <p class="font-display text-sm font-semibold">19. Terms &amp; Conditions</p>
+          <p class="text-black/45 text-xs truncate">rinmora-terms-preview.html</p>
+        </div>
+      </a>
+
+      <a href="rinmora-returns-preview.html" target="_blank" rel="noopener noreferrer" class="hover-lift bg-white rounded-3xl shadow-card p-5 flex items-center gap-4">
+        <span class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-solid fa-rotate-left text-primary-dark text-sm"></i></span>
+        <div class="min-w-0">
+          <p class="font-display text-sm font-semibold">20. Returns &amp; Refunds</p>
+          <p class="text-black/45 text-xs truncate">rinmora-returns-preview.html</p>
+        </div>
+      </a>
+
+      <a href="rinmora-404-preview.html" target="_blank" rel="noopener noreferrer" class="hover-lift bg-white rounded-3xl shadow-card p-5 flex items-center gap-4">
+        <span class="w-10 h-10 rounded-full bg-primary/20 grid place-items-center shrink-0"><i class="fa-solid fa-triangle-exclamation text-primary-dark text-sm"></i></span>
+        <div class="min-w-0">
+          <p class="font-display text-sm font-semibold">21. 404 Error Page</p>
+          <p class="text-black/45 text-xs truncate">rinmora-404-preview.html</p>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-black/5 py-8 text-center text-xs text-black/40">
+  &copy; 2026 Rinmora — Frontend Design Kit
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us — Rinmora</title>
+<meta name="description" content="The Rinmora story — crafted for women who appreciate elegance.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: { primary: '#CFBAA5', 'primary-dark': '#b89e84', ink: '#000000' },
+        fontFamily: { sans: ['Poppins', 'sans-serif'], body: ['Manrope', 'sans-serif'] },
+        borderRadius: { '4xl': '2rem', '5xl': '2.5rem' },
+        boxShadow: { soft: '0 20px 60px -15px rgba(0,0,0,0.15)', card: '0 10px 40px -12px rgba(0,0,0,0.12)' },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Manrope', sans-serif; }
+  .font-display { font-family: 'Poppins', sans-serif; }
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+  .img-zoom { overflow: hidden; }
+  .img-zoom img { transition: transform .6s cubic-bezier(.16,1,.3,1); }
+  .img-zoom:hover img { transform: scale(1.06); }
+  .fade-up { animation: fadeUp .7s cubic-bezier(.16,1,.3,1) both; }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(20px);} to {opacity:1; transform:translateY(0);} }
+  .btn-ripple { position: relative; overflow: hidden; }
+  .btn-ripple span.ripple { position: absolute; border-radius: 9999px; transform: scale(0); animation: ripple .6s linear; background: rgba(0,0,0,0.15); pointer-events: none; }
+  @keyframes ripple { to { transform: scale(3); opacity: 0; } }
+</style>
+</head>
+
+<body class="bg-white text-ink antialiased">
+
+<!-- =========================================================
+     HEADER
+========================================================== -->
+<header id="site-header" class="fixed top-0 inset-x-0 z-50 bg-primary border-b border-black/10 lg:bg-white/95 lg:backdrop-blur-md lg:border-black/5">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10">
+    <div class="flex items-center justify-between h-16 md:h-20">
+      <div class="flex items-center gap-2">
+        <button id="menuBtn" aria-label="Open menu" class="lg:hidden w-10 h-10 grid place-items-center rounded-full hover:bg-black/10 transition">
+          <i class="fa-solid fa-bars text-lg"></i>
+        </button>
+        <nav class="hidden lg:flex items-center gap-8 font-display text-[13px] tracking-wide uppercase font-medium">
+          <a href="rinmora-shop-preview.html" class="hover:text-primary-dark transition">Shop</a>
+          <a href="rinmora-categories-preview.html" class="hover:text-primary-dark transition">Categories</a>
+          <a href="rinmora-home-preview.html#promo" class="hover:text-primary-dark transition">New Arrivals</a>
+          <a href="rinmora-about-preview.html" class="text-primary-dark transition">About</a>
+        </nav>
+      </div>
+
+      <a href="rinmora-home-preview.html" class="absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 select-none">
+        <img src="../logo-01.png" alt="Rinmora" class="h-12 md:h-16 w-auto">
+      </a>
+
+      <div class="flex items-center gap-1 md:gap-2">
+        <a href="rinmora-search-preview.html" aria-label="Search" class="w-10 h-10 grid place-items-center rounded-full hover:bg-black/10 transition">
+          <i class="fa-solid fa-magnifying-glass text-[15px]"></i>
+        </a>
+        <a href="rinmora-wishlist-preview.html" aria-label="Wishlist" class="hidden sm:grid w-10 h-10 place-items-center rounded-full hover:bg-black/10 transition">
+          <i class="fa-regular fa-heart text-[15px]"></i>
+        </a>
+        <button aria-label="Shopping bag" class="relative w-10 h-10 grid place-items-center rounded-full hover:bg-black/10 transition">
+          <i class="fa-solid fa-bag-shopping text-[15px]"></i>
+          <span class="absolute top-1 right-1 bg-ink text-white text-[10px] font-bold w-4 h-4 rounded-full grid place-items-center">0</span>
+        </button>
+        <a href="rinmora-login-preview.html" aria-label="Account" class="w-10 h-10 grid place-items-center rounded-full hover:bg-black/10 transition">
+          <i class="fa-regular fa-user text-[15px]"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu drawer -->
+  <div id="mobileMenu" class="lg:hidden fixed inset-0 z-[60] invisible pointer-events-none">
+    <div id="menuOverlay" class="absolute inset-0 z-0 bg-black/0 transition-colors duration-300"></div>
+    <div id="menuPanel" class="absolute top-0 left-0 z-10 h-full w-[80%] max-w-xs bg-primary shadow-soft px-7 pt-7 pb-10 flex flex-col gap-1 -translate-x-full transition-transform duration-300 ease-out">
+      <div class="flex items-center justify-between mb-8">
+        <img src="../logo-01.png" alt="Rinmora" class="h-10 w-auto">
+        <button id="closeMenuBtn" aria-label="Close menu" class="w-10 h-10 grid place-items-center rounded-full hover:bg-black/10 transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div class="flex flex-col gap-3">
+        <a href="rinmora-home-preview.html" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">Home</a>
+        <a href="rinmora-shop-preview.html" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">Shop</a>
+        <a href="rinmora-categories-preview.html" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">Categories</a>
+        <a href="rinmora-about-preview.html" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">About Us</a>
+        <a href="rinmora-contact-preview.html" class="bg-white shadow-sm rounded-2xl px-5 py-4 font-display text-base font-medium hover:bg-ink hover:text-white transition-colors">Contact Us</a>
+      </div>
+      <div class="mt-auto flex items-center gap-4 pt-6">
+        <i class="fa-brands fa-instagram text-xl"></i>
+        <i class="fa-brands fa-facebook text-xl"></i>
+        <i class="fa-brands fa-tiktok text-xl"></i>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="pt-16 md:pt-20">
+
+  <!-- =========================================================
+       HERO
+  ========================================================== -->
+  <section class="relative overflow-hidden">
+    <img src="https://picsum.photos/seed/rinmora-about-hero/1600/900" alt="Woman wearing a Rinmora handbag" class="absolute inset-0 w-full h-full object-cover">
+    <div class="absolute inset-0 bg-black/45"></div>
+    <div class="relative max-w-4xl mx-auto px-5 md:px-8 py-24 md:py-36 text-center text-white fade-up">
+      <span class="font-display text-xs tracking-[0.25em] uppercase text-primary font-semibold">Our Story</span>
+      <h1 class="font-display text-3xl md:text-5xl font-semibold mt-4 leading-tight">Crafted for Women Who Appreciate Elegance</h1>
+      <p class="text-white/70 text-sm md:text-base mt-5 max-w-xl mx-auto">Rinmora was founded on a simple belief — that everyday essentials deserve the same care and craftsmanship as fine jewelry.</p>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       BRAND STORY / MISSION / VISION
+  ========================================================== -->
+  <section class="max-w-6xl mx-auto px-5 md:px-8 lg:px-10 py-16 md:py-24">
+    <div class="grid md:grid-cols-3 gap-8 md:gap-10">
+      <div class="fade-up">
+        <div class="w-12 h-12 rounded-full bg-primary/20 grid place-items-center mb-5">
+          <i class="fa-solid fa-book-open text-primary-dark"></i>
+        </div>
+        <h2 class="font-display text-lg font-semibold mb-3">Our Story</h2>
+        <p class="text-black/55 text-sm leading-relaxed">Founded in 2019, Rinmora began as a small atelier dedicated to reimagining the everyday handbag — blending timeless silhouettes with modern craftsmanship.</p>
+      </div>
+      <div class="fade-up">
+        <div class="w-12 h-12 rounded-full bg-primary/20 grid place-items-center mb-5">
+          <i class="fa-solid fa-bullseye text-primary-dark"></i>
+        </div>
+        <h2 class="font-display text-lg font-semibold mb-3">Our Mission</h2>
+        <p class="text-black/55 text-sm leading-relaxed">To create beautifully crafted handbags that empower women to feel confident, elegant, and effortlessly put-together every day.</p>
+      </div>
+      <div class="fade-up">
+        <div class="w-12 h-12 rounded-full bg-primary/20 grid place-items-center mb-5">
+          <i class="fa-regular fa-eye text-primary-dark"></i>
+        </div>
+        <h2 class="font-display text-lg font-semibold mb-3">Our Vision</h2>
+        <p class="text-black/55 text-sm leading-relaxed">To become the most trusted name in accessible luxury, known for quality, integrity, and designs that stand the test of time.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       OUR VALUES
+  ========================================================== -->
+  <section class="bg-black/[0.02] py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-5 md:px-8 lg:px-10">
+      <div class="text-center mb-12">
+        <span class="font-display text-xs tracking-[0.25em] uppercase text-primary-dark font-semibold">What We Stand For</span>
+        <h2 class="font-display text-2xl md:text-3xl font-semibold mt-2">Our Values</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-3xl shadow-card p-7 text-center">
+          <div class="w-14 h-14 rounded-full bg-primary/20 grid place-items-center mx-auto mb-4">
+            <i class="fa-solid fa-gem text-primary-dark"></i>
+          </div>
+          <h3 class="font-display font-semibold mb-2">Premium Materials</h3>
+          <p class="text-black/55 text-sm leading-relaxed">Ethically sourced leathers and hardware chosen for durability and a luxurious finish.</p>
+        </div>
+        <div class="bg-white rounded-3xl shadow-card p-7 text-center">
+          <div class="w-14 h-14 rounded-full bg-primary/20 grid place-items-center mx-auto mb-4">
+            <i class="fa-solid fa-hand-sparkles text-primary-dark"></i>
+          </div>
+          <h3 class="font-display font-semibold mb-2">Craftsmanship</h3>
+          <p class="text-black/55 text-sm leading-relaxed">Every piece is finished by skilled artisans who take pride in every stitch and seam.</p>
+        </div>
+        <div class="bg-white rounded-3xl shadow-card p-7 text-center">
+          <div class="w-14 h-14 rounded-full bg-primary/20 grid place-items-center mx-auto mb-4">
+            <i class="fa-solid fa-award text-primary-dark"></i>
+          </div>
+          <h3 class="font-display font-semibold mb-2">Quality Promise</h3>
+          <p class="text-black/55 text-sm leading-relaxed">Every handbag is quality-checked twice before it ever reaches your hands.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       MEET OUR BRAND — GALLERY
+  ========================================================== -->
+  <section class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10 py-16 md:py-24">
+    <div class="text-center mb-10">
+      <span class="font-display text-xs tracking-[0.25em] uppercase text-primary-dark font-semibold">Behind the Scenes</span>
+      <h2 class="font-display text-2xl md:text-3xl font-semibold mt-2">Meet Our Brand</h2>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+      <div class="img-zoom rounded-2xl overflow-hidden aspect-[3/4] md:col-span-2 md:row-span-2">
+        <img src="https://picsum.photos/seed/brand-1/700/900" alt="Rinmora atelier" class="w-full h-full object-cover">
+      </div>
+      <div class="img-zoom rounded-2xl overflow-hidden aspect-square">
+        <img src="https://picsum.photos/seed/brand-2/400/400" alt="Rinmora craftsmanship" class="w-full h-full object-cover">
+      </div>
+      <div class="img-zoom rounded-2xl overflow-hidden aspect-square">
+        <img src="https://picsum.photos/seed/brand-3/400/400" alt="Rinmora materials" class="w-full h-full object-cover">
+      </div>
+      <div class="img-zoom rounded-2xl overflow-hidden aspect-square">
+        <img src="https://picsum.photos/seed/brand-4/400/400" alt="Rinmora design studio" class="w-full h-full object-cover">
+      </div>
+      <div class="img-zoom rounded-2xl overflow-hidden aspect-square">
+        <img src="https://picsum.photos/seed/brand-5/400/400" alt="Rinmora packaging" class="w-full h-full object-cover">
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       WHY CHOOSE RINMORA — STATISTICS
+  ========================================================== -->
+  <section class="bg-ink text-white py-16 md:py-20">
+    <div class="max-w-6xl mx-auto px-5 md:px-8 lg:px-10">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div>
+          <p class="font-display text-3xl md:text-4xl font-semibold text-primary">50K+</p>
+          <p class="text-white/60 text-xs md:text-sm mt-2">Happy Customers</p>
+        </div>
+        <div>
+          <p class="font-display text-3xl md:text-4xl font-semibold text-primary">120K+</p>
+          <p class="text-white/60 text-xs md:text-sm mt-2">Orders Delivered</p>
+        </div>
+        <div>
+          <p class="font-display text-3xl md:text-4xl font-semibold text-primary">180+</p>
+          <p class="text-white/60 text-xs md:text-sm mt-2">Premium Designs</p>
+        </div>
+        <div>
+          <p class="font-display text-3xl md:text-4xl font-semibold text-primary">24</p>
+          <p class="text-white/60 text-xs md:text-sm mt-2">Countries Served</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       CUSTOMER TESTIMONIALS
+  ========================================================== -->
+  <section class="py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-5 md:px-8 lg:px-10">
+      <div class="text-center mb-12">
+        <span class="font-display text-xs tracking-[0.25em] uppercase text-primary-dark font-semibold">Testimonials</span>
+        <h2 class="font-display text-2xl md:text-3xl font-semibold mt-2">Loved By Our Customers</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <figure class="bg-black/[0.02] rounded-3xl p-7 flex flex-col gap-4">
+          <div class="flex items-center gap-4">
+            <img src="https://picsum.photos/seed/about-review-1/80/80" alt="Sana K." class="w-12 h-12 rounded-full object-cover">
+            <div>
+              <figcaption class="font-display font-semibold text-sm">Sana K.</figcaption>
+              <div class="text-primary-dark text-xs">★★★★★</div>
+            </div>
+          </div>
+          <blockquote class="text-black/60 text-sm leading-relaxed">"Every detail feels intentional. Rinmora bags are the first thing people notice."</blockquote>
+        </figure>
+        <figure class="bg-black/[0.02] rounded-3xl p-7 flex flex-col gap-4">
+          <div class="flex items-center gap-4">
+            <img src="https://picsum.photos/seed/about-review-2/80/80" alt="Amina R." class="w-12 h-12 rounded-full object-cover">
+            <div>
+              <figcaption class="font-display font-semibold text-sm">Amina R.</figcaption>
+              <div class="text-primary-dark text-xs">★★★★★</div>
+            </div>
+          </div>
+          <blockquote class="text-black/60 text-sm leading-relaxed">"Quality that genuinely rivals designer brands, at a fraction of the price."</blockquote>
+        </figure>
+        <figure class="bg-black/[0.02] rounded-3xl p-7 flex flex-col gap-4">
+          <div class="flex items-center gap-4">
+            <img src="https://picsum.photos/seed/about-review-3/80/80" alt="Hira M." class="w-12 h-12 rounded-full object-cover">
+            <div>
+              <figcaption class="font-display font-semibold text-sm">Hira M.</figcaption>
+              <div class="text-primary-dark text-xs">★★★★★</div>
+            </div>
+          </div>
+          <blockquote class="text-black/60 text-sm leading-relaxed">"My Rinmora tote has been through everything with me and still looks brand new."</blockquote>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       CALL TO ACTION
+  ========================================================== -->
+  <section class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10 pb-16 md:pb-24">
+    <div class="relative rounded-4xl overflow-hidden">
+      <img src="https://picsum.photos/seed/about-cta/1400/500" alt="Rinmora handbag collection" class="absolute inset-0 w-full h-full object-cover">
+      <div class="absolute inset-0 bg-ink/55"></div>
+      <div class="relative px-6 py-16 md:py-20 text-center text-white max-w-lg mx-auto">
+        <h2 class="font-display text-2xl md:text-4xl font-semibold mb-4">Discover the Collection</h2>
+        <p class="text-white/70 text-sm md:text-base mb-8">Explore handbags crafted with the same passion that built Rinmora.</p>
+        <a href="rinmora-shop-preview.html" class="btn-ripple inline-block bg-primary text-ink font-display font-semibold text-sm tracking-wide uppercase px-9 py-4 rounded-full hover:bg-primary-dark transition">
+          Shop Collection
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- =========================================================
+     FOOTER
+========================================================== -->
+<footer class="border-t border-black/5">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 lg:px-10 py-14 md:py-16">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-10">
+      <div class="col-span-2 md:col-span-2">
+        <img src="../logo-01.png" alt="Rinmora" class="h-10 w-auto mb-4">
+        <p class="text-black/50 text-sm max-w-xs">Premium handbags designed for confident women. Elegance you can carry, every day.</p>
+        <div class="flex items-center gap-3 mt-6">
+          <a href="#" aria-label="Instagram" class="w-10 h-10 rounded-full bg-black/[0.04] grid place-items-center hover:bg-primary transition"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-full bg-black/[0.04] grid place-items-center hover:bg-primary transition"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" aria-label="TikTok" class="w-10 h-10 rounded-full bg-black/[0.04] grid place-items-center hover:bg-primary transition"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div>
+        <h3 class="font-display font-semibold text-sm mb-4 uppercase tracking-wide">Shop</h3>
+        <ul class="space-y-3 text-sm text-black/55">
+          <li><a href="rinmora-shop-preview.html" class="hover:text-ink transition">Shop All</a></li>
+          <li><a href="rinmora-categories-preview.html" class="hover:text-ink transition">Categories</a></li>
+          <li><a href="#" class="hover:text-ink transition">New Arrivals</a></li>
+          <li><a href="rinmora-about-preview.html" class="hover:text-ink transition">About Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-display font-semibold text-sm mb-4 uppercase tracking-wide">Support</h3>
+        <ul class="space-y-3 text-sm text-black/55">
+          <li><a href="rinmora-contact-preview.html" class="hover:text-ink transition">Contact Us</a></li>
+          <li><a href="rinmora-faq-preview.html" class="hover:text-ink transition">FAQs</a></li>
+          <li><a href="rinmora-orders-preview.html" class="hover:text-ink transition">Track Order</a></li>
+          <li><a href="rinmora-returns-preview.html" class="hover:text-ink transition">Returns &amp; Refunds</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-display font-semibold text-sm mb-4 uppercase tracking-wide">Policies</h3>
+        <ul class="space-y-3 text-sm text-black/55">
+          <li><a href="rinmora-privacy-policy-preview.html" class="hover:text-ink transition">Privacy Policy</a></li>
+          <li><a href="rinmora-terms-preview.html" class="hover:text-ink transition">Terms of Service</a></li>
+          <li><a href="rinmora-returns-preview.html" class="hover:text-ink transition">Return Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-black/5 mt-10 pt-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-5">
+        <div>
+          <p class="font-display font-semibold text-sm">Stay in Style</p>
+          <p class="text-black/45 text-xs mt-1">Get exclusive offers and new arrivals in your inbox.</p>
+        </div>
+        <form class="flex w-full md:w-auto gap-2" onsubmit="return false;">
+          <label for="footer-email" class="sr-only">Email address</label>
+          <input id="footer-email" type="email" placeholder="Enter your email" class="w-full md:w-64 px-5 py-3 rounded-full border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+          <button type="submit" class="shrink-0 bg-ink text-white font-display font-semibold text-xs uppercase tracking-wide px-5 py-3 rounded-full hover:bg-black/80 transition">Subscribe</button>
+        </form>
+      </div>
+    </div>
+    <div class="border-t border-black/5 mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-black/40">
+      <p>&copy; 2026 Rinmora. All rights reserved.</p>
+      <div class="flex items-center gap-3 text-base text-black/30">
+        <i class="fa-brands fa-cc-visa"></i>
+        <i class="fa-brands fa-cc-mastercard"></i>
+        <i class="fa-brands fa-cc-paypal"></i>
+        <i class="fa-solid fa-money-bill-wave"></i>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const closeMenuBtn = document.getElementById('closeMenuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const menuOverlay = document.getElementById('menuOverlay');
+  const menuPanel = document.getElementById('menuPanel');
+  function openMenu() {
+    mobileMenu.classList.remove('invisible', 'pointer-events-none');
+    requestAnimationFrame(() => {
+      menuPanel.classList.remove('-translate-x-full');
+      menuOverlay.classList.remove('bg-black/0');
+      menuOverlay.classList.add('bg-black/50');
+    });
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    menuPanel.classList.add('-translate-x-full');
+    menuOverlay.classList.remove('bg-black/50');
+    menuOverlay.classList.add('bg-black/0');
+    mobileMenu.classList.add('pointer-events-none');
+    document.body.style.overflow = '';
+    setTimeout(() => mobileMenu.classList.add('invisible'), 300);
+  }
+  menuBtn.addEventListener('click', openMenu);
+  closeMenuBtn.addEventListener('click', closeMenu);
+  menuOverlay.addEventListener('click', closeMenu);
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+  document.querySelectorAll('.btn-ripple').forEach(btn => {
+    btn.addEventListener('click', function (e) {
+      const rect = this.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      const size = Math.max(rect.width, rect.height);
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+      ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+      this.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 650);
+    });
+  });
+</script>
+
+</body>
+</html>
