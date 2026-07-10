@@ -8,12 +8,14 @@
         $totalWeight = $order->items->sum(fn ($i) => (float) ($i->weight ?? 0) * $i->quantity);
         $totalItems = $order->items->sum('quantity');
         $trackingCode = 'TRK-'.str_pad($order->id, 7, '0', STR_PAD_LEFT).'PK';
+        $labelLogoPath = \App\Models\Setting::getValue('logo_path', 'store_branding');
+        $labelLogoUrl = $labelLogoPath ? \Illuminate\Support\Facades\Storage::disk('public_uploads')->url($labelLogoPath) : asset('public/logo-01.png');
     @endphp
 
     <div class="print-card bg-white rounded-3xl shadow-card p-8 border-2 border-dashed border-black/15">
 
         <div class="flex items-center justify-between mb-6 pb-6 border-b border-dashed border-black/15">
-            <img src="{{ asset('logo-01.png') }}" alt="Rinmora" class="h-8 w-auto">
+            <img src="{{ $labelLogoUrl }}" alt="Rinmora" class="h-8 w-auto">
             <span class="bg-ink text-white text-[11px] font-semibold px-3 py-1.5 rounded-full">Standard Shipping</span>
         </div>
 

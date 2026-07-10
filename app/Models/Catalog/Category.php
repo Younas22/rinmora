@@ -59,6 +59,20 @@ class Category extends Model
         return $this->hasMany(Product::class, 'category_id');
     }
 
+    /**
+     * Extra images/videos for this category's reel/story on the storefront,
+     * separate from the single `image_path` thumbnail used elsewhere.
+     */
+    public function media()
+    {
+        return $this->hasMany(CategoryMedia::class, 'category_id')->orderBy('sort_order');
+    }
+
+    public function coverMedia()
+    {
+        return $this->hasOne(CategoryMedia::class, 'category_id')->where('is_cover', true);
+    }
+
     public function scopeActive($query)
     {
         return $query->where('status', true);

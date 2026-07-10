@@ -200,6 +200,26 @@ class OrderController extends Controller
         return back()->with('success', 'Order status updated.');
     }
 
+    public function verifyPayment(Order $order)
+    {
+        $payment = $order->latestPayment;
+
+        if (! $payment) {
+            return back()->with('error', 'This order has no payment record to verify.');
+        }
+
+        $payment->update(['status' => 'success']);
+        $order->update(['payment_status' => 'paid']);
+
+        $order->events()->create([
+            'title' => 'Payment Verified',
+            'description' => $payment->gateway?->name ? "Verified via {$payment->gateway->name}" : null,
+            'created_by' => request()->user()->id,
+        ]);
+
+        return back()->with('success', 'Payment marked as verified.');
+    }
+
     public function cancel(Request $request, Order $order)
     {
         if (in_array($order->status, self::CANCELLABLE_BLOCKED, true)) {

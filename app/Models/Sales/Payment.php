@@ -4,6 +4,7 @@ namespace App\Models\Sales;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Payment extends Model
 {
@@ -13,7 +14,7 @@ class Payment extends Model
 
     protected $fillable = [
         'order_id', 'gateway_id', 'transaction_ref', 'status', 'amount',
-        'card_brand', 'card_last_four', 'notes',
+        'card_brand', 'card_last_four', 'notes', 'proof_path',
     ];
 
     protected $casts = [
@@ -37,5 +38,10 @@ class Payment extends Model
         }
 
         return "{$this->card_brand} ending in {$this->card_last_four}";
+    }
+
+    public function getProofUrlAttribute(): ?string
+    {
+        return $this->proof_path ? Storage::disk('public_uploads')->url($this->proof_path) : null;
     }
 }

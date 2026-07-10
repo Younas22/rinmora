@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Cms\HomepageController;
 use App\Http\Controllers\Admin\Cms\MediaController;
 use App\Http\Controllers\Admin\Cms\SeoController;
 use App\Http\Controllers\Admin\Cms\NotificationController;
+use App\Http\Controllers\Admin\Cms\FaqController;
 
 // Rinmora e-commerce admin (Marketing/CMS module). Same conventions as
 // routes/admin_catalog.php, routes/admin_sales.php, routes/admin_customers.php.
@@ -41,5 +42,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
         Route::post('notifications/campaigns', [NotificationController::class, 'storeCampaign'])->name('notifications.campaigns.store');
         Route::post('notifications/campaigns/{campaign}/send', [NotificationController::class, 'sendCampaign'])->name('notifications.campaigns.send');
+
+        Route::get('faqs', [FaqController::class, 'index'])->name('faqs.index');
+        Route::post('faqs', [FaqController::class, 'store'])->name('faqs.store');
+        Route::put('faqs/{faq}', [FaqController::class, 'update'])->name('faqs.update');
+        Route::delete('faqs/{faq}', [FaqController::class, 'destroy'])->name('faqs.destroy');
     });
 });

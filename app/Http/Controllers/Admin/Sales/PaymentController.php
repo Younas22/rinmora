@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Sales;
 
 use App\Http\Controllers\Controller;
+use App\Models\Sales\BankAccount;
 use App\Models\Sales\PaymentGateway;
 use App\Models\Sales\Payment;
 use App\Models\Sales\Refund;
@@ -20,6 +21,7 @@ class PaymentController extends Controller
         ];
 
         $gateways = PaymentGateway::orderBy('sort_order')->get();
+        $bankAccounts = BankAccount::orderBy('sort_order')->get();
         $transactions = Payment::with(['order', 'gateway'])->latest()->paginate(10);
         $refunds = Refund::with(['order', 'payment'])->whereIn('stage', ['requested', 'approved'])->latest()->take(10)->get();
 
@@ -40,7 +42,46 @@ class PaymentController extends Controller
             ->take(6)
             ->values();
 
-        return view('admin.sales.payments.index', compact('stats', 'gateways', 'transactions', 'refunds', 'logs'));
+        return view('admin.sales.payments.index', compact('stats', 'gateways', 'bankAccounts', 'transactions', 'refunds', 'logs'));
+    }
+
+    public function storeBankAccount(Request $request)
+    {
+        $data = $request->validate([
+            'bank_name' => 'required|string|max:255',
+            'account_title' => 'required|string|max:255',
+            'account_number' => 'required|string|max:255',
+            'iban' => 'nullable|string|max:255',
+            'is_active' => 'nullable|boolean',
+        ]);
+        $data['is_active'] = $request->boolean('is_active', true);
+
+        BankAccount::create($data);
+
+        return back()->with('success', 'Bank account added.');
+    }
+
+    public function updateBankAccount(Request $request, BankAccount $bankAccount)
+    {
+        $data = $request->validate([
+            'bank_name' => 'required|string|max:255',
+            'account_title' => 'required|string|max:255',
+            'account_number' => 'required|string|max:255',
+            'iban' => 'nullable|string|max:255',
+            'is_active' => 'nullable|boolean',
+        ]);
+        $data['is_active'] = $request->boolean('is_active', true);
+
+        $bankAccount->update($data);
+
+        return back()->with('success', 'Bank account updated.');
+    }
+
+    public function destroyBankAccount(BankAccount $bankAccount)
+    {
+        $bankAccount->delete();
+
+        return back()->with('success', 'Bank account deleted.');
     }
 
     public function updateGateway(Request $request, PaymentGateway $gateway)

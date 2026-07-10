@@ -10,15 +10,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+@php
+  $__theme = \App\Models\Setting::getByGroup('theme');
+  $__themePrimary = $__theme['primary_color'] ?? '#CFBAA5';
+  $__themeSecondary = $__theme['secondary_color'] ?? '#000000';
+  $__themeAccent = $__theme['accent_color'] ?? '#3B82F6';
+  $__themeBackground = $__theme['background_color'] ?? '#F8F8F8';
+@endphp
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
     theme: {
       extend: {
         colors: {
-          primary: '#CFBAA5', 'primary-dark': '#b89e84', ink: '#000000',
-          canvas: '#F8F8F8',
-          success: '#22C55E', warning: '#F59E0B', danger: '#EF4444', info: '#3B82F6',
+          primary: '{{ $__themePrimary }}', 'primary-dark': '{{ darkenHex($__themePrimary) }}', ink: '{{ $__themeSecondary }}',
+          canvas: '{{ $__themeBackground }}',
+          success: '#22C55E', warning: '#F59E0B', danger: '#EF4444', info: '{{ $__themeAccent }}',
         },
         fontFamily: { sans: ['Inter', 'sans-serif'] },
         borderRadius: { '4xl': '2rem' },

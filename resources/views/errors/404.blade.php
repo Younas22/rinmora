@@ -30,12 +30,7 @@
       
       <div class="error-box">
         <h1>404</h1>
-        <h3><i class="fa fa-warning"></i> 
-
-            <?php 
-            dd($error_message);
-            ?>
-
+        <h3><i class="fa fa-warning"></i></h3>
 
         <p>
             @if (isset($error_message))

@@ -40,6 +40,23 @@ class ImageUploadService
     }
 
     /**
+     * Store an uploaded file as-is, with no image processing or thumbnail.
+     * Used for video uploads, which Intervention Image cannot touch.
+     *
+     * @return array{path: string}
+     */
+    public function storeRaw(UploadedFile $file, string $directory): array
+    {
+        $uuid = Str::uuid();
+        $ext = $file->getClientOriginalExtension();
+        $path = "{$directory}/{$uuid}.{$ext}";
+
+        Storage::disk('public_uploads')->put($path, file_get_contents($file->getRealPath()));
+
+        return ['path' => $path];
+    }
+
+    /**
      * Delete a stored image and its derived thumbnail (if any).
      */
     public function delete(?string $path): void

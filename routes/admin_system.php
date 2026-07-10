@@ -64,6 +64,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::put('settings/currency', [SettingController::class, 'updateCurrency'])->name('settings.currency');
         Route::put('settings/language', [SettingController::class, 'updateLanguage'])->name('settings.language');
         Route::put('settings/timezone', [SettingController::class, 'updateTimezone'])->name('settings.timezone');
+        Route::put('settings/environment', [SettingController::class, 'updateEnvironment'])->name('settings.environment');
         Route::post('settings/tax-rules', [SettingController::class, 'storeTaxRule'])->name('settings.tax-rules.store');
         Route::patch('settings/tax-rules/{taxRule}', [SettingController::class, 'updateTaxRule'])->name('settings.tax-rules.update');
         Route::delete('settings/tax-rules/{taxRule}', [SettingController::class, 'destroyTaxRule'])->name('settings.tax-rules.destroy');

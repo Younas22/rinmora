@@ -7,8 +7,12 @@
       <i class="fa-solid fa-bars"></i>
     </button>
 
+    @php
+      $adminLogoPath = \App\Models\Setting::getValue('logo_path', 'store_branding');
+      $adminLogoUrl = $adminLogoPath ? \Illuminate\Support\Facades\Storage::disk('public_uploads')->url($adminLogoPath) : asset('public/logo-01.png');
+    @endphp
     <a href="{{ route('admin.dashboard.index') }}" class="flex items-center gap-2 shrink-0">
-      <img src="{{ asset('logo-01.png') }}" alt="Rinmora" class="h-7 w-auto">
+      <img src="{{ $adminLogoUrl }}" alt="Rinmora" class="h-7 w-auto">
       <span class="hidden sm:inline text-[10px] font-semibold uppercase tracking-wider bg-ink text-white px-2 py-0.5 rounded-full">Admin</span>
     </a>
 

@@ -94,6 +94,46 @@
                     </label>
                 </div>
 
+                <div class="pt-1 border-t border-black/5">
+                    <p class="text-sm font-semibold mt-3">Reel / Story Media</p>
+                    <p class="text-black/45 text-xs mt-0.5 mb-3">Add several photos or short videos for this category's home page reel. The first item is used as its cover.</p>
+
+                    <div id="categoryMediaGrid" class="grid grid-cols-3 gap-2">
+                        @if ($editing)
+                            @foreach ($editing->media as $item)
+                                <div class="relative aspect-square rounded-xl overflow-hidden group bg-black/5">
+                                    @if ($item->type === 'video')
+                                        <video src="{{ $item->url }}" class="w-full h-full object-cover" muted playsinline></video>
+                                        <span class="absolute bottom-1 left-1 w-5 h-5 rounded-full bg-black/60 text-white grid place-items-center text-[9px]"><i class="fa-solid fa-play"></i></span>
+                                    @else
+                                        <img src="{{ $item->url }}" alt="" class="w-full h-full object-cover">
+                                    @endif
+                                    @if ($item->is_cover)
+                                        <span class="absolute top-1 left-1 bg-ink text-white text-[9px] font-semibold px-1.5 py-0.5 rounded-full">Cover</span>
+                                    @else
+                                        <form method="POST" action="{{ route('admin.catalog.categories.media.cover', [$editing, $item]) }}" class="absolute top-1 left-1 opacity-0 group-hover:opacity-100 transition">
+                                            @csrf
+                                            <button type="submit" class="bg-white/90 text-[9px] font-semibold px-1.5 py-0.5 rounded-full">Set Cover</button>
+                                        </form>
+                                    @endif
+                                    <form method="POST" action="{{ route('admin.catalog.categories.media.destroy', [$editing, $item]) }}" class="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition" onsubmit="return confirm('Remove this media?');">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" aria-label="Remove media" class="w-5 h-5 rounded-full bg-black/60 text-white grid place-items-center text-[9px]"><i class="fa-solid fa-xmark"></i></button>
+                                    </form>
+                                </div>
+                            @endforeach
+                        @endif
+                        <label class="aspect-square rounded-xl border-2 border-dashed border-black/10 grid place-items-center text-center cursor-pointer hover:bg-black/[0.02] transition">
+                            <input type="file" name="media[]" id="categoryMediaInput" class="hidden" accept="image/*,video/*" multiple>
+                            <span>
+                                <i class="fa-solid fa-cloud-arrow-up text-black/30 text-base block mb-1"></i>
+                                <span class="text-black/40 text-[10px] font-medium">Upload</span>
+                            </span>
+                        </label>
+                    </div>
+                    <p id="newCategoryMediaLabel" class="text-black/35 text-[11px] mt-2 hidden"></p>
+                </div>
+
                 <button type="submit" class="w-full inline-flex items-center justify-center gap-2 bg-primary text-ink rounded-full px-4 py-3 text-xs font-semibold hover:bg-primary-dark transition mt-2">
                     <i class="fa-solid fa-{{ $editing ? 'check' : 'plus' }} text-[10px]"></i> {{ $editing ? 'Update Category' : 'Add Category' }}
                 </button>
@@ -184,3 +224,18 @@
     </div>
 
 @endsection
+
+@push('scripts')
+<script>
+  const categoryMediaInput = document.getElementById('categoryMediaInput');
+  const newCategoryMediaLabel = document.getElementById('newCategoryMediaLabel');
+  categoryMediaInput.addEventListener('change', () => {
+    if (categoryMediaInput.files.length) {
+      newCategoryMediaLabel.textContent = categoryMediaInput.files.length + ' new file(s) selected — will be uploaded on save.';
+      newCategoryMediaLabel.classList.remove('hidden');
+    } else {
+      newCategoryMediaLabel.classList.add('hidden');
+    }
+  });
+</script>
+@endpush

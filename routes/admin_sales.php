@@ -14,12 +14,16 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::resource('orders', OrderController::class)->only(['index', 'create', 'store', 'show']);
         Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.status');
         Route::post('orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+        Route::post('orders/{order}/verify-payment', [OrderController::class, 'verifyPayment'])->name('orders.verify-payment');
         Route::get('orders/{order}/invoice', [OrderController::class, 'invoice'])->name('orders.invoice');
         Route::get('orders/{order}/shipping-label', [OrderController::class, 'shippingLabel'])->name('orders.shipping-label');
 
         Route::get('payments', [PaymentController::class, 'index'])->name('payments.index');
         Route::patch('payments/gateways/{gateway}', [PaymentController::class, 'updateGateway'])->name('payments.gateways.update');
         Route::patch('refunds/{refund}/stage', [PaymentController::class, 'updateRefundStage'])->name('refunds.stage');
+        Route::post('bank-accounts', [PaymentController::class, 'storeBankAccount'])->name('bank-accounts.store');
+        Route::patch('bank-accounts/{bankAccount}', [PaymentController::class, 'updateBankAccount'])->name('bank-accounts.update');
+        Route::delete('bank-accounts/{bankAccount}', [PaymentController::class, 'destroyBankAccount'])->name('bank-accounts.destroy');
 
         Route::get('shipping', [ShippingController::class, 'index'])->name('shipping.index');
         Route::post('shipping/zones', [ShippingController::class, 'storeZone'])->name('shipping.zones.store');

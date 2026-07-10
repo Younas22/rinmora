@@ -150,7 +150,28 @@
                     <div class="flex justify-between text-base font-bold pt-2 border-t border-black/5"><span>Total</span><span>${{ number_format($order->total, 2) }}</span></div>
                 </div>
                 @if ($order->latestPayment)
-                    <p class="text-black/45 text-xs mt-4">{{ $order->latestPayment->card_label ?? ucfirst($order->latestPayment->gateway->name ?? 'Payment') }}</p>
+                    <div class="mt-4 pt-4 border-t border-black/5">
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <p class="text-sm font-medium">{{ $order->latestPayment->card_label ?? ($order->latestPayment->gateway->name ?? 'Payment') }}</p>
+                            <span class="bg-{{ $order->latestPayment->status === 'success' ? 'success' : ($order->latestPayment->status === 'failed' ? 'danger' : 'warning') }}/10 text-{{ $order->latestPayment->status === 'success' ? 'success' : ($order->latestPayment->status === 'failed' ? 'danger' : 'warning') }} text-[11px] font-semibold px-2.5 py-1 rounded-full">{{ ucfirst($order->latestPayment->status) }}</span>
+                        </div>
+
+                        @if ($order->latestPayment->proof_url)
+                            <a href="{{ $order->latestPayment->proof_url }}" target="_blank" class="block mt-2 rounded-xl overflow-hidden border border-black/10 hover:opacity-90 transition">
+                                <img src="{{ $order->latestPayment->proof_url }}" alt="Payment proof screenshot" class="w-full h-40 object-cover">
+                            </a>
+                            <p class="text-black/40 text-xs mt-1.5">Customer-uploaded payment proof &middot; click to view full size</p>
+                        @elseif ($order->latestPayment->gateway?->code === 'bank_transfer')
+                            <p class="text-black/40 text-xs italic mt-1.5">No payment proof uploaded yet.</p>
+                        @endif
+
+                        @if ($order->latestPayment->status !== 'success')
+                            <form method="POST" action="{{ route('admin.sales.orders.verify-payment', $order) }}" class="mt-3" onsubmit="return confirm('Mark this payment as verified/paid?');">
+                                @csrf
+                                <button type="submit" class="w-full text-xs font-semibold bg-ink text-white rounded-full px-4 py-2.5 hover:bg-black/80 transition">Mark Payment as Verified</button>
+                            </form>
+                        @endif
+                    </div>
                 @endif
             </div>
         </div>

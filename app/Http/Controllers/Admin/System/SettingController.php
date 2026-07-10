@@ -35,10 +35,12 @@ class SettingController extends Controller
         $enabledLanguages = json_decode($language['enabled_languages'] ?? '[]', true) ?: [];
         $timezone = Setting::getByGroup('timezone');
         $taxRules = TaxRule::orderBy('id')->get();
+        $environment = Setting::getByGroup('environment');
 
         return view('admin.system.settings.index', compact(
-            'tab', 'general', 'storeInfo', 'businessHours', 'branding', 'theme', 'smtp', 'sms',
-            'socialMedia', 'seo', 'currency', 'language', 'enabledLanguages', 'timezone', 'taxRules'
+            'tab', 'general', 'storeInfo', 'branding', 'theme', 'smtp', 'sms',
+            'socialMedia', 'seo', 'currency', 'language', 'enabledLanguages', 'timezone', 'taxRules',
+            'businessHours', 'environment'
         ));
     }
 
@@ -127,11 +129,7 @@ class SettingController extends Controller
     public function updateEmail(Request $request)
     {
         $data = $request->validate([
-            'smtp_host' => 'nullable|string|max:255',
-            'smtp_port' => 'nullable|string|max:10',
-            'smtp_encryption' => 'nullable|in:none,ssl,tls',
-            'smtp_user' => 'nullable|string|max:255',
-            'smtp_pass' => 'nullable|string|max:255',
+            'resend_api_key' => 'nullable|string|max:255|starts_with:re_',
             'sender_name' => 'nullable|string|max:255',
             'sender_email' => 'nullable|email|max:255',
         ]);
@@ -156,7 +154,7 @@ class SettingController extends Controller
 
             Setting::setValue('last_tested_at', now()->toDateTimeString(), 'smtp');
 
-            return back()->with('success', 'Test email attempted via mailer "'.config('mail.default').'" — check storage/logs/laravel.log if using the log driver.');
+            return back()->with('success', 'Test email sent via Resend to '.$request->test_email.' — check the inbox (and spam folder).');
         } catch (\Throwable $e) {
             return back()->with('error', 'Failed to send test email: '.$e->getMessage());
         }
@@ -246,6 +244,25 @@ class SettingController extends Controller
         }
 
         return redirect()->route('admin.system.settings.index', ['tab' => 'language'])->with('success', 'Language settings saved.');
+    }
+
+    public function updateEnvironment(Request $request)
+    {
+        $data = $request->validate([
+            'mode' => 'required|in:development,production',
+            'dev_admin_url' => 'nullable|url|max:255',
+            'dev_frontend_url' => 'nullable|url|max:255',
+            'dev_api_url' => 'nullable|url|max:255',
+            'prod_admin_url' => 'nullable|url|max:255',
+            'prod_frontend_url' => 'nullable|url|max:255',
+            'prod_api_url' => 'nullable|url|max:255',
+        ]);
+
+        foreach ($data as $key => $value) {
+            Setting::setValue($key, (string) $value, 'environment');
+        }
+
+        return redirect()->route('admin.system.settings.index', ['tab' => 'environment'])->with('success', 'Environment settings saved.');
     }
 
     public function updateTimezone(Request $request)

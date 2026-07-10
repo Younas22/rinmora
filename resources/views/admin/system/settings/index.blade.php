@@ -18,6 +18,7 @@
             'taxes' => ['icon' => 'fa-percent', 'label' => 'Taxes'],
             'language' => ['icon' => 'fa-language', 'label' => 'Language'],
             'timezone' => ['icon' => 'fa-clock', 'label' => 'Timezone'],
+            'environment' => ['icon' => 'fa-globe', 'label' => 'Environment & URLs'],
         ];
     @endphp
 
@@ -42,6 +43,7 @@
             @include('admin.system.settings.partials.taxes')
             @include('admin.system.settings.partials.language')
             @include('admin.system.settings.partials.timezone')
+            @include('admin.system.settings.partials.environment')
         </div>
     </div>
 

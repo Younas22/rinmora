@@ -1,5 +1,4 @@
 <?php
-use App\Models\MenuItem;
 
 if (!function_exists('getInitials')) {
     function getInitials(string $name): string
@@ -31,18 +30,27 @@ if (!function_exists('getRandomColor')) {
 
 
 
-if (!function_exists('get_menu_items')) {
-    function get_menu_items($category = 'header', $activeOnly = true) {
-        return MenuItem::where('category', $category)
-            ->when($activeOnly, function ($query) {
-                $query->where('is_active', true);
-            })
-            ->orderBy('sort_order')
-            ->get();
+if (!function_exists('darkenHex')) {
+    /**
+     * Darken a hex color by a percentage — used to derive a "-dark" hover
+     * variant from the single admin-configured brand color (there's no
+     * separate "primary dark" field in Settings > Theme Colors).
+     */
+    function darkenHex(string $hex, float $percent = 0.12): string
+    {
+        $hex = ltrim($hex, '#');
+        if (strlen($hex) === 3) {
+            $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
+        }
+        if (strlen($hex) !== 6 || !ctype_xdigit($hex)) {
+            return '#'.$hex;
+        }
+
+        [$r, $g, $b] = array_map(fn ($c) => max(0, (int) round(hexdec($c) * (1 - $percent))), str_split($hex, 2));
+
+        return sprintf('#%02x%02x%02x', $r, $g, $b);
     }
 }
-
-
 
 if (!function_exists('processImages')) {
     function processImages($content) {

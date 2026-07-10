@@ -171,12 +171,6 @@ class User extends Authenticatable
         return in_array($this->user_type, [self::TYPE_ADMIN, self::TYPE_AGENT]);
     }
 
-    // app/Models/User.php
-    public function blogPosts()
-    {
-        return $this->hasMany(BlogPost::class, 'author_id');
-    }
-
     public function orders()
     {
         return $this->hasMany(\App\Models\Sales\Order::class, 'user_id');
@@ -276,5 +270,10 @@ class User extends Authenticatable
             'user' => 'Customer',
             default => 'Unknown'
         };
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new \App\Notifications\CustomerResetPasswordNotification($token));
     }
 }

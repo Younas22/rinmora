@@ -50,7 +50,10 @@ return [
         'public_uploads' => [
             'driver' => 'local',
             'root' => public_path('uploads'),
-            'url' => env('APP_URL').'/uploads',
+            // This app is served with the project root (not /public) as the
+            // web server's document root, so uploaded files are only reachable
+            // one level deeper at "<APP_URL>/public/uploads/...".
+            'url' => env('APP_URL').'/public/uploads',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,

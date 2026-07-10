@@ -20,6 +20,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::name('admin.catalog.')->group(function () {
         Route::resource('categories', CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::delete('categories/{category}/media/{media}', [CategoryController::class, 'destroyMedia'])->name('categories.media.destroy');
+        Route::post('categories/{category}/media/{media}/cover', [CategoryController::class, 'setCoverMedia'])->name('categories.media.cover');
 
         Route::resource('brands', BrandController::class)->only(['index', 'store', 'update', 'destroy']);
 

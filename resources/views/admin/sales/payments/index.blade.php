@@ -31,6 +31,42 @@
     </div>
 
     <div class="bg-white rounded-3xl shadow-card p-5 md:p-6 mb-6">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="font-bold text-sm">Bank Accounts <span class="text-black/40 font-normal">(shown to customers who choose Bank Transfer at checkout)</span></h2>
+            <button type="button" onclick="openBankModal()" class="inline-flex items-center gap-2 bg-primary text-ink rounded-full px-4 py-2 text-xs font-semibold hover:bg-primary-dark transition">
+                <i class="fa-solid fa-plus text-[10px]"></i> Add Bank Account
+            </button>
+        </div>
+        <div class="space-y-3">
+            @forelse ($bankAccounts as $account)
+                <div class="border border-black/10 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <p class="text-sm font-semibold">{{ $account->bank_name }} &middot; {{ $account->account_title }}</p>
+                        <p class="text-black/45 text-xs mt-0.5">Acct #{{ $account->account_number }}@if($account->iban) &middot; IBAN {{ $account->iban }}@endif</p>
+                    </div>
+                    <div class="flex items-center gap-3 shrink-0">
+                        @if ($account->is_active)
+                            <span class="bg-success/10 text-success text-[10px] font-semibold px-2 py-1 rounded-full">Active</span>
+                        @else
+                            <span class="bg-black/5 text-black/45 text-[10px] font-semibold px-2 py-1 rounded-full">Inactive</span>
+                        @endif
+                        <button type="button" class="edit-bank-btn text-xs font-semibold text-black/50 hover:text-ink transition"
+                            data-id="{{ $account->id }}" data-bank_name="{{ $account->bank_name }}" data-account_title="{{ $account->account_title }}"
+                            data-account_number="{{ $account->account_number }}" data-iban="{{ $account->iban }}" data-active="{{ $account->is_active ? 1 : 0 }}"
+                            data-action="{{ route('admin.sales.bank-accounts.update', $account) }}">Edit</button>
+                        <form method="POST" action="{{ route('admin.sales.bank-accounts.destroy', $account) }}" onsubmit="return confirm('Delete this bank account?');">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="text-xs font-semibold text-danger hover:text-danger/70 transition">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            @empty
+                <p class="text-black/40 text-sm text-center py-4">No bank accounts yet — add one so customers can pay via Bank Transfer.</p>
+            @endforelse
+        </div>
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-card p-5 md:p-6 mb-6">
         <h2 class="font-bold text-sm mb-4">Payment Gateways</h2>
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             @foreach ($gateways as $gateway)
@@ -72,7 +108,7 @@
                     </thead>
                     <tbody class="divide-y divide-black/5">
                         @forelse ($transactions as $txn)
-                            @php $txnColor = ['success' => 'success', 'failed' => 'danger', 'refunded' => 'warning'][$txn->status]; @endphp
+                            @php $txnColor = ['success' => 'success', 'failed' => 'danger', 'refunded' => 'warning', 'pending' => 'warning'][$txn->status]; @endphp
                             <tr class="hover:bg-black/[0.02] transition">
                                 <td class="py-3 pl-5 font-semibold">{{ $txn->transaction_ref }}</td>
                                 <td class="py-3 text-black/60">{{ $txn->order->customer_name ?? '—' }}</td>
@@ -145,4 +181,57 @@
         </div>
     </div>
 
+    <!-- Bank Account Modal -->
+    <div id="bankModal" class="hidden fixed inset-0 z-50 bg-black/40 grid place-items-center p-4">
+        <form method="POST" id="bankForm" class="bg-white rounded-3xl shadow-soft w-full max-w-md p-6">
+            @csrf
+            <div id="bankMethodField"></div>
+            <div class="flex items-center justify-between mb-4">
+                <h2 id="bankModalTitle" class="font-bold text-base">Add Bank Account</h2>
+                <button type="button" onclick="closeBankModal()" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1.5">Bank Name</label>
+                    <input type="text" name="bank_name" id="bankName" required class="w-full px-4 py-2.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5">Account Title</label>
+                    <input type="text" name="account_title" id="bankAccountTitle" required class="w-full px-4 py-2.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5">Account Number</label>
+                    <input type="text" name="account_number" id="bankAccountNumber" required class="w-full px-4 py-2.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5">IBAN <span class="text-black/40 font-normal">(optional)</span></label>
+                    <input type="text" name="iban" id="bankIban" class="w-full px-4 py-2.5 rounded-xl border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
+                </div>
+                <label class="flex items-center gap-2 text-sm font-medium">
+                    <input type="checkbox" name="is_active" id="bankActive" value="1" checked class="rounded"> Active
+                </label>
+                <button type="submit" class="w-full bg-primary text-ink rounded-full px-4 py-3 text-xs font-semibold hover:bg-primary-dark transition">Save Bank Account</button>
+            </div>
+        </form>
+    </div>
+
 @endsection
+
+@push('scripts')
+<script>
+  function openBankModal(data = null) {
+    const form = document.getElementById('bankForm');
+    form.action = data ? data.action : "{{ route('admin.sales.bank-accounts.store') }}";
+    document.getElementById('bankMethodField').innerHTML = data ? '<input type="hidden" name="_method" value="PATCH">' : '';
+    document.getElementById('bankModalTitle').textContent = data ? 'Edit Bank Account' : 'Add Bank Account';
+    document.getElementById('bankName').value = data?.bank_name || '';
+    document.getElementById('bankAccountTitle').value = data?.account_title || '';
+    document.getElementById('bankAccountNumber').value = data?.account_number || '';
+    document.getElementById('bankIban').value = data?.iban || '';
+    document.getElementById('bankActive').checked = data ? data.active === '1' : true;
+    document.getElementById('bankModal').classList.remove('hidden');
+  }
+  function closeBankModal() { document.getElementById('bankModal').classList.add('hidden'); }
+  document.querySelectorAll('.edit-bank-btn').forEach(btn => btn.addEventListener('click', () => openBankModal(btn.dataset)));
+</script>
+@endpush
