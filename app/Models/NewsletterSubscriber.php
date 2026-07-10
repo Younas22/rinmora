@@ -13,7 +13,8 @@ class NewsletterSubscriber extends Model
     protected $fillable = [
         'email',
         'status',
-        'joined_date'
+        'joined_date',
+        'source',
     ];
 
     protected $casts = [

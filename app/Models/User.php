@@ -3,9 +3,12 @@
 
 namespace App\Models;
 
+use App\Models\System\AdminActivityLog;
+use App\Models\System\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -48,6 +51,13 @@ class User extends Authenticatable
         'sms_notifications',
         'marketing_emails',
         'internal_notes',
+        'role_id',
+        'bio',
+        'social_website',
+        'social_linkedin',
+        'social_twitter',
+        'social_instagram',
+        'notification_preferences',
     ];
 
     protected $hidden = [
@@ -67,6 +77,7 @@ class User extends Authenticatable
         'email_notifications' => 'boolean',
         'sms_notifications' => 'boolean',
         'marketing_emails' => 'boolean',
+        'notification_preferences' => 'array',
     ];
 
     // Accessors
@@ -82,9 +93,24 @@ class User extends Authenticatable
 
     public function getProfileImageUrlAttribute()
     {
-        return $this->profile_image 
+        return $this->profile_image
             ? asset('storage/' . $this->profile_image)
             : 'https://placehold.co/400';
+    }
+
+    public function getAvatarUrlAttribute(): ?string
+    {
+        return $this->profile_image ? Storage::disk('public_uploads')->url($this->profile_image) : null;
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function adminActivityLogs()
+    {
+        return $this->hasMany(AdminActivityLog::class, 'user_id');
     }
 
     // User Type Scopes

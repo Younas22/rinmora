@@ -56,32 +56,27 @@
       </div>
     </div>
 
-    <!-- Phase 2+ -->
-    <span class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/30 font-medium text-sm cursor-not-allowed" title="Coming in a later phase">
-      <i class="fa-solid fa-bullhorn w-4 text-center"></i> <span class="nav-label">Marketing</span>
-    </span>
-
     <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Content &amp; Store</p>
 
     {{-- Phase 2+ items below: static placeholders until those modules are built --}}
-    <span class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/30 font-medium text-sm cursor-not-allowed" title="Coming in the Marketing/CMS phase"><i class="fa-solid fa-file-lines w-4 text-center"></i> <span class="nav-label">CMS</span></span>
-    <span class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/30 font-medium text-sm cursor-not-allowed" title="Coming in the Marketing/CMS phase"><i class="fa-regular fa-images w-4 text-center"></i> <span class="nav-label">Media Manager</span></span>
+    <a href="{{ route('admin.cms.homepage-sections.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm transition {{ request()->routeIs('admin.cms.homepage-sections.*') ? 'text-ink bg-black/5' : 'text-black/65 hover:bg-black/5' }}"><i class="fa-solid fa-file-lines w-4 text-center"></i> <span class="nav-label">CMS</span></a>
+    <a href="{{ route('admin.cms.media.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm transition {{ request()->routeIs('admin.cms.media.*') ? 'text-ink bg-black/5' : 'text-black/65 hover:bg-black/5' }}"><i class="fa-regular fa-images w-4 text-center"></i> <span class="nav-label">Media Manager</span></a>
     <a href="{{ route('admin.sales.shipping.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm transition {{ request()->routeIs('admin.sales.shipping.*') ? 'text-ink bg-black/5' : 'text-black/65 hover:bg-black/5' }}"><i class="fa-solid fa-truck-fast w-4 text-center"></i> <span class="nav-label">Shipping</span></a>
     <a href="{{ route('admin.sales.payments.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm transition {{ request()->routeIs('admin.sales.payments.*') ? 'text-ink bg-black/5' : 'text-black/65 hover:bg-black/5' }}"><i class="fa-solid fa-credit-card w-4 text-center"></i> <span class="nav-label">Payments</span></a>
-    <span class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/30 font-medium text-sm cursor-not-allowed" title="Coming in the Admin/System phase"><i class="fa-solid fa-user-shield w-4 text-center"></i> <span class="nav-label">Users &amp; Roles</span></span>
-    <span class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/30 font-medium text-sm cursor-not-allowed" title="Coming in the Admin/System phase"><i class="fa-solid fa-chart-line w-4 text-center"></i> <span class="nav-label">Reports</span></span>
+    <a href="{{ route('admin.system.users.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm transition {{ request()->routeIs('admin.system.users.*') || request()->routeIs('admin.system.roles.*') ? 'text-ink bg-black/5' : 'text-black/65 hover:bg-black/5' }}"><i class="fa-solid fa-user-shield w-4 text-center"></i> <span class="nav-label">Users &amp; Roles</span></a>
+    <a href="{{ route('admin.system.reports.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm transition {{ request()->routeIs('admin.system.reports.*') ? 'text-ink bg-black/5' : 'text-black/65 hover:bg-black/5' }}"><i class="fa-solid fa-chart-line w-4 text-center"></i> <span class="nav-label">Reports</span></a>
 
     <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">System</p>
 
-    <span class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/30 font-medium text-sm cursor-not-allowed" title="Coming in the Marketing/CMS phase"><i class="fa-solid fa-magnifying-glass-chart w-4 text-center"></i> <span class="nav-label">SEO</span></span>
-    <span class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/30 font-medium text-sm cursor-not-allowed" title="Coming in the Admin/System phase"><i class="fa-solid fa-headset w-4 text-center"></i> <span class="nav-label">Contact &amp; Support</span></span>
-    <span class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/30 font-medium text-sm cursor-not-allowed" title="Coming in the Marketing/CMS phase"><i class="fa-solid fa-bell w-4 text-center"></i> <span class="nav-label">Notifications</span></span>
-    <span class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/30 font-medium text-sm cursor-not-allowed" title="Coming in the Admin/System phase"><i class="fa-solid fa-clock-rotate-left w-4 text-center"></i> <span class="nav-label">Activity Logs</span></span>
+    <a href="{{ route('admin.cms.seo.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm transition {{ request()->routeIs('admin.cms.seo.*') ? 'text-ink bg-black/5' : 'text-black/65 hover:bg-black/5' }}"><i class="fa-solid fa-magnifying-glass-chart w-4 text-center"></i> <span class="nav-label">SEO</span></a>
+    <a href="{{ route('admin.system.support.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm transition {{ request()->routeIs('admin.system.support.*') ? 'text-ink bg-black/5' : 'text-black/65 hover:bg-black/5' }}"><i class="fa-solid fa-headset w-4 text-center"></i> <span class="nav-label">Contact &amp; Support</span></a>
+    <a href="{{ route('admin.cms.notifications.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm transition {{ request()->routeIs('admin.cms.notifications.*') ? 'text-ink bg-black/5' : 'text-black/65 hover:bg-black/5' }}"><i class="fa-solid fa-bell w-4 text-center"></i> <span class="nav-label">Notifications</span></a>
+    <a href="{{ route('admin.system.activity.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm transition {{ request()->routeIs('admin.system.activity.*') ? 'text-ink bg-black/5' : 'text-black/65 hover:bg-black/5' }}"><i class="fa-solid fa-clock-rotate-left w-4 text-center"></i> <span class="nav-label">Activity Logs</span></a>
 
     <p class="nav-section-label px-3 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-black/35">Account</p>
 
-    <span class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/30 font-medium text-sm cursor-not-allowed" title="Coming in the Admin/System phase"><i class="fa-regular fa-user w-4 text-center"></i> <span class="nav-label">My Profile</span></span>
-    <span class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/30 font-medium text-sm cursor-not-allowed" title="Coming in the Admin/System phase"><i class="fa-solid fa-gear w-4 text-center"></i> <span class="nav-label">Settings</span></span>
+    <a href="{{ route('admin.system.profile.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm transition {{ request()->routeIs('admin.system.profile.*') ? 'text-ink bg-black/5' : 'text-black/65 hover:bg-black/5' }}"><i class="fa-regular fa-user w-4 text-center"></i> <span class="nav-label">My Profile</span></a>
+    <a href="{{ route('admin.system.settings.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm transition {{ request()->routeIs('admin.system.settings.*') ? 'text-ink bg-black/5' : 'text-black/65 hover:bg-black/5' }}"><i class="fa-solid fa-gear w-4 text-center"></i> <span class="nav-label">Settings</span></a>
     <form method="POST" action="{{ route('admin.logout') }}">
       @csrf
       <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-black/65 hover:bg-black/5 font-medium text-sm transition text-left">

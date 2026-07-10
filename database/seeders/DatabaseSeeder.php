@@ -37,6 +37,8 @@ class DatabaseSeeder extends Seeder
             CatalogSeeder::class,
             SalesSeeder::class,
             CustomerSeeder::class,
+            CmsSeeder::class,
+            AdminSystemSeeder::class,
         ]);
 
     }

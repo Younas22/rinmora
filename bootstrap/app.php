@@ -27,6 +27,14 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::middleware('web')
                 ->prefix('admin')
                 ->group(base_path('routes/admin_customers.php'));
+
+            Route::middleware('web')
+                ->prefix('admin')
+                ->group(base_path('routes/admin_cms.php'));
+
+            Route::middleware('web')
+                ->prefix('admin')
+                ->group(base_path('routes/admin_system.php'));
         },
     )
     ->withMiddleware(function (Middleware $middleware) {
