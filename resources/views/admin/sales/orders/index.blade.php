@@ -75,7 +75,7 @@
                             </td>
                             <td class="py-3 text-{{ $order->shipping_status_color }}">{{ $order->shipping_status }}</td>
                             <td class="py-3 text-black/50 text-xs">{{ $order->created_at->format('M d, Y') }}</td>
-                            <td class="py-3 text-right font-semibold">${{ number_format($order->total, 2) }}</td>
+                            <td class="py-3 text-right font-semibold">{{ format_price($order->total) }}</td>
                             <td class="py-3 pr-5 text-right">
                                 <a href="{{ route('admin.sales.orders.show', $order) }}" class="text-xs font-semibold text-black/50 hover:text-ink transition mr-3">View</a>
                                 <a href="{{ route('admin.sales.orders.invoice', $order) }}" target="_blank" class="text-xs font-semibold text-black/50 hover:text-ink transition mr-3">Invoice</a>

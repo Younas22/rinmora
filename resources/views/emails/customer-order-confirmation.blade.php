@@ -39,15 +39,15 @@
                                 @endif
                             </td>
                             <td style="text-align: center;">x{{ $item->quantity }}</td>
-                            <td style="text-align: right;">${{ number_format($item->line_total, 2) }}</td>
+                            <td style="text-align: right;">{{ format_price($item->line_total) }}</td>
                         </tr>
                     @endforeach
                 </table>
 
                 <table class="totals">
-                    <tr><td>Subtotal</td><td style="text-align: right;">${{ number_format($order->subtotal, 2) }}</td></tr>
-                    <tr><td>Shipping</td><td style="text-align: right;">${{ number_format($order->shipping_amount, 2) }}</td></tr>
-                    <tr><td><strong>Total</strong></td><td style="text-align: right;"><strong>${{ number_format($order->total, 2) }}</strong></td></tr>
+                    <tr><td>Subtotal</td><td style="text-align: right;">{{ format_price($order->subtotal) }}</td></tr>
+                    <tr><td>Shipping</td><td style="text-align: right;">{{ format_price($order->shipping_amount) }}</td></tr>
+                    <tr><td><strong>Total</strong></td><td style="text-align: right;"><strong>{{ format_price($order->total) }}</strong></td></tr>
                 </table>
 
                 <p><strong>Shipping to:</strong><br>

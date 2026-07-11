@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\System;
 
 use App\Http\Controllers\Controller;
+use App\Models\Currency;
 use App\Models\Setting;
 use App\Models\System\TaxRule;
 use App\Services\Catalog\ImageUploadService;
@@ -30,7 +31,7 @@ class SettingController extends Controller
         $sms = Setting::getByGroup('sms');
         $socialMedia = Setting::getByGroup('social_media');
         $seo = Setting::getByGroup('seo');
-        $currency = Setting::getByGroup('currency');
+        $currencies = Currency::ordered()->get();
         $language = Setting::getByGroup('language');
         $enabledLanguages = json_decode($language['enabled_languages'] ?? '[]', true) ?: [];
         $timezone = Setting::getByGroup('timezone');
@@ -39,7 +40,7 @@ class SettingController extends Controller
 
         return view('admin.system.settings.index', compact(
             'tab', 'general', 'storeInfo', 'branding', 'theme', 'smtp', 'sms',
-            'socialMedia', 'seo', 'currency', 'language', 'enabledLanguages', 'timezone', 'taxRules',
+            'socialMedia', 'seo', 'currencies', 'language', 'enabledLanguages', 'timezone', 'taxRules',
             'businessHours', 'environment'
         ));
     }
@@ -212,23 +213,6 @@ class SettingController extends Controller
         }
 
         return redirect()->route('admin.system.settings.index', ['tab' => 'seo'])->with('success', 'SEO defaults saved.');
-    }
-
-    public function updateCurrency(Request $request)
-    {
-        $data = $request->validate([
-            'default_currency' => 'required|string|max:10',
-            'currency_symbol' => 'required|string|max:5',
-            'currency_position' => 'required|in:before,after',
-            'decimal_places' => 'required|in:0,2',
-        ]);
-        $data['currency_active'] = $request->boolean('currency_active') ? '1' : '0';
-
-        foreach ($data as $key => $value) {
-            Setting::setValue($key, $value, 'currency');
-        }
-
-        return redirect()->route('admin.system.settings.index', ['tab' => 'currency'])->with('success', 'Currency settings saved.');
     }
 
     public function updateLanguage(Request $request)

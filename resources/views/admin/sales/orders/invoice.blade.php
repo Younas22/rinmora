@@ -62,8 +62,8 @@
                             <p class="text-black/40 text-xs">{{ $item->variant_label }}@if($item->variant_label && $item->sku) &middot; @endif{{ $item->sku ? 'SKU: '.$item->sku : '' }}</p>
                         </td>
                         <td class="py-3 text-center">{{ $item->quantity }}</td>
-                        <td class="py-3 text-right">${{ number_format($item->unit_price, 2) }}</td>
-                        <td class="py-3 text-right font-medium">${{ number_format($item->line_total, 2) }}</td>
+                        <td class="py-3 text-right">{{ format_price($item->unit_price) }}</td>
+                        <td class="py-3 text-right font-medium">{{ format_price($item->line_total) }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -71,13 +71,13 @@
 
         <div class="flex justify-end mb-8">
             <div class="w-full sm:w-64 space-y-2 text-sm">
-                <div class="flex justify-between"><span class="text-black/50">Subtotal</span><span>${{ number_format($order->subtotal, 2) }}</span></div>
-                <div class="flex justify-between"><span class="text-black/50">Shipping</span><span>${{ number_format($order->shipping_amount, 2) }}</span></div>
+                <div class="flex justify-between"><span class="text-black/50">Subtotal</span><span>{{ format_price($order->subtotal) }}</span></div>
+                <div class="flex justify-between"><span class="text-black/50">Shipping</span><span>{{ format_price($order->shipping_amount) }}</span></div>
                 @if ($order->discount_amount > 0)
-                    <div class="flex justify-between text-success"><span>Discount</span><span>&minus;${{ number_format($order->discount_amount, 2) }}</span></div>
+                    <div class="flex justify-between text-success"><span>Discount</span><span>&minus;{{ format_price($order->discount_amount) }}</span></div>
                 @endif
-                <div class="flex justify-between"><span class="text-black/50">Tax</span><span>${{ number_format($order->tax_amount, 2) }}</span></div>
-                <div class="flex justify-between text-base font-bold pt-2 border-t border-black/10"><span>Total Paid</span><span>${{ number_format($order->total, 2) }}</span></div>
+                <div class="flex justify-between"><span class="text-black/50">Tax</span><span>{{ format_price($order->tax_amount) }}</span></div>
+                <div class="flex justify-between text-base font-bold pt-2 border-t border-black/10"><span>Total Paid</span><span>{{ format_price($order->total) }}</span></div>
             </div>
         </div>
 

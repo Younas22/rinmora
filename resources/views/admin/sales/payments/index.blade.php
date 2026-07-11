@@ -18,7 +18,7 @@
         </div>
         <div class="bg-white rounded-2xl shadow-card p-5">
             <p class="text-black/45 text-xs mb-1">Total Revenue</p>
-            <p class="text-xl font-bold">${{ number_format($stats['total_revenue'], 2) }}</p>
+            <p class="text-xl font-bold">{{ format_price($stats['total_revenue']) }}</p>
         </div>
         <div class="bg-white rounded-2xl shadow-card p-5">
             <p class="text-black/45 text-xs mb-1">Pending Refunds</p>
@@ -114,7 +114,7 @@
                                 <td class="py-3 text-black/60">{{ $txn->order->customer_name ?? '—' }}</td>
                                 <td class="py-3 text-black/60">{{ $txn->gateway->name ?? '—' }}</td>
                                 <td class="py-3"><span class="bg-{{ $txnColor }}/10 text-{{ $txnColor }} text-[11px] font-semibold px-2.5 py-1 rounded-full">{{ ucfirst($txn->status) }}</span></td>
-                                <td class="py-3 pr-5 text-right font-semibold">${{ number_format($txn->amount, 2) }}</td>
+                                <td class="py-3 pr-5 text-right font-semibold">{{ format_price($txn->amount) }}</td>
                             </tr>
                         @empty
                             <tr><td colspan="5" class="py-8 text-center text-black/40 text-sm">No transactions yet.</td></tr>
@@ -141,7 +141,7 @@
                     <div class="mb-5 pb-5 border-b border-black/5 last:border-0 last:mb-0 last:pb-0">
                         <div class="flex items-center justify-between mb-2">
                             <p class="text-sm font-semibold">Order #{{ $refund->order->order_number ?? '—' }}</p>
-                            <p class="text-sm font-semibold">${{ number_format($refund->amount, 2) }}</p>
+                            <p class="text-sm font-semibold">{{ format_price($refund->amount) }}</p>
                         </div>
                         <div class="flex items-center gap-1 mb-2">
                             @foreach ($stages as $i => $stage)

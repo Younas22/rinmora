@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\StorefrontAuthController;
 use App\Http\Controllers\Api\StorefrontCheckoutController;
 use App\Http\Controllers\Api\StorefrontContentController;
 use App\Http\Controllers\Api\StorefrontController;
+use App\Http\Controllers\Api\StorefrontReviewController;
 use App\Http\Controllers\Api\StorefrontWishlistController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -44,6 +45,11 @@ Route::prefix('storefront')->group(function () {
     Route::post('orders', [StorefrontCheckoutController::class, 'store']);
     Route::get('orders/{orderNumber}', [StorefrontCheckoutController::class, 'show']);
     Route::post('orders/{orderNumber}/payment-proof', [StorefrontCheckoutController::class, 'uploadPaymentProof']);
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('products/{slug}/review-eligibility', [StorefrontReviewController::class, 'eligibility']);
+        Route::post('reviews', [StorefrontReviewController::class, 'store']);
+    });
 
     Route::middleware('auth:sanctum')->prefix('wishlist')->group(function () {
         Route::get('/', [StorefrontWishlistController::class, 'index']);

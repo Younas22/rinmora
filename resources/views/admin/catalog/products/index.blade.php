@@ -110,7 +110,7 @@
                                 </div>
                             </td>
                             <td class="py-3 text-black/60">{{ $product->category->name ?? '—' }}</td>
-                            <td class="py-3 font-semibold">${{ number_format($product->price, 2) }}</td>
+                            <td class="py-3 font-semibold">{{ format_price($product->price) }}</td>
                             <td class="py-3">
                                 @php $statusColor = ['In Stock' => 'success', 'Low Stock' => 'warning', 'Out of Stock' => 'danger'][$product->stock_status]; @endphp
                                 <span class="text-{{ $statusColor }} font-medium">{{ $product->quantity }} in stock</span>

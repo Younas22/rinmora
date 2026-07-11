@@ -4,6 +4,12 @@
 
 @section('content')
 
+@php
+    // Line-item math on this screen (products, shipping/discount/tax fields) all works
+    // in the base currency — this is a live pre-save preview, not a stored/converted amount.
+    $baseCurrencySymbol = \App\Models\Currency::where('is_base', true)->value('symbol') ?? '$';
+@endphp
+
     <form method="POST" action="{{ route('admin.sales.orders.store') }}" id="orderForm">
         @csrf
 
@@ -68,7 +74,7 @@
                     <input type="hidden" name="items_json" id="itemsJson">
 
                     <div class="flex justify-end mt-4 pt-4 border-t border-black/5">
-                        <p class="text-sm font-semibold">Subtotal: <span id="subtotalDisplay">$0.00</span></p>
+                        <p class="text-sm font-semibold">Subtotal: <span id="subtotalDisplay">{{ $baseCurrencySymbol }}0.00</span></p>
                     </div>
                 </div>
 
@@ -164,7 +170,7 @@
                             <input id="taxAmount" name="tax_amount" type="number" step="0.01" min="0" value="0" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
                         </div>
                         <div class="pt-3 border-t border-black/5 flex justify-between text-base font-bold">
-                            <span>Total</span><span id="totalDisplay">$0.00</span>
+                            <span>Total</span><span id="totalDisplay">{{ $baseCurrencySymbol }}0.00</span>
                         </div>
                     </div>
                 </div>
@@ -178,6 +184,7 @@
 <script>
   @php $productsPayload = $products; @endphp
   const products = @json($productsPayload);
+  const baseCurrencySymbol = @json($baseCurrencySymbol);
 
   // ---- customer autofill ----
   const customerSelect = document.getElementById('customerSelect');
@@ -237,7 +244,7 @@
 
       const priceLabel = document.createElement('span');
       priceLabel.className = 'w-24 text-right text-sm font-semibold';
-      priceLabel.textContent = '$' + (item.unit_price * item.quantity).toFixed(2);
+      priceLabel.textContent = baseCurrencySymbol + (item.unit_price * item.quantity).toFixed(2);
 
       const removeBtn = document.createElement('button');
       removeBtn.type = 'button';
@@ -283,7 +290,7 @@
       qtyInput.addEventListener('input', () => {
         item.quantity = parseInt(qtyInput.value, 10) || 1;
         updateTotals();
-        priceLabel.textContent = '$' + (item.unit_price * item.quantity).toFixed(2);
+        priceLabel.textContent = baseCurrencySymbol + (item.unit_price * item.quantity).toFixed(2);
         syncItemsJson();
       });
 
@@ -306,8 +313,8 @@
     const shipping = parseFloat(document.getElementById('shippingAmount').value) || 0;
     const discount = parseFloat(document.getElementById('discountAmount').value) || 0;
     const tax = parseFloat(document.getElementById('taxAmount').value) || 0;
-    subtotalDisplay.textContent = '$' + subtotal.toFixed(2);
-    totalDisplay.textContent = '$' + (subtotal + shipping + tax - discount).toFixed(2);
+    subtotalDisplay.textContent = baseCurrencySymbol + subtotal.toFixed(2);
+    totalDisplay.textContent = baseCurrencySymbol + (subtotal + shipping + tax - discount).toFixed(2);
   }
 
   function syncItemsJson() {

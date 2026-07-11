@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Mail\CustomerWelcomeMail;
+use App\Models\Sales\Order;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
@@ -37,6 +38,8 @@ class StorefrontAuthController extends Controller
 
         Mail::to($user->email)->send(new CustomerWelcomeMail($user));
 
+        $this->linkGuestOrders($user);
+
         $token = $user->createToken('storefront')->plainTextToken;
 
         return response()->json([
@@ -68,12 +71,27 @@ class StorefrontAuthController extends Controller
 
         $user->update(['last_activity' => now()]);
 
+        $this->linkGuestOrders($user);
+
         $token = $user->createToken('storefront')->plainTextToken;
 
         return response()->json([
             'token' => $token,
             'user' => new UserResource($user),
         ]);
+    }
+
+    /**
+     * Orders placed as a guest (checkout without being signed in) have no
+     * user_id even if the same email as an existing account was used —
+     * link them the moment that customer logs in or registers, so "My
+     * Orders" shows their full history instead of appearing empty.
+     */
+    protected function linkGuestOrders(User $user): void
+    {
+        Order::where('customer_email', $user->email)
+            ->whereNull('user_id')
+            ->update(['user_id' => $user->id]);
     }
 
     public function logout(Request $request)

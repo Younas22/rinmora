@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Catalog\Review;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -9,6 +10,8 @@ class OrderResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        $user = $request->user('sanctum');
+
         return [
             'order_number' => $this->order_number,
             'status' => $this->status,
@@ -30,11 +33,15 @@ class OrderResource extends JsonResource
                 'product_id' => $item->product_id,
                 'variant_id' => $item->variant_id,
                 'product_name' => $item->product_name,
+                'product_slug' => $item->product?->slug,
                 'variant_label' => $item->variant_label,
                 'image_url' => $item->product?->coverImage?->url ?? $item->product?->images->first()?->url,
                 'quantity' => $item->quantity,
                 'unit_price' => (float) $item->unit_price,
                 'line_total' => (float) $item->line_total,
+                'already_reviewed' => $user
+                    ? Review::where('product_id', $item->product_id)->where('user_id', $user->id)->exists()
+                    : false,
             ])),
             'events' => $this->whenLoaded('events', fn () => $this->events->map(fn ($event) => [
                 'title' => $event->title,

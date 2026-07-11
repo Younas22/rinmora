@@ -52,6 +52,32 @@ if (!function_exists('darkenHex')) {
     }
 }
 
+if (!function_exists('format_price')) {
+    /**
+     * Format a base-currency (USD) amount using the admin's active display
+     * currency (Settings > Currency): converts by exchange_rate, then
+     * applies that currency's decimal places and symbol position. Falls
+     * back to plain USD formatting if no currency is marked active yet
+     * (e.g. before the currencies table has been seeded).
+     */
+    function format_price(float|int|string|null $amount): string
+    {
+        $amount = (float) $amount;
+        $currency = \App\Models\Currency::active();
+
+        if (! $currency) {
+            return '$'.number_format($amount, 2);
+        }
+
+        $converted = $amount * (float) $currency->exchange_rate;
+        $formatted = number_format($converted, $currency->decimal_places);
+
+        return $currency->symbol_position === 'after'
+            ? $formatted.$currency->symbol
+            : $currency->symbol.$formatted;
+    }
+}
+
 if (!function_exists('processImages')) {
     function processImages($content) {
         // Add responsive class to images

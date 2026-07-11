@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\System\ReportController;
 use App\Http\Controllers\Admin\System\SupportController;
 use App\Http\Controllers\Admin\System\ProfileController;
 use App\Http\Controllers\Admin\System\SettingController;
+use App\Http\Controllers\Admin\System\CurrencyController;
 
 // Rinmora e-commerce admin (Admin/System module). Same conventions as
 // routes/admin_catalog.php, routes/admin_sales.php, routes/admin_customers.php,
@@ -61,7 +62,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::post('settings/sms/send-test', [SettingController::class, 'sendTestSms'])->name('settings.sms.send-test');
         Route::put('settings/social', [SettingController::class, 'updateSocial'])->name('settings.social');
         Route::put('settings/seo', [SettingController::class, 'updateSeo'])->name('settings.seo');
-        Route::put('settings/currency', [SettingController::class, 'updateCurrency'])->name('settings.currency');
+        Route::post('settings/currencies', [CurrencyController::class, 'store'])->name('settings.currencies.store');
+        Route::put('settings/currencies/{currency}', [CurrencyController::class, 'update'])->name('settings.currencies.update');
+        Route::delete('settings/currencies/{currency}', [CurrencyController::class, 'destroy'])->name('settings.currencies.destroy');
+        Route::post('settings/currencies/{currency}/activate', [CurrencyController::class, 'activate'])->name('settings.currencies.activate');
         Route::put('settings/language', [SettingController::class, 'updateLanguage'])->name('settings.language');
         Route::put('settings/timezone', [SettingController::class, 'updateTimezone'])->name('settings.timezone');
         Route::put('settings/environment', [SettingController::class, 'updateEnvironment'])->name('settings.environment');

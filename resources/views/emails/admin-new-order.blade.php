@@ -22,7 +22,7 @@
             <div class="header"><span>Rinmora Admin</span></div>
             <div class="body">
                 <h1>New Order: {{ $order->order_number }}</h1>
-                <p>{{ $order->customer_name }} ({{ $order->customer_email }}) just placed an order for <strong>${{ number_format($order->total, 2) }}</strong> via {{ $order->latestPayment?->gateway?->name ?? 'Unknown' }}.</p>
+                <p>{{ $order->customer_name }} ({{ $order->customer_email }}) just placed an order for <strong>{{ format_price($order->total) }}</strong> via {{ $order->latestPayment?->gateway?->name ?? 'Unknown' }}.</p>
                 <p style="text-align: center;">
                     <a href="{{ $adminUrl }}" class="btn">View Order</a>
                 </p>

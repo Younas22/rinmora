@@ -29,7 +29,7 @@
         </div>
         <div class="bg-white rounded-2xl shadow-card p-5">
             <p class="text-black/45 text-xs mb-1">Avg. Lifetime Value</p>
-            <p class="text-xl font-bold">${{ number_format($stats['avg_lifetime_value'], 2) }}</p>
+            <p class="text-xl font-bold">{{ format_price($stats['avg_lifetime_value']) }}</p>
         </div>
     </div>
 
@@ -94,7 +94,7 @@
                             </td>
                             <td class="py-3 text-black/60">{{ $customer->city ? $customer->city.', '.$customer->country : '—' }}</td>
                             <td class="py-3 text-black/60">{{ $customer->orders_count }}</td>
-                            <td class="py-3 font-semibold">${{ number_format($customer->lifetime_value ?? 0, 2) }}</td>
+                            <td class="py-3 font-semibold">{{ format_price($customer->lifetime_value ?? 0) }}</td>
                             <td class="py-3">
                                 <div class="flex flex-wrap gap-1">
                                     @if ($customer->status === 'vip')

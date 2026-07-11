@@ -78,13 +78,14 @@
         </form>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-sm min-w-[860px]">
+            <table class="w-full text-sm min-w-[940px]">
                 <thead>
                     <tr class="text-left text-black/40 text-xs uppercase tracking-wide border-b border-black/5">
                         <th class="py-3 pl-5 font-medium">Customer</th>
                         <th class="py-3 font-medium">Product</th>
                         <th class="py-3 font-medium">Rating</th>
                         <th class="py-3 font-medium">Review</th>
+                        <th class="py-3 font-medium">Photo</th>
                         <th class="py-3 font-medium">Date</th>
                         <th class="py-3 font-medium">Status</th>
                         <th class="py-3 pr-5 font-medium text-right">Actions</th>
@@ -105,6 +106,15 @@
                             <td class="py-3 text-black/60">{{ $review->product->name ?? 'Deleted product' }}</td>
                             <td class="py-3 text-primary-dark">{{ str_repeat('★', $review->rating) }}<span class="text-black/20">{{ str_repeat('★', 5 - $review->rating) }}</span></td>
                             <td class="py-3 text-black/60 max-w-[220px] truncate">{{ $review->body ? '"'.$review->body.'"' : '—' }}</td>
+                            <td class="py-3">
+                                @if ($review->photo_url)
+                                    <a href="{{ $review->photo_url }}" target="_blank" rel="noopener" class="block w-10 h-10 rounded-lg overflow-hidden border border-black/10">
+                                        <img src="{{ $review->photo_url }}" alt="Review photo" class="w-full h-full object-cover">
+                                    </a>
+                                @else
+                                    <span class="text-black/25">—</span>
+                                @endif
+                            </td>
                             <td class="py-3 text-black/50 text-xs">{{ $review->created_at->format('M d, Y') }}</td>
                             <td class="py-3">
                                 @if ($review->status === 'rejected')
@@ -137,7 +147,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" class="py-10 text-center text-black/40 text-sm">No reviews here.</td></tr>
+                        <tr><td colspan="8" class="py-10 text-center text-black/40 text-sm">No reviews here.</td></tr>
                     @endforelse
                 </tbody>
             </table>

@@ -93,7 +93,9 @@
                 <p id="newImagesLabel" class="text-black/35 text-[11px] mt-3 hidden"></p>
             </div>
 
-            <!-- Pricing -->
+            {{-- Prices are always entered and stored in the base currency (Settings > Currency)
+                 regardless of which currency is set active for display, so the prefix below
+                 shows the base symbol, not the active one. --}}
             <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
                 <h2 class="font-bold text-sm mb-1">Pricing</h2>
                 <p class="text-black/40 text-xs mb-5">Set the retail price and optional compare-at price for discounts.</p>
@@ -102,21 +104,21 @@
                     <div>
                         <label class="block text-sm font-medium mb-1.5" for="priceField">Price</label>
                         <div class="relative">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-black/35 text-sm">$</span>
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-black/35 text-sm">{{ \App\Models\Currency::where('is_base', true)->value('symbol') ?? '$' }}</span>
                             <input id="priceField" name="price" type="text" value="{{ old('price', $product?->price) }}" class="w-full pl-8 pr-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
                         </div>
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1.5" for="compareAtField">Compare-at Price</label>
                         <div class="relative">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-black/35 text-sm">$</span>
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-black/35 text-sm">{{ \App\Models\Currency::where('is_base', true)->value('symbol') ?? '$' }}</span>
                             <input id="compareAtField" name="compare_at_price" type="text" value="{{ old('compare_at_price', $product?->compare_at_price) }}" placeholder="0.00" class="w-full pl-8 pr-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
                         </div>
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1.5" for="costField">Cost per Item</label>
                         <div class="relative">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-black/35 text-sm">$</span>
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-black/35 text-sm">{{ \App\Models\Currency::where('is_base', true)->value('symbol') ?? '$' }}</span>
                             <input id="costField" name="cost_per_item" type="text" value="{{ old('cost_per_item', $product?->cost_per_item) }}" placeholder="0.00" class="w-full pl-8 pr-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
                         </div>
                     </div>

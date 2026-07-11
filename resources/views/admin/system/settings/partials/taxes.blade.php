@@ -46,8 +46,8 @@
         @php $exampleRate = $taxRules->firstWhere('is_active', true)?->rate ?? 0; @endphp
         <div class="bg-black/[0.03] rounded-xl p-4 text-sm space-y-1.5">
             <div class="flex justify-between"><span class="text-black/60">Subtotal</span><span>$248.00</span></div>
-            <div class="flex justify-between"><span class="text-black/60">Tax ({{ $exampleRate }}%)</span><span>${{ number_format(248 * $exampleRate / 100, 2) }}</span></div>
-            <div class="flex justify-between font-bold pt-1.5 border-t border-black/10"><span>Total</span><span>${{ number_format(248 + 248 * $exampleRate / 100, 2) }}</span></div>
+            <div class="flex justify-between"><span class="text-black/60">Tax ({{ $exampleRate }}%)</span><span>{{ format_price(248 * $exampleRate / 100) }}</span></div>
+            <div class="flex justify-between font-bold pt-1.5 border-t border-black/10"><span>Total</span><span>{{ format_price(248 + 248 * $exampleRate / 100) }}</span></div>
         </div>
     </div>
 </div>

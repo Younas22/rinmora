@@ -44,8 +44,8 @@
                     <span class="w-9 h-9 rounded-full bg-primary/20 grid place-items-center"><i class="fa-solid fa-sack-dollar text-primary-dark text-xs"></i></span>
                     <span class="text-[11px] font-semibold {{ $kpis['revenue']['change'] >= 0 ? 'text-success bg-success/10' : 'text-danger bg-danger/10' }} px-2 py-1 rounded-full"><i class="fa-solid {{ $kpis['revenue']['change'] >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} text-[9px] mr-0.5"></i>{{ abs($kpis['revenue']['change']) }}%</span>
                 </div>
-                <p class="text-xl font-bold">${{ number_format($kpis['revenue']['value'], 0) }}</p>
-                <p class="text-black/45 text-xs mt-0.5">Total Revenue &middot; vs ${{ number_format($kpis['revenue']['prev'], 0) }} last period</p>
+                <p class="text-xl font-bold">{{ format_price($kpis['revenue']['value']) }}</p>
+                <p class="text-black/45 text-xs mt-0.5">Total Revenue &middot; vs {{ format_price($kpis['revenue']['prev']) }} last period</p>
             </div>
             <div class="hover-lift bg-white rounded-2xl shadow-card p-5">
                 <div class="flex items-center justify-between mb-3">
@@ -60,8 +60,8 @@
                     <span class="w-9 h-9 rounded-full bg-primary/20 grid place-items-center"><i class="fa-solid fa-scale-balanced text-primary-dark text-xs"></i></span>
                     <span class="text-[11px] font-semibold {{ $kpis['aov']['change'] >= 0 ? 'text-success bg-success/10' : 'text-danger bg-danger/10' }} px-2 py-1 rounded-full"><i class="fa-solid {{ $kpis['aov']['change'] >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} text-[9px] mr-0.5"></i>{{ abs($kpis['aov']['change']) }}%</span>
                 </div>
-                <p class="text-xl font-bold">${{ number_format($kpis['aov']['value'], 2) }}</p>
-                <p class="text-black/45 text-xs mt-0.5">Avg. Order Value &middot; vs ${{ number_format($kpis['aov']['prev'], 2) }} last period</p>
+                <p class="text-xl font-bold">{{ format_price($kpis['aov']['value']) }}</p>
+                <p class="text-black/45 text-xs mt-0.5">Avg. Order Value &middot; vs {{ format_price($kpis['aov']['prev']) }} last period</p>
             </div>
             <div class="hover-lift bg-white rounded-2xl shadow-card p-5">
                 <div class="flex items-center justify-between mb-3">
@@ -125,7 +125,7 @@
                     @forelse ($topProducts as $p)
                         <li class="flex items-center justify-between text-sm">
                             <span class="text-black/70 truncate pr-2">{{ $p->product_name }}</span>
-                            <span class="text-black/40 text-xs shrink-0">{{ $p->sold }} sold &middot; ${{ number_format($p->revenue, 0) }}</span>
+                            <span class="text-black/40 text-xs shrink-0">{{ $p->sold }} sold &middot; {{ format_price($p->revenue) }}</span>
                         </li>
                     @empty
                         <li class="text-black/40 text-xs">No sales this period.</li>
@@ -138,7 +138,7 @@
                     @forelse ($topCustomers as $c)
                         <li class="flex items-center justify-between text-sm">
                             <span class="text-black/70 truncate pr-2">{{ $c->user->full_name ?? 'Unknown' }}</span>
-                            <span class="text-black/40 text-xs shrink-0">{{ $c->orders_count }} orders &middot; ${{ number_format($c->spend, 0) }}</span>
+                            <span class="text-black/40 text-xs shrink-0">{{ $c->orders_count }} orders &middot; {{ format_price($c->spend) }}</span>
                         </li>
                     @empty
                         <li class="text-black/40 text-xs">No orders this period.</li>
@@ -151,7 +151,7 @@
                     @forelse ($revenueByCategory as $cat)
                         @php $pct = round($cat->total / $categoryTotal * 100); @endphp
                         <li>
-                            <div class="flex items-center justify-between text-xs mb-1"><span class="text-black/70">{{ $cat->name }}</span><span class="text-black/40">${{ number_format($cat->total, 0) }}</span></div>
+                            <div class="flex items-center justify-between text-xs mb-1"><span class="text-black/70">{{ $cat->name }}</span><span class="text-black/40">{{ format_price($cat->total) }}</span></div>
                             <div class="h-1.5 rounded-full bg-black/5 overflow-hidden"><div class="h-full bg-primary-dark rounded-full" style="width:{{ $pct }}%"></div></div>
                         </li>
                     @empty
@@ -178,9 +178,9 @@
                         <tr class="hover:bg-black/[0.02] transition">
                             <td class="py-3">{{ \Illuminate\Support\Carbon::parse($day['date'])->format('M d, Y') }}</td>
                             <td class="py-3 text-right">{{ $day['orders'] }}</td>
-                            <td class="py-3 text-right">${{ number_format($day['revenue'], 0) }}</td>
+                            <td class="py-3 text-right">{{ format_price($day['revenue']) }}</td>
                             <td class="py-3 text-right {{ $day['refunds'] > 0 ? 'text-danger' : 'text-black/40' }}">{{ $day['refunds'] > 0 ? '-$'.number_format($day['refunds'], 0) : '$0' }}</td>
-                            <td class="py-3 text-right font-bold">${{ number_format($day['net'], 0) }}</td>
+                            <td class="py-3 text-right font-bold">{{ format_price($day['net']) }}</td>
                         </tr>
                     @empty
                         <tr><td colspan="5" class="py-10 text-center text-black/40 text-sm">No orders this period.</td></tr>

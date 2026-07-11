@@ -35,7 +35,7 @@
         </div>
         <div class="bg-white rounded-2xl shadow-card p-5">
             <p class="text-black/45 text-xs mb-1">Lifetime Value</p>
-            <p class="text-xl font-bold">${{ number_format($lifetimeValue, 2) }}</p>
+            <p class="text-xl font-bold">{{ format_price($lifetimeValue) }}</p>
         </div>
         <div class="bg-white rounded-2xl shadow-card p-5">
             <p class="text-black/45 text-xs mb-1">Wishlist Items</p>
@@ -62,7 +62,7 @@
                             <p class="text-black/40 text-xs">{{ $order->created_at->format('M d, Y') }}</p>
                         </div>
                         <span class="bg-{{ $order->status_color }}/10 text-{{ $order->status_color }} text-[11px] font-semibold px-2.5 py-1 rounded-full">{{ ucfirst($order->status) }}</span>
-                        <p class="text-sm font-semibold w-20 text-right">${{ number_format($order->total, 2) }}</p>
+                        <p class="text-sm font-semibold w-20 text-right">{{ format_price($order->total) }}</p>
                     </a>
                 @empty
                     <p class="text-black/40 text-sm py-4">No orders yet.</p>

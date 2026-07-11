@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\ContactMessageNotification;
 use App\Models\Cms\Faq;
 use App\Models\Cms\SeoMeta;
+use App\Models\Currency;
 use App\Models\Page;
 use App\Models\Setting;
 use App\Models\System\ContactMessage;
@@ -113,6 +114,21 @@ class StorefrontContentController extends Controller
                     'favicon_url' => $assetUrl($branding['favicon_path'] ?? null),
                 ],
                 'social' => $socialLinks,
+                'currency' => (function () {
+                    $currency = Currency::active();
+
+                    if (! $currency) {
+                        return ['code' => 'USD', 'symbol' => '$', 'symbol_position' => 'before', 'decimal_places' => 2, 'exchange_rate' => 1];
+                    }
+
+                    return [
+                        'code' => $currency->code,
+                        'symbol' => $currency->symbol,
+                        'symbol_position' => $currency->symbol_position,
+                        'decimal_places' => $currency->decimal_places,
+                        'exchange_rate' => (float) $currency->exchange_rate,
+                    ];
+                })(),
                 'theme' => [
                     'primary_color' => $themePrimary,
                     'primary_dark_color' => darkenHex($themePrimary),

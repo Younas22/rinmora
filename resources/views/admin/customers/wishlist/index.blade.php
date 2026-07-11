@@ -97,7 +97,7 @@
                                     <div class="h-full bg-primary-dark rounded-full" style="width: {{ $popularityPct }}%"></div>
                                 </div>
                             </td>
-                            <td class="py-3">${{ number_format($product->price, 2) }}</td>
+                            <td class="py-3">{{ format_price($product->price) }}</td>
                             <td class="py-3"><span class="bg-{{ $stockColor }}/10 text-{{ $stockColor }} text-[11px] font-semibold px-2.5 py-1 rounded-full">{{ $product->stock_status }}</span></td>
                             <td class="py-3 pr-5 font-semibold {{ $conversion >= 20 ? 'text-success' : ($conversion >= 10 ? 'text-black/60' : 'text-danger') }}">{{ $conversion }}%</td>
                         </tr>

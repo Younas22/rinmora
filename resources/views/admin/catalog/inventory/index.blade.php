@@ -14,7 +14,7 @@
     <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-6">
         <div class="bg-white rounded-2xl shadow-card p-5">
             <p class="text-black/45 text-xs mb-1">Inventory Value</p>
-            <p class="text-xl font-bold">${{ number_format($stats['inventory_value'], 0) }}</p>
+            <p class="text-xl font-bold">{{ format_price($stats['inventory_value']) }}</p>
         </div>
         <div class="bg-white rounded-2xl shadow-card p-5">
             <p class="text-black/45 text-xs mb-1">Low Stock</p>
@@ -77,7 +77,7 @@
                             <td class="py-3 text-black/60">Main Warehouse</td>
                             <td class="py-3 text-right font-semibold text-{{ $statusColor }}">{{ $product->quantity }}</td>
                             <td class="py-3 text-right text-black/30">—</td>
-                            <td class="py-3 text-right font-semibold">${{ number_format($stockValue, 0) }}</td>
+                            <td class="py-3 text-right font-semibold">{{ format_price($stockValue) }}</td>
                             <td class="py-3"><span class="bg-{{ $statusColor }}/10 text-{{ $statusColor }} text-[11px] font-semibold px-2.5 py-1 rounded-full">{{ $product->stock_status }}</span></td>
                             <td class="py-3 pr-5 text-right">
                                 <button type="button" class="adjust-stock-btn text-xs font-semibold border border-black/10 rounded-full px-3.5 py-1.5 hover:bg-black/5 transition"

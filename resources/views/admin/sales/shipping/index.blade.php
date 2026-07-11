@@ -25,7 +25,7 @@
         </div>
         <div class="bg-white rounded-2xl shadow-card p-5">
             <p class="text-black/45 text-xs mb-1">Free Shipping Threshold</p>
-            <p class="text-xl font-bold">${{ number_format((float) $stats['free_shipping_threshold'], 2) }}</p>
+            <p class="text-xl font-bold">{{ format_price((float) $stats['free_shipping_threshold']) }}</p>
         </div>
     </div>
 
@@ -105,7 +105,7 @@
                 </label>
                 <label class="block text-sm font-medium mb-1.5" for="freeShipThreshold">Minimum Order Amount</label>
                 <div class="relative">
-                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-black/35 text-sm">$</span>
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-black/35 text-sm">{{ \App\Models\Currency::where('is_base', true)->value('symbol') ?? '$' }}</span>
                     <input id="freeShipThreshold" name="free_shipping_threshold" type="number" step="0.01" min="0" value="{{ $freeShippingThreshold }}" class="w-full pl-8 pr-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary transition">
                 </div>
                 <p class="text-black/45 text-xs mt-1.5">Orders above this amount qualify for free standard shipping.</p>
