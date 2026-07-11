@@ -144,6 +144,10 @@ class StorefrontContentController extends Controller
                     'description' => $storeInfo['store_desc'] ?? null,
                     'hours' => json_decode($storeInfo['business_hours'] ?? '[]', true) ?: null,
                 ],
+                'shipping' => [
+                    'free_shipping_enabled' => (bool) Setting::getValue('free_shipping_enabled', 'shipping', true),
+                    'free_shipping_threshold' => (float) Setting::getValue('free_shipping_threshold', 'shipping', '0'),
+                ],
             ],
         ]);
     }

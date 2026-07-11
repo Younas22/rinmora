@@ -33,7 +33,7 @@ class ShippingController extends Controller
             'countries' => 'required|string|max:255',
             'is_active' => 'nullable|boolean',
         ]);
-        $data['is_active'] = $request->boolean('is_active', true);
+        $data['is_active'] = $request->boolean('is_active');
 
         ShippingZone::create($data);
 
@@ -47,7 +47,7 @@ class ShippingController extends Controller
             'countries' => 'required|string|max:255',
             'is_active' => 'nullable|boolean',
         ]);
-        $data['is_active'] = $request->boolean('is_active', true);
+        $data['is_active'] = $request->boolean('is_active');
 
         $zone->update($data);
 

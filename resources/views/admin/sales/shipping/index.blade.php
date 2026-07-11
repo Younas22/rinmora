@@ -191,14 +191,28 @@
 
         return [$z->id => $methods];
     });
+    $__activeCurrency = \App\Models\Currency::active();
+    $__activeCurrencyPayload = $__activeCurrency ? [
+        'symbol' => $__activeCurrency->symbol,
+        'symbol_position' => $__activeCurrency->symbol_position,
+        'decimal_places' => $__activeCurrency->decimal_places,
+        'exchange_rate' => (float) $__activeCurrency->exchange_rate,
+    ] : ['symbol' => '$', 'symbol_position' => 'before', 'decimal_places' => 2, 'exchange_rate' => 1];
   @endphp
   const zoneMethods = @json($zoneMethodsPayload);
+  const activeCurrency = @json($__activeCurrencyPayload);
+
+  function formatPrice(amount) {
+    const converted = parseFloat(amount) * activeCurrency.exchange_rate;
+    const formatted = converted.toFixed(activeCurrency.decimal_places);
+    return activeCurrency.symbol_position === 'after' ? formatted + activeCurrency.symbol : activeCurrency.symbol + formatted;
+  }
 
   document.getElementById('calcShippingBtn').addEventListener('click', () => {
     const zoneId = document.getElementById('calcZone').value;
     const methods = zoneMethods[zoneId] || [];
     const cheapest = methods.reduce((min, m) => (m.rate === null ? 0 : m.rate) < (min === null ? 0 : min.rate ?? 0) ? m : min, methods[0]);
-    document.getElementById('calcCost').textContent = cheapest && cheapest.rate !== null ? '$' + parseFloat(cheapest.rate).toFixed(2) : 'Free';
+    document.getElementById('calcCost').textContent = cheapest && cheapest.rate !== null ? formatPrice(cheapest.rate) : 'Free';
     document.getElementById('calcTime').textContent = cheapest ? cheapest.delivery_time : '—';
     document.getElementById('calcResult').classList.remove('hidden');
   });

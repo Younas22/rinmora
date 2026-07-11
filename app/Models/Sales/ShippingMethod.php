@@ -26,6 +26,6 @@ class ShippingMethod extends Model
 
     public function getRateLabelAttribute(): string
     {
-        return $this->rate === null ? 'Free' : ('$'.number_format((float) $this->rate, 2));
+        return $this->rate === null ? 'Free' : format_price((float) $this->rate);
     }
 }
