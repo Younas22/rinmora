@@ -134,11 +134,15 @@
                                 </form>
                             </td>
                             <td class="py-3 pr-5 text-right">
-                                <a href="{{ route('admin.catalog.products.edit', $product) }}" class="text-xs font-semibold text-black/50 hover:text-ink transition mr-3">Edit</a>
-                                <form method="POST" action="{{ route('admin.catalog.products.destroy', $product) }}" class="inline" onsubmit="return confirm('Delete this product?');">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="text-xs font-semibold text-danger hover:text-danger/70 transition">Delete</button>
-                                </form>
+                                <div class="inline-flex items-center gap-1">
+                                    <a href="{{ route('admin.catalog.products.edit', $product) }}" class="text-xs font-semibold text-black/50 hover:bg-black/5 hover:text-ink px-3 py-1.5 rounded-full transition">Edit</a>
+                                    <form method="POST" action="{{ route('admin.catalog.products.destroy', $product) }}" class="inline" onsubmit="return confirm('Delete this product? This cannot be undone.');">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" aria-label="Delete {{ $product->name }}" class="w-8 h-8 rounded-full grid place-items-center text-black/30 hover:bg-danger/10 hover:text-danger transition">
+                                            <i class="fa-regular fa-trash-can text-xs"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty
