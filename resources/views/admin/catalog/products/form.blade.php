@@ -7,6 +7,17 @@
     @csrf
     @if ($isEdit) @method('PUT') @endif
 
+    @if ($errors->any())
+        <div class="bg-danger/10 text-danger text-sm rounded-2xl px-5 py-4 mb-6">
+            <p class="font-semibold mb-1">This product wasn't saved — please fix the following:</p>
+            <ul class="list-disc list-inside space-y-0.5">
+                @foreach ($errors->all() as $message)
+                    <li>{{ $message }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div>
             <h1 class="text-xl md:text-2xl font-bold">{{ $isEdit ? 'Edit Product' : 'Add New Product' }}</h1>

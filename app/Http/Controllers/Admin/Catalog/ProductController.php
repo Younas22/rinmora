@@ -157,6 +157,15 @@ class ProductController extends Controller
     {
         $variants = json_decode($request->input('variants_json', '[]'), true) ?: [];
 
+        // Defensive: an empty submitted list while the product currently HAS
+        // variants almost always means the variants_json field failed to
+        // populate (e.g. a JS error before submit) rather than the admin
+        // deliberately removing every option — don't silently wipe existing
+        // variants in that case.
+        if (empty($variants) && $product->variants()->exists()) {
+            return;
+        }
+
         $product->variants()->delete();
 
         foreach ($variants as $variant) {

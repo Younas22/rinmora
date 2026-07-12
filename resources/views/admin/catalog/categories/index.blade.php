@@ -39,6 +39,17 @@
             <h2 class="font-bold text-sm mb-1">{{ $editing ? 'Edit Category' : 'Add New Category' }}</h2>
             <p class="text-black/40 text-xs mb-5">{{ $editing ? 'Update this category.' : 'Create a category to group related products.' }}</p>
 
+            @if ($errors->any())
+                <div class="bg-danger/10 text-danger text-xs rounded-xl px-4 py-3 mb-4">
+                    <p class="font-semibold mb-1">Not saved — please fix:</p>
+                    <ul class="list-disc list-inside space-y-0.5">
+                        @foreach ($errors->all() as $message)
+                            <li>{{ $message }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <div class="space-y-4">
                 <label class="block aspect-[16/9] rounded-2xl border-2 border-dashed border-black/10 grid place-items-center text-center cursor-pointer hover:bg-black/[0.02] transition overflow-hidden">
                     <input type="file" name="image" class="hidden" accept="image/*">
