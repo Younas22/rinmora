@@ -94,16 +94,18 @@ class SettingController extends Controller
     public function updateLogo(Request $request)
     {
         $request->validate([
-            'logo' => 'nullable|image|max:2048',
-            'dark_logo' => 'nullable|image|max:2048',
-            'mobile_logo' => 'nullable|image|max:2048',
+            'logo' => 'nullable|image:allow_svg|max:2048',
+            'dark_logo' => 'nullable|image:allow_svg|max:2048',
+            'mobile_logo' => 'nullable|image:allow_svg|max:2048',
             'favicon' => 'nullable|image|max:1024',
         ]);
 
         $fields = ['logo' => 'logo_path', 'dark_logo' => 'dark_logo_path', 'mobile_logo' => 'mobile_logo_path', 'favicon' => 'favicon_path'];
         foreach ($fields as $input => $key) {
             if ($request->hasFile($input)) {
-                $stored = $this->imageUploadService->store($request->file($input), 'settings/branding');
+                // storeRaw(), not store(): Intervention Image (GD) can't read SVG to
+                // generate a thumbnail, and branding assets never use the thumb anyway.
+                $stored = $this->imageUploadService->storeRaw($request->file($input), 'settings/branding');
                 Setting::setValue($key, $stored['path'], 'store_branding');
             }
         }

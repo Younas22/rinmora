@@ -28,13 +28,25 @@
     <form method="POST" action="{{ route('admin.system.settings.logo') }}" enctype="multipart/form-data" class="bg-white rounded-3xl shadow-card p-5 md:p-6">
         @csrf @method('PUT')
         <h2 class="font-bold text-sm mb-5">Upload New Assets</h2>
+        @if ($errors->any())
+            <div class="bg-danger/10 text-danger text-xs rounded-xl px-4 py-3 mb-4">
+                <ul class="list-disc list-inside space-y-0.5">
+                    @foreach ($errors->all() as $message)
+                        <li>{{ $message }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <div class="grid sm:grid-cols-2 gap-4">
-            @foreach (['logo' => 'Logo (PNG/JPG/SVG up to 5MB)', 'dark_logo' => 'Dark Logo (for dark header)', 'mobile_logo' => 'Mobile Logo (compact mark)', 'favicon' => 'Favicon (512x512px)'] as $field => $helper)
-                <label class="block border-2 border-dashed border-black/10 rounded-2xl p-6 text-center hover:border-primary hover:bg-primary/5 transition cursor-pointer">
+            @foreach (['logo' => 'Logo (PNG/JPG/SVG up to 5MB)', 'dark_logo' => 'Dark Logo (for dark header)', 'mobile_logo' => 'Mobile Logo (compact mark)', 'favicon' => 'Favicon (PNG/JPG, 512x512px)'] as $field => $helper)
+                <label class="block border-2 border-dashed rounded-2xl p-6 text-center hover:border-primary hover:bg-primary/5 transition cursor-pointer {{ $errors->has($field) ? 'border-danger' : 'border-black/10' }}">
                     <input type="file" name="{{ $field }}" accept="image/*" class="hidden">
                     <i class="fa-solid fa-cloud-arrow-up text-xl text-black/25 mb-2"></i>
                     <p class="text-sm font-medium">Upload {{ str_replace('_', ' ', ucfirst($field)) }}</p>
                     <p class="text-black/40 text-[11px] mt-1">{{ $helper }}</p>
+                    @error($field)
+                        <p class="text-danger text-[11px] mt-1">{{ $message }}</p>
+                    @enderror
                 </label>
             @endforeach
         </div>
