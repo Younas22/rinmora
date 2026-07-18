@@ -81,15 +81,9 @@
                                 @if ($image->is_cover)
                                     <span class="absolute top-1.5 left-1.5 bg-ink text-white text-[9px] font-semibold px-2 py-0.5 rounded-full">Cover</span>
                                 @else
-                                    <form method="POST" action="{{ route('admin.catalog.products.images.cover', [$product, $image]) }}" class="absolute bottom-1.5 left-1.5 opacity-0 group-hover:opacity-100 transition">
-                                        @csrf @method('POST')
-                                        <button type="submit" class="bg-white/90 text-[9px] font-semibold px-2 py-0.5 rounded-full">Set Cover</button>
-                                    </form>
+                                    <button type="button" data-action-url="{{ route('admin.catalog.products.images.cover', [$product, $image]) }}" data-action-method="POST" class="image-action-btn absolute bottom-1.5 left-1.5 opacity-0 group-hover:opacity-100 transition bg-white/90 text-[9px] font-semibold px-2 py-0.5 rounded-full">Set Cover</button>
                                 @endif
-                                <form method="POST" action="{{ route('admin.catalog.products.images.destroy', [$product, $image]) }}" class="absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 transition" onsubmit="return confirm('Remove this image?');">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" aria-label="Remove image" class="w-6 h-6 rounded-full bg-black/60 text-white grid place-items-center text-[10px]"><i class="fa-solid fa-xmark"></i></button>
-                                </form>
+                                <button type="button" data-action-url="{{ route('admin.catalog.products.images.destroy', [$product, $image]) }}" data-action-method="DELETE" data-action-confirm="Remove this image?" aria-label="Remove image" class="image-action-btn absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 transition w-6 h-6 rounded-full bg-black/60 text-white grid place-items-center text-[10px]"><i class="fa-solid fa-xmark"></i></button>
                             </div>
                         @endforeach
                     @endif
@@ -371,6 +365,41 @@
     if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); addTag(tagsInput.value); tagsInput.value = ''; }
   });
   tagsInput.addEventListener('blur', () => { if (tagsInput.value.trim()) { addTag(tagsInput.value); tagsInput.value = ''; } });
+
+  // ---- Per-image actions (Set Cover / Remove) ----
+  // These can't be real nested <form> elements since they live inside the
+  // main #productForm — a <form> can never contain another <form> in HTML;
+  // browsers silently close the OUTER form at the inner form's </form> tag,
+  // which used to drop every field below the image grid (price, status,
+  // variants, ...) from the save request. Submit them as detached forms instead.
+  document.querySelectorAll('.image-action-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const message = btn.dataset.actionConfirm;
+      if (message && !confirm(message)) return;
+
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = btn.dataset.actionUrl;
+      form.style.display = 'none';
+
+      const token = document.createElement('input');
+      token.type = 'hidden';
+      token.name = '_token';
+      token.value = document.querySelector('#productForm input[name="_token"]').value;
+      form.appendChild(token);
+
+      if (btn.dataset.actionMethod !== 'POST') {
+        const method = document.createElement('input');
+        method.type = 'hidden';
+        method.name = '_method';
+        method.value = btn.dataset.actionMethod;
+        form.appendChild(method);
+      }
+
+      document.body.appendChild(form);
+      form.submit();
+    });
+  });
 
   // ---- New image previews ----
   const imagesInput = document.getElementById('imagesInput');
