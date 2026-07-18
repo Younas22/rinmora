@@ -85,6 +85,8 @@ class StorefrontController extends Controller
             return response()->json(['message' => 'Product not found'], 404);
         }
 
+        $product->increment('views_count');
+
         $reviewsPerPage = min((int) $request->input('reviews_per_page', 5), 20);
         $reviews = $product->reviews()->approved()->latest()->paginate($reviewsPerPage, ['*'], 'reviews_page');
 

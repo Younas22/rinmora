@@ -81,13 +81,14 @@
         </form>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-sm min-w-[880px]">
+            <table class="w-full text-sm min-w-[960px]">
                 <thead>
                     <tr class="text-left text-black/40 text-xs uppercase tracking-wide border-b border-black/5">
                         <th class="py-3 pl-5 font-medium">Product</th>
                         <th class="py-3 font-medium">Category</th>
                         <th class="py-3 font-medium">Price</th>
                         <th class="py-3 font-medium">Stock</th>
+                        <th class="py-3 font-medium">Views</th>
                         <th class="py-3 font-medium">Status</th>
                         <th class="py-3 font-medium text-center">Featured</th>
                         <th class="py-3 pr-5 font-medium text-right">Actions</th>
@@ -114,6 +115,12 @@
                             <td class="py-3">
                                 @php $statusColor = ['In Stock' => 'success', 'Low Stock' => 'warning', 'Out of Stock' => 'danger'][$product->stock_status]; @endphp
                                 <span class="text-{{ $statusColor }} font-medium">{{ $product->quantity }} in stock</span>
+                            </td>
+                            <td class="py-3 text-black/60">
+                                <span class="inline-flex items-center gap-1.5">
+                                    <i class="fa-regular fa-eye text-[11px] text-black/30"></i>
+                                    {{ number_format($product->views_count) }}
+                                </span>
                             </td>
                             <td class="py-3">
                                 @php $badge = ['active' => 'success', 'draft' => 'black/50', 'archived' => 'danger'][$product->status]; @endphp
@@ -147,7 +154,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="py-10 text-center text-black/40 text-sm">No products yet — add your first one.</td>
+                            <td colspan="8" class="py-10 text-center text-black/40 text-sm">No products yet — add your first one.</td>
                         </tr>
                     @endforelse
                 </tbody>
