@@ -1,6 +1,8 @@
 @php
     $product = $product ?? null;
     $isEdit = (bool) $product;
+    $bulkDeleteImagesUrl = $isEdit ? route('admin.catalog.products.images.destroyMany', $product) : null;
+    $reorderImagesUrl = $isEdit ? route('admin.catalog.products.images.reorder', $product) : null;
 @endphp
 
 <form method="POST" action="{{ $isEdit ? route('admin.catalog.products.update', $product) : route('admin.catalog.products.store') }}" enctype="multipart/form-data" id="productForm">
@@ -70,16 +72,26 @@
 
             <!-- Media -->
             <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
-                <h2 class="font-bold text-sm mb-1">Product Media</h2>
-                <p class="text-black/40 text-xs mb-5">Upload high-quality images. The first image is used as the featured thumbnail.</p>
+                <div class="flex items-center justify-between gap-3 mb-1">
+                    <h2 class="font-bold text-sm">Product Media</h2>
+                    <div class="flex items-center gap-3">
+                        <span id="mediaStatus" class="text-[11px] text-black/40"></span>
+                        <button type="button" id="deleteSelectedBtn" class="hidden text-[11px] font-semibold text-danger hover:underline">Delete Selected (<span id="selectedCount">0</span>)</button>
+                    </div>
+                </div>
+                <p class="text-black/40 text-xs mb-5">Upload high-quality images. Drag a thumbnail to reorder — the first image is the featured thumbnail. Check images to delete several at once.</p>
 
                 <div id="imageGrid" class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-3">
                     @if ($isEdit)
                         @foreach ($product->images as $image)
-                            <div class="relative aspect-square rounded-2xl overflow-hidden group">
-                                <img src="{{ $image->url }}" alt="" class="w-full h-full object-cover">
+                            <div class="image-thumb relative aspect-square rounded-2xl overflow-hidden group cursor-move" draggable="true" data-image-id="{{ $image->id }}">
+                                <img src="{{ $image->url }}" alt="" class="w-full h-full object-cover pointer-events-none">
+                                <label class="absolute top-1.5 left-1.5 z-10 grid place-items-center w-5 h-5 rounded-md bg-white/90 border border-black/10 cursor-pointer">
+                                    <input type="checkbox" class="image-select-checkbox peer sr-only" value="{{ $image->id }}">
+                                    <i class="fa-solid fa-check text-[9px] text-transparent peer-checked:text-primary"></i>
+                                </label>
                                 @if ($image->is_cover)
-                                    <span class="absolute top-1.5 left-1.5 bg-ink text-white text-[9px] font-semibold px-2 py-0.5 rounded-full">Cover</span>
+                                    <span class="absolute bottom-1.5 left-1.5 bg-ink text-white text-[9px] font-semibold px-2 py-0.5 rounded-full">Cover</span>
                                 @else
                                     <button type="button" data-action-url="{{ route('admin.catalog.products.images.cover', [$product, $image]) }}" data-action-method="POST" class="image-action-btn absolute bottom-1.5 left-1.5 opacity-0 group-hover:opacity-100 transition bg-white/90 text-[9px] font-semibold px-2 py-0.5 rounded-full">Set Cover</button>
                                 @endif
@@ -398,6 +410,75 @@
 
       document.body.appendChild(form);
       form.submit();
+    });
+  });
+
+  // ---- Multi-select delete ----
+  const imageGrid = document.getElementById('imageGrid');
+  const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
+  const selectedCountEl = document.getElementById('selectedCount');
+  const mediaStatus = document.getElementById('mediaStatus');
+  const csrfToken = document.querySelector('#productForm input[name="_token"]').value;
+
+  function showMediaStatus(text) {
+    mediaStatus.textContent = text;
+    setTimeout(() => { if (mediaStatus.textContent === text) mediaStatus.textContent = ''; }, 3000);
+  }
+
+  imageGrid.addEventListener('change', (e) => {
+    if (!e.target.classList.contains('image-select-checkbox')) return;
+    const count = imageGrid.querySelectorAll('.image-select-checkbox:checked').length;
+    selectedCountEl.textContent = count;
+    deleteSelectedBtn.classList.toggle('hidden', count === 0);
+  });
+
+  deleteSelectedBtn.addEventListener('click', async () => {
+    const checked = [...imageGrid.querySelectorAll('.image-select-checkbox:checked')];
+    if (!checked.length || !confirm(`Remove ${checked.length} selected image(s)?`)) return;
+
+    const res = await fetch(@json($bulkDeleteImagesUrl), {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' },
+      body: JSON.stringify({ image_ids: checked.map(c => c.value) }),
+    });
+
+    if (!res.ok) { alert('Could not remove the selected images.'); return; }
+
+    checked.forEach(c => c.closest('.image-thumb').remove());
+    deleteSelectedBtn.classList.add('hidden');
+    selectedCountEl.textContent = '0';
+    showMediaStatus(`${checked.length} image(s) removed.`);
+  });
+
+  // ---- Drag to reorder ----
+  let draggedThumb = null;
+
+  imageGrid.querySelectorAll('.image-thumb').forEach((thumb) => {
+    thumb.addEventListener('dragstart', () => {
+      draggedThumb = thumb;
+      thumb.classList.add('opacity-40');
+    });
+    thumb.addEventListener('dragend', () => {
+      thumb.classList.remove('opacity-40');
+      draggedThumb = null;
+    });
+    thumb.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (!draggedThumb || draggedThumb === thumb) return;
+      const rect = thumb.getBoundingClientRect();
+      const before = (e.clientX - rect.left) < rect.width / 2;
+      thumb.parentNode.insertBefore(draggedThumb, before ? thumb : thumb.nextSibling);
+    });
+    thumb.addEventListener('drop', async (e) => {
+      e.preventDefault();
+      const order = [...imageGrid.querySelectorAll('.image-thumb')].map(t => t.dataset.imageId);
+
+      const res = await fetch(@json($reorderImagesUrl), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' },
+        body: JSON.stringify({ order }),
+      });
+      showMediaStatus(res.ok ? 'Order saved.' : 'Could not save order.');
     });
   });
 

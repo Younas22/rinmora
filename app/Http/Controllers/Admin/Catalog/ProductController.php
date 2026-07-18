@@ -244,4 +244,32 @@ class ProductController extends Controller
 
         return back()->with('success', 'Cover image updated.');
     }
+
+    public function destroyManyImages(Request $request, Product $product)
+    {
+        $ids = (array) $request->input('image_ids', []);
+        $images = $product->images()->whereIn('id', $ids)->get();
+
+        $hadCover = $images->contains('is_cover', true);
+
+        foreach ($images as $image) {
+            $this->images->delete($image->path);
+            $image->delete();
+        }
+
+        if ($hadCover) {
+            $product->images()->oldest('sort_order')->first()?->update(['is_cover' => true]);
+        }
+
+        return response()->json(['deleted' => $images->pluck('id')]);
+    }
+
+    public function reorderImages(Request $request, Product $product)
+    {
+        foreach ((array) $request->input('order', []) as $index => $imageId) {
+            $product->images()->where('id', $imageId)->update(['sort_order' => $index]);
+        }
+
+        return response()->json(['success' => true]);
+    }
 }

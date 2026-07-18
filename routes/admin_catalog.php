@@ -33,6 +33,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::delete('attributes/{attribute}/values/{value}', [AttributeController::class, 'destroyValue'])->name('attributes.values.destroy');
 
         Route::resource('products', ProductController::class);
+        // Static /images/... paths must be registered before the {image} wildcard
+        // route below, or Laravel will match "bulk-delete"/"reorder" as an {image} id.
+        Route::delete('products/{product}/images/bulk-delete', [ProductController::class, 'destroyManyImages'])->name('products.images.destroyMany');
+        Route::post('products/{product}/images/reorder', [ProductController::class, 'reorderImages'])->name('products.images.reorder');
         Route::delete('products/{product}/images/{image}', [ProductController::class, 'destroyImage'])->name('products.images.destroy');
         Route::post('products/{product}/images/{image}/cover', [ProductController::class, 'setCoverImage'])->name('products.images.cover');
 
