@@ -11,7 +11,11 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-6">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
+        <div class="bg-white rounded-2xl shadow-card p-5">
+            <p class="text-black/45 text-xs mb-1">Total Stock</p>
+            <p class="text-xl font-bold">{{ number_format($stats['total_stock']) }}</p>
+        </div>
         <div class="bg-white rounded-2xl shadow-card p-5">
             <p class="text-black/45 text-xs mb-1">Inventory Value</p>
             <p class="text-xl font-bold">{{ format_price($stats['inventory_value']) }}</p>

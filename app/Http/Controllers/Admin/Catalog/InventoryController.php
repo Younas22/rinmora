@@ -30,6 +30,7 @@ class InventoryController extends Controller
         $products = $query->latest()->paginate(15)->withQueryString();
 
         $stats = [
+            'total_stock' => Product::sum('quantity'),
             'inventory_value' => Product::selectRaw('SUM(quantity * COALESCE(cost_per_item, 0)) as total')->value('total') ?? 0,
             'low_stock' => Product::lowStock()->where('quantity', '>', 0)->count(),
             'out_of_stock' => Product::where('quantity', '<=', 0)->count(),
