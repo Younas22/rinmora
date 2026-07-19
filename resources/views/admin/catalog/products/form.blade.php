@@ -636,3 +636,30 @@
   renderOptions();
 </script>
 @endpush
+
+@push('scripts')
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+<script>
+ClassicEditor.create(document.querySelector('#fullDesc'), {
+  toolbar: {
+    items: ['heading', '|', 'bold', 'italic', 'underline', '|', 'bulletedList', 'numberedList', 'outdent', 'indent', '|', 'link', 'blockQuote', '|', 'undo', 'redo'],
+  },
+  heading: {
+    options: [
+      { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+      { model: 'heading2', view: 'h2', title: 'Heading', class: 'ck-heading_heading2' },
+      { model: 'heading3', view: 'h3', title: 'Sub-heading', class: 'ck-heading_heading3' },
+    ],
+  },
+}).then(editor => {
+  editor.model.document.on('change:data', () => {
+    document.querySelector('#fullDesc').value = editor.getData();
+  });
+}).catch(error => {
+  console.error('CKEditor initialization error:', error);
+  const fullDesc = document.querySelector('#fullDesc');
+  fullDesc.style.display = 'block';
+  fullDesc.style.minHeight = '200px';
+});
+</script>
+@endpush
