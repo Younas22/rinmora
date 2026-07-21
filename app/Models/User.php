@@ -108,6 +108,11 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
+    public function hasPermission(string $slug): bool
+    {
+        return $this->role?->hasPermission($slug) ?? false;
+    }
+
     public function adminActivityLogs()
     {
         return $this->hasMany(AdminActivityLog::class, 'user_id');

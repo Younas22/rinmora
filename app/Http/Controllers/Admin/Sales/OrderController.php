@@ -254,6 +254,27 @@ class OrderController extends Controller
         return back()->with('success', 'Order cancelled and stock restored.');
     }
 
+    public function destroy(Request $request, Order $order)
+    {
+        abort_unless($request->user()->hasPermission('delete-orders'), 403);
+
+        $orderNumber = $order->order_number;
+        $order->delete();
+
+        return redirect()->route('admin.sales.orders.index')->with('success', "Order {$orderNumber} deleted.");
+    }
+
+    public function destroyMany(Request $request)
+    {
+        abort_unless($request->user()->hasPermission('delete-orders'), 403);
+
+        $ids = (array) $request->input('order_ids', []);
+        $count = Order::whereIn('id', $ids)->count();
+        Order::whereIn('id', $ids)->delete();
+
+        return response()->json(['deleted' => $count]);
+    }
+
     public function invoice(Order $order)
     {
         $order->load(['items', 'latestPayment']);

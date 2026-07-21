@@ -4,14 +4,23 @@
 
 @section('content')
 
+    @php $canDeleteOrders = auth()->user()->hasPermission('delete-orders'); @endphp
+
     <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div>
             <h1 class="text-xl md:text-2xl font-bold">All Orders</h1>
             <p class="text-black/45 text-sm mt-1">Track and fulfill customer orders.</p>
         </div>
-        <a href="{{ route('admin.sales.orders.create') }}" class="inline-flex items-center gap-2 bg-primary text-ink rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-primary-dark transition">
-            <i class="fa-solid fa-plus text-[10px]"></i> Create Order
-        </a>
+        <div class="flex items-center gap-2">
+            @if ($canDeleteOrders)
+                <button type="button" id="deleteSelectedBtn" class="hidden inline-flex items-center gap-2 border border-danger/30 text-danger rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-danger/10 transition">
+                    <i class="fa-solid fa-trash text-[10px]"></i> Delete Selected (<span id="selectedCount">0</span>)
+                </button>
+            @endif
+            <a href="{{ route('admin.sales.orders.create') }}" class="inline-flex items-center gap-2 bg-primary text-ink rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-primary-dark transition">
+                <i class="fa-solid fa-plus text-[10px]"></i> Create Order
+            </a>
+        </div>
     </div>
 
     <div class="flex gap-2 overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0 mb-5">
@@ -43,10 +52,13 @@
         </form>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-sm min-w-[880px]">
+            <table class="w-full text-sm min-w-[880px]" id="ordersTable">
                 <thead>
                     <tr class="text-left text-black/40 text-xs uppercase tracking-wide border-b border-black/5">
-                        <th class="py-3 pl-5 font-medium">Order</th>
+                        @if ($canDeleteOrders)
+                            <th class="py-3 pl-5 w-8"><span class="sr-only">Select</span></th>
+                        @endif
+                        <th class="py-3 font-medium {{ $canDeleteOrders ? '' : 'pl-5' }}">Order</th>
                         <th class="py-3 font-medium">Customer</th>
                         <th class="py-3 font-medium">Items</th>
                         <th class="py-3 font-medium">Payment</th>
@@ -60,7 +72,12 @@
                 <tbody class="divide-y divide-black/5">
                     @forelse ($orders as $order)
                         <tr class="hover:bg-black/[0.02] transition">
-                            <td class="py-3 pl-5 font-semibold">
+                            @if ($canDeleteOrders)
+                                <td class="py-3 pl-5">
+                                    <input type="checkbox" class="order-select-checkbox" value="{{ $order->id }}" aria-label="Select order {{ $order->order_number }}">
+                                </td>
+                            @endif
+                            <td class="py-3 font-semibold {{ $canDeleteOrders ? '' : 'pl-5' }}">
                                 <a href="{{ route('admin.sales.orders.show', $order) }}" class="hover:text-primary-dark transition">#{{ $order->order_number }}</a>
                             </td>
                             <td class="py-3 text-black/60">{{ $order->customer_name }}</td>
@@ -76,15 +93,22 @@
                             <td class="py-3 text-{{ $order->shipping_status_color }}">{{ $order->shipping_status }}</td>
                             <td class="py-3 text-black/50 text-xs">{{ $order->created_at->format('M d, Y') }}</td>
                             <td class="py-3 text-right font-semibold">{{ format_price($order->total) }}</td>
-                            <td class="py-3 pr-5 text-right">
+                            <td class="py-3 pr-5 text-right whitespace-nowrap">
                                 <a href="{{ route('admin.sales.orders.show', $order) }}" class="text-xs font-semibold text-black/50 hover:text-ink transition mr-3">View</a>
                                 <a href="{{ route('admin.sales.orders.invoice', $order) }}" target="_blank" class="text-xs font-semibold text-black/50 hover:text-ink transition mr-3">Invoice</a>
                                 <a href="{{ route('admin.sales.orders.shipping-label', $order) }}" target="_blank" class="text-xs font-semibold text-black/50 hover:text-ink transition">Label</a>
+                                @if ($canDeleteOrders)
+                                    <form method="POST" action="{{ route('admin.sales.orders.destroy', $order) }}" class="inline ml-3" onsubmit="return confirm('Delete order #{{ $order->order_number }}? This permanently removes the order and its payment/refund history and cannot be undone.');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" aria-label="Delete order {{ $order->order_number }}" class="text-xs font-semibold text-black/50 hover:text-danger transition">Delete</button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="9" class="py-10 text-center text-black/40 text-sm">No orders yet.</td>
+                            <td colspan="{{ $canDeleteOrders ? 10 : 9 }}" class="py-10 text-center text-black/40 text-sm">No orders yet.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -99,3 +123,38 @@
     </div>
 
 @endsection
+
+@if ($canDeleteOrders)
+    @push('scripts')
+    <script>
+      const ordersTable = document.getElementById('ordersTable');
+      const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
+      const selectedCountEl = document.getElementById('selectedCount');
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content ?? '{{ csrf_token() }}';
+
+      ordersTable.addEventListener('change', (e) => {
+        if (!e.target.classList.contains('order-select-checkbox')) return;
+        const count = ordersTable.querySelectorAll('.order-select-checkbox:checked').length;
+        selectedCountEl.textContent = count;
+        deleteSelectedBtn.classList.toggle('hidden', count === 0);
+      });
+
+      deleteSelectedBtn.addEventListener('click', async () => {
+        const checked = [...ordersTable.querySelectorAll('.order-select-checkbox:checked')];
+        if (!checked.length || !confirm(`Delete ${checked.length} selected order(s)? This permanently removes them and their payment/refund history and cannot be undone.`)) return;
+
+        const res = await fetch(@json(route('admin.sales.orders.destroyMany')), {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' },
+          body: JSON.stringify({ order_ids: checked.map(c => c.value) }),
+        });
+
+        if (!res.ok) { alert('Could not delete the selected orders.'); return; }
+
+        checked.forEach(c => c.closest('tr').remove());
+        deleteSelectedBtn.classList.add('hidden');
+        selectedCountEl.textContent = '0';
+      });
+    </script>
+    @endpush
+@endif

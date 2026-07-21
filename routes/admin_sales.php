@@ -11,7 +11,10 @@ use App\Http\Controllers\Admin\Sales\ShippingController;
 // /admin, no extra URI prefix, route names under admin.sales.*.
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::name('admin.sales.')->group(function () {
-        Route::resource('orders', OrderController::class)->only(['index', 'create', 'store', 'show']);
+        // Static /orders/... path must be registered before the {order} wildcard
+        // destroy route below, or Laravel will match "bulk-delete" as an {order} id.
+        Route::delete('orders/bulk-delete', [OrderController::class, 'destroyMany'])->name('orders.destroyMany');
+        Route::resource('orders', OrderController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
         Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.status');
         Route::post('orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
         Route::post('orders/{order}/verify-payment', [OrderController::class, 'verifyPayment'])->name('orders.verify-payment');
