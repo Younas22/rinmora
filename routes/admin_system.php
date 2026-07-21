@@ -41,7 +41,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::post('support/messages/{message}/toggle-read', [SupportController::class, 'toggleReadMessage'])->name('support.messages.toggle-read');
         Route::post('support/messages/{message}/archive', [SupportController::class, 'archiveMessage'])->name('support.messages.archive');
         Route::delete('support/messages/{message}', [SupportController::class, 'destroyMessage'])->name('support.messages.destroy');
+        Route::post('support/messages/bulk-delete', [SupportController::class, 'bulkDestroyMessages'])->name('support.messages.bulk-destroy');
         Route::post('support/tickets/{ticket}/reply', [SupportController::class, 'replyTicket'])->name('support.tickets.reply');
+        Route::delete('support/tickets/{ticket}', [SupportController::class, 'destroyTicket'])->name('support.tickets.destroy');
+        Route::post('support/tickets/bulk-delete', [SupportController::class, 'bulkDestroyTickets'])->name('support.tickets.bulk-destroy');
         Route::delete('support/newsletter/{subscriber}', [SupportController::class, 'destroySubscriber'])->name('support.newsletter.destroy');
         Route::post('support/newsletter/bulk-delete', [SupportController::class, 'bulkDestroySubscribers'])->name('support.newsletter.bulk-destroy');
 

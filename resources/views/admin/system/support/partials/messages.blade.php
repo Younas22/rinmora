@@ -1,5 +1,6 @@
 @php
     $priorityStyle = ['high' => 'danger', 'medium' => 'warning', 'low' => 'info'];
+    $canDeleteMessages = auth()->user()->hasPermission('delete-contact-messages');
 @endphp
 
 <div id="section-messages" class="section-panel {{ $tab !== 'messages' ? 'hidden' : '' }}">
@@ -21,11 +22,30 @@
             </div>
         </form>
 
-        <div class="overflow-x-auto">
+        @if ($canDeleteMessages)
+            {{-- Deliberately NOT wrapping the table below: each row already has its
+                 own Archive/Delete <form>, and nesting a <form> inside another <form>
+                 is invalid HTML that makes browsers close the outer form early,
+                 silently dropping every field after the first nested one. Instead
+                 this form stays empty/detached and the checkboxes + submit button
+                 associate with it via the form="bulkMessageForm" attribute. --}}
+            <form id="bulkMessageForm" method="POST" action="{{ route('admin.system.support.messages.bulk-destroy') }}">
+                @csrf
+            </form>
+            <div id="messageBulkBar" class="hidden items-center justify-between gap-3 px-4 py-3 bg-ink text-white text-sm mx-4 md:mx-5 mt-4 rounded-2xl">
+                <span><span id="messageSelectedCount">0</span> selected</span>
+                <button type="submit" form="bulkMessageForm" onclick="return confirm('Delete selected messages?');" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-danger hover:bg-danger/85 transition">Bulk Delete</button>
+            </div>
+        @endif
+
+        <div class="overflow-x-auto{{ $canDeleteMessages ? ' mt-4' : '' }}">
             <table class="w-full text-sm min-w-[640px]">
                 <thead>
                     <tr class="text-left text-black/40 text-xs uppercase tracking-wide border-b border-black/5">
-                        <th class="py-3 pl-5 font-medium">Customer</th>
+                        @if ($canDeleteMessages)
+                            <th class="py-3 pl-5 font-medium w-8"><input type="checkbox" id="messageSelectAll"></th>
+                        @endif
+                        <th class="py-3 font-medium {{ $canDeleteMessages ? '' : 'pl-5' }}">Customer</th>
                         <th class="py-3 font-medium">Subject</th>
                         <th class="py-3 font-medium">Priority</th>
                         <th class="py-3 font-medium">Date</th>
@@ -35,7 +55,10 @@
                 <tbody class="divide-y divide-black/5">
                     @forelse ($messages as $message)
                         <tr class="hover:bg-black/[0.02] transition {{ $message->is_read ? '' : 'bg-primary/[0.03]' }}">
-                            <td class="py-3 pl-5">
+                            @if ($canDeleteMessages)
+                                <td class="py-3 pl-5"><input type="checkbox" name="ids[]" value="{{ $message->id }}" class="message-checkbox" form="bulkMessageForm"></td>
+                            @endif
+                            <td class="py-3 {{ $canDeleteMessages ? '' : 'pl-5' }}">
                                 <div class="flex items-center gap-2.5">
                                     <span class="w-8 h-8 rounded-full bg-primary/20 grid place-items-center text-xs font-semibold shrink-0">{{ strtoupper(substr($message->name, 0, 1)) }}</span>
                                     <div class="min-w-0">
@@ -62,15 +85,17 @@
                                         @csrf
                                         <button type="submit" aria-label="Archive" class="w-8 h-8 rounded-full grid place-items-center hover:bg-black/5 transition"><i class="fa-solid fa-box-archive text-xs text-black/40"></i></button>
                                     </form>
-                                    <form method="POST" action="{{ route('admin.system.support.messages.destroy', $message) }}" onsubmit="return confirm('Delete this message?');">
-                                        @csrf @method('DELETE')
-                                        <button type="submit" aria-label="Delete" class="w-8 h-8 rounded-full grid place-items-center hover:bg-danger/10 transition"><i class="fa-solid fa-trash-can text-xs text-danger"></i></button>
-                                    </form>
+                                    @if ($canDeleteMessages)
+                                        <form method="POST" action="{{ route('admin.system.support.messages.destroy', $message) }}" onsubmit="return confirm('Delete this message?');">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" aria-label="Delete" class="w-8 h-8 rounded-full grid place-items-center hover:bg-danger/10 transition"><i class="fa-solid fa-trash-can text-xs text-danger"></i></button>
+                                        </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="5" class="py-10 text-center text-black/40 text-sm">No messages.</td></tr>
+                        <tr><td colspan="{{ $canDeleteMessages ? 6 : 5 }}" class="py-10 text-center text-black/40 text-sm">No messages.</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -126,4 +151,25 @@
       });
     });
   })();
+
+  @if ($canDeleteMessages)
+  (function () {
+    const selectAll = document.getElementById('messageSelectAll');
+    const bar = document.getElementById('messageBulkBar');
+    const countEl = document.getElementById('messageSelectedCount');
+
+    function updateBar() {
+      const checked = document.querySelectorAll('.message-checkbox:checked').length;
+      countEl.textContent = checked;
+      bar.classList.toggle('hidden', checked === 0);
+      bar.classList.toggle('flex', checked > 0);
+    }
+
+    selectAll?.addEventListener('change', () => {
+      document.querySelectorAll('.message-checkbox').forEach(cb => { cb.checked = selectAll.checked; });
+      updateBar();
+    });
+    document.querySelectorAll('.message-checkbox').forEach(cb => cb.addEventListener('change', updateBar));
+  })();
+  @endif
 </script>

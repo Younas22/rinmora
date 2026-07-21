@@ -1,6 +1,7 @@
 @php
     $ticketStatusStyle = ['open' => 'info', 'pending' => 'warning', 'resolved' => 'success', 'closed' => 'black/5'];
     $statusSteps = ['open', 'pending', 'resolved', 'closed'];
+    $canDeleteTickets = auth()->user()->hasPermission('delete-support-tickets');
 @endphp
 
 <div id="section-tickets" class="section-panel {{ $tab !== 'tickets' ? 'hidden' : '' }}">
@@ -13,22 +14,47 @@
     </div>
 
     <div class="grid lg:grid-cols-[320px_1fr] gap-5">
-        <div class="bg-white rounded-3xl shadow-card p-3 space-y-1 h-fit">
-            @forelse ($tickets as $t)
-                <a href="{{ route('admin.system.support.index', ['tab' => 'tickets', 'ticket' => $t->id]) }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition {{ $selectedTicket && $selectedTicket->id === $t->id ? 'bg-primary/15' : 'hover:bg-black/5' }}">
-                    <span class="w-8 h-8 rounded-full bg-primary/20 grid place-items-center text-xs font-semibold shrink-0">{{ strtoupper(substr($t->customer_name, 0, 1)) }}</span>
-                    <div class="min-w-0 flex-1">
-                        <p class="text-sm font-semibold truncate">{{ $t->ticket_number }} &middot; {{ $t->subject }}</p>
-                        <p class="text-black/40 text-xs truncate">{{ $t->customer_name }}</p>
+        <div>
+            @if ($canDeleteTickets)
+                <form id="bulkTicketForm" method="POST" action="{{ route('admin.system.support.tickets.bulk-destroy') }}">
+                    @csrf
+                    <div class="flex items-center justify-between gap-2 mb-2 px-1">
+                        <label class="flex items-center gap-2 text-xs text-black/50">
+                            <input type="checkbox" id="ticketSelectAll"> Select all
+                        </label>
+                        <div id="ticketBulkBar" class="hidden items-center gap-2">
+                            <span class="text-xs text-black/50"><span id="ticketSelectedCount">0</span> selected</span>
+                            <button type="submit" onclick="return confirm('Delete selected tickets? This also deletes their conversation history.');" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-danger text-white hover:bg-danger/85 transition">Delete</button>
+                        </div>
                     </div>
-                    <div class="text-right shrink-0">
-                        <span class="bg-{{ $ticketStatusStyle[$t->status] }}/10 text-{{ $ticketStatusStyle[$t->status] }} text-[10px] font-semibold px-2 py-0.5 rounded-full capitalize block mb-1">{{ $t->status }}</span>
-                        <span class="text-black/35 text-[10px]">{{ $t->updated_at->diffForHumans(null, true) }}</span>
+            @endif
+
+            <div class="bg-white rounded-3xl shadow-card p-3 space-y-1 h-fit">
+                @forelse ($tickets as $t)
+                    <div class="flex items-center gap-1 rounded-xl transition {{ $selectedTicket && $selectedTicket->id === $t->id ? 'bg-primary/15' : 'hover:bg-black/5' }}">
+                        @if ($canDeleteTickets)
+                            <input type="checkbox" name="ids[]" value="{{ $t->id }}" class="ticket-checkbox ml-2 shrink-0">
+                        @endif
+                        <a href="{{ route('admin.system.support.index', ['tab' => 'tickets', 'ticket' => $t->id]) }}" class="flex items-center gap-3 px-3 py-2.5 flex-1 min-w-0">
+                            <span class="w-8 h-8 rounded-full bg-primary/20 grid place-items-center text-xs font-semibold shrink-0">{{ strtoupper(substr($t->customer_name, 0, 1)) }}</span>
+                            <div class="min-w-0 flex-1">
+                                <p class="text-sm font-semibold truncate">{{ $t->ticket_number }} &middot; {{ $t->subject }}</p>
+                                <p class="text-black/40 text-xs truncate">{{ $t->customer_name }}</p>
+                            </div>
+                            <div class="text-right shrink-0">
+                                <span class="bg-{{ $ticketStatusStyle[$t->status] }}/10 text-{{ $ticketStatusStyle[$t->status] }} text-[10px] font-semibold px-2 py-0.5 rounded-full capitalize block mb-1">{{ $t->status }}</span>
+                                <span class="text-black/35 text-[10px]">{{ $t->updated_at->diffForHumans(null, true) }}</span>
+                            </div>
+                        </a>
                     </div>
-                </a>
-            @empty
-                <p class="text-center text-black/40 text-sm py-6">No tickets yet.</p>
-            @endforelse
+                @empty
+                    <p class="text-center text-black/40 text-sm py-6">No tickets yet.</p>
+                @endforelse
+            </div>
+
+            @if ($canDeleteTickets)
+                </form>
+            @endif
         </div>
 
         <div class="bg-white rounded-3xl shadow-card p-5 md:p-6">
@@ -51,6 +77,12 @@
                         <p class="text-black/40 text-xs">{{ $selectedTicket->customer_email }}</p>
                     </div>
                     <span class="bg-black/5 text-black/50 text-[11px] font-semibold px-2.5 py-1 rounded-full">{{ $selectedTicket->ticket_number }}</span>
+                    @if ($canDeleteTickets)
+                        <form method="POST" action="{{ route('admin.system.support.tickets.destroy', $selectedTicket) }}" onsubmit="return confirm('Delete this ticket? This also deletes its conversation history.');">
+                            @csrf @method('DELETE')
+                            <button type="submit" aria-label="Delete ticket" class="w-8 h-8 rounded-full grid place-items-center hover:bg-danger/10 transition"><i class="fa-solid fa-trash-can text-xs text-danger"></i></button>
+                        </form>
+                    @endif
                 </div>
 
                 <div class="space-y-4 mb-5 max-h-[360px] overflow-y-auto pr-1">
@@ -92,3 +124,26 @@
         </div>
     </div>
 </div>
+
+@if ($canDeleteTickets)
+<script>
+  (function () {
+    const selectAll = document.getElementById('ticketSelectAll');
+    const bar = document.getElementById('ticketBulkBar');
+    const countEl = document.getElementById('ticketSelectedCount');
+
+    function updateBar() {
+      const checked = document.querySelectorAll('.ticket-checkbox:checked').length;
+      countEl.textContent = checked;
+      bar.classList.toggle('hidden', checked === 0);
+      bar.classList.toggle('flex', checked > 0);
+    }
+
+    selectAll?.addEventListener('change', () => {
+      document.querySelectorAll('.ticket-checkbox').forEach(cb => { cb.checked = selectAll.checked; });
+      updateBar();
+    });
+    document.querySelectorAll('.ticket-checkbox').forEach(cb => cb.addEventListener('change', updateBar));
+  })();
+</script>
+@endif

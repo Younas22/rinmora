@@ -47,6 +47,8 @@ class AdminSystemSeeder extends Seeder
             ['name' => 'Manage Media', 'slug' => 'manage-media', 'group' => 'Content'],
             ['name' => 'Manage SEO', 'slug' => 'manage-seo', 'group' => 'Content'],
             ['name' => 'Manage Notifications', 'slug' => 'manage-notifications', 'group' => 'Content'],
+            ['name' => 'Delete Contact Messages', 'slug' => 'delete-contact-messages', 'group' => 'Support'],
+            ['name' => 'Delete Support Tickets', 'slug' => 'delete-support-tickets', 'group' => 'Support'],
             ['name' => 'View Reports', 'slug' => 'view-reports', 'group' => 'Reports'],
             ['name' => 'Manage Users & Roles', 'slug' => 'manage-users-roles', 'group' => 'System'],
             ['name' => 'Manage Settings', 'slug' => 'manage-settings', 'group' => 'System'],

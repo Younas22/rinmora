@@ -87,11 +87,27 @@ class SupportController extends Controller
         return back()->with('success', 'Message archived.');
     }
 
-    public function destroyMessage(ContactMessage $message)
+    public function destroyMessage(Request $request, ContactMessage $message)
     {
+        abort_unless($request->user()->hasPermission('delete-contact-messages'), 403);
+
         $message->delete();
 
         return back()->with('success', 'Message deleted.');
+    }
+
+    public function bulkDestroyMessages(Request $request)
+    {
+        abort_unless($request->user()->hasPermission('delete-contact-messages'), 403);
+
+        $data = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:contact_messages,id',
+        ]);
+
+        ContactMessage::whereIn('id', $data['ids'])->delete();
+
+        return back()->with('success', count($data['ids']).' message(s) deleted.');
     }
 
     public function replyTicket(Request $request, SupportTicket $ticket)
@@ -112,6 +128,29 @@ class SupportController extends Controller
         $ticket->update(['status' => $data['status']]);
 
         return back()->with('success', 'Reply sent.');
+    }
+
+    public function destroyTicket(Request $request, SupportTicket $ticket)
+    {
+        abort_unless($request->user()->hasPermission('delete-support-tickets'), 403);
+
+        $ticket->delete();
+
+        return redirect()->route('admin.system.support.index', ['tab' => 'tickets'])->with('success', 'Ticket deleted.');
+    }
+
+    public function bulkDestroyTickets(Request $request)
+    {
+        abort_unless($request->user()->hasPermission('delete-support-tickets'), 403);
+
+        $data = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:support_tickets,id',
+        ]);
+
+        SupportTicket::whereIn('id', $data['ids'])->delete();
+
+        return redirect()->route('admin.system.support.index', ['tab' => 'tickets'])->with('success', count($data['ids']).' ticket(s) deleted.');
     }
 
     public function destroySubscriber(NewsletterSubscriber $subscriber)
