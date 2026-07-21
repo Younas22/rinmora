@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Admin\System;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ContactMessageReplyMail;
 use App\Models\NewsletterSubscriber;
 use App\Models\System\ContactMessage;
 use App\Models\System\SupportTicket;
 use App\Models\System\SupportTicketMessage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class SupportController extends Controller
 {
@@ -70,7 +72,15 @@ class SupportController extends Controller
             'is_read' => true,
         ]);
 
-        return back()->with('success', 'Reply sent.');
+        try {
+            Mail::to($message->email)->send(new ContactMessageReplyMail($message));
+        } catch (\Throwable $e) {
+            report($e);
+
+            return back()->with('error', "Reply saved, but the email to {$message->email} failed to send. Check the SMTP/Resend settings.");
+        }
+
+        return back()->with('success', "Reply sent to {$message->email}.");
     }
 
     public function toggleReadMessage(ContactMessage $message)
