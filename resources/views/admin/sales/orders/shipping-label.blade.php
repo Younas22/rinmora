@@ -10,6 +10,7 @@
         $trackingCode = 'TRK-'.str_pad($order->id, 7, '0', STR_PAD_LEFT).'PK';
         $labelLogoPath = \App\Models\Setting::getValue('logo_path', 'store_branding');
         $labelLogoUrl = $labelLogoPath ? \Illuminate\Support\Facades\Storage::disk('public_uploads')->url($labelLogoPath) : asset('public/logo-01.png');
+        $storeInfo = \App\Models\Setting::getByGroup('store_info');
     @endphp
 
     <div class="print-card bg-white rounded-3xl shadow-card p-8 border-2 border-dashed border-black/15">
@@ -21,8 +22,10 @@
 
         <div class="mb-6 pb-6 border-b border-dashed border-black/15">
             <p class="text-black/40 text-[11px] font-semibold uppercase tracking-wide mb-1.5">From</p>
-            <p class="text-sm font-medium">Rinmora Fulfillment Center</p>
-            <p class="text-black/60 text-sm">Plot 24, Korangi Industrial Area, Karachi, Sindh 74900, Pakistan</p>
+            <p class="text-sm font-medium">{{ $storeInfo['biz_name'] ?? 'Rinmora' }}</p>
+            @if (!empty($storeInfo['biz_address']))
+                <p class="text-black/60 text-sm">{{ $storeInfo['biz_address'] }}</p>
+            @endif
         </div>
 
         <div class="mb-6 pb-6 border-b border-dashed border-black/15">

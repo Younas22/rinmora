@@ -11,11 +11,16 @@
                 @php
                     $invoiceLogoPath = \App\Models\Setting::getValue('logo_path', 'store_branding');
                     $invoiceLogoUrl = $invoiceLogoPath ? \Illuminate\Support\Facades\Storage::disk('public_uploads')->url($invoiceLogoPath) : asset('public/logo-01.png');
+                    $storeInfo = \App\Models\Setting::getByGroup('store_info');
                 @endphp
-                <img src="{{ $invoiceLogoUrl }}" alt="Rinmora" class="h-10 w-auto mb-3">
-                <p class="font-semibold text-sm">Rinmora Pvt. Ltd.</p>
-                <p class="text-black/50 text-xs">Plot 24, Korangi Industrial Area, Karachi, Sindh 74900, Pakistan</p>
-                <p class="text-black/50 text-xs">hello@rinmora.com &middot; +92 21 111 786 462</p>
+                <img src="{{ $invoiceLogoUrl }}" alt="{{ $storeInfo['biz_name'] ?? 'Rinmora' }}" class="h-10 w-auto mb-3">
+                <p class="font-semibold text-sm">{{ $storeInfo['biz_name'] ?? 'Rinmora' }}</p>
+                @if (!empty($storeInfo['biz_address']))
+                    <p class="text-black/50 text-xs">{{ $storeInfo['biz_address'] }}</p>
+                @endif
+                @if (!empty($storeInfo['biz_email']) || !empty($storeInfo['biz_phone']))
+                    <p class="text-black/50 text-xs">{{ $storeInfo['biz_email'] ?? '' }}{{ !empty($storeInfo['biz_email']) && !empty($storeInfo['biz_phone']) ? ' · ' : '' }}{{ $storeInfo['biz_phone'] ?? '' }}</p>
+                @endif
             </div>
             <div class="text-right">
                 <h1 class="text-xl font-bold">Invoice</h1>
