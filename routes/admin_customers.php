@@ -25,6 +25,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
         Route::get('customers/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
         Route::get('customers/reward-points', [RewardPointController::class, 'index'])->name('reward-points.index');
+
+        Route::delete('customers/bulk-delete', [CustomerController::class, 'destroyMany'])->name('destroyMany');
     });
 
     // Route::resource() prefixes route names with the resource name itself

@@ -4,14 +4,23 @@
 
 @section('content')
 
+    @php $canDeleteCustomers = auth()->user()->hasPermission('delete-customers'); @endphp
+
     <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div>
             <h1 class="text-xl md:text-2xl font-bold">All Customers</h1>
             <p class="text-black/45 text-sm mt-1">View profiles, order history, and lifetime value.</p>
         </div>
-        <a href="{{ route('admin.customers.create') }}" class="inline-flex items-center gap-2 bg-primary text-ink rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-primary-dark transition">
-            <i class="fa-solid fa-plus text-[10px]"></i> Add Customer
-        </a>
+        <div class="flex items-center gap-2">
+            @if ($canDeleteCustomers)
+                <button type="button" id="deleteSelectedBtn" class="hidden inline-flex items-center gap-2 border border-danger/30 text-danger rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-danger/10 transition">
+                    <i class="fa-solid fa-trash text-[10px]"></i> Delete Selected (<span id="selectedCount">0</span>)
+                </button>
+            @endif
+            <a href="{{ route('admin.customers.create') }}" class="inline-flex items-center gap-2 bg-primary text-ink rounded-full px-4 py-2.5 text-xs font-semibold hover:bg-primary-dark transition">
+                <i class="fa-solid fa-plus text-[10px]"></i> Add Customer
+            </a>
+        </div>
     </div>
 
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
@@ -67,10 +76,15 @@
         </form>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-sm min-w-[880px]">
+            <table class="w-full text-sm min-w-[880px]" id="customersTable">
                 <thead>
                     <tr class="text-left text-black/40 text-xs uppercase tracking-wide border-b border-black/5">
-                        <th class="py-3 pl-5 font-medium">Customer</th>
+                        @if ($canDeleteCustomers)
+                            <th class="py-3 pl-5 w-8">
+                                <input type="checkbox" id="selectAllCustomers" aria-label="Select all customers on this page">
+                            </th>
+                        @endif
+                        <th class="py-3 font-medium {{ $canDeleteCustomers ? '' : 'pl-5' }}">Customer</th>
                         <th class="py-3 font-medium">Location</th>
                         <th class="py-3 font-medium">Orders</th>
                         <th class="py-3 font-medium">Lifetime Value</th>
@@ -83,7 +97,12 @@
                 <tbody class="divide-y divide-black/5">
                     @forelse ($customers as $customer)
                         <tr class="hover:bg-black/[0.02] transition">
-                            <td class="py-3 pl-5">
+                            @if ($canDeleteCustomers)
+                                <td class="py-3 pl-5">
+                                    <input type="checkbox" class="customer-select-checkbox" value="{{ $customer->id }}" aria-label="Select {{ $customer->full_name }}">
+                                </td>
+                            @endif
+                            <td class="py-3 {{ $canDeleteCustomers ? '' : 'pl-5' }}">
                                 <div class="flex items-center gap-3">
                                     <span class="w-9 h-9 rounded-full bg-primary/20 grid place-items-center text-xs font-semibold shrink-0">{{ strtoupper(substr($customer->first_name, 0, 1)) }}</span>
                                     <div class="min-w-0">
@@ -116,17 +135,19 @@
                                 @endif
                             </td>
                             <td class="py-3 text-black/50 text-xs">{{ $customer->last_login_label }}</td>
-                            <td class="py-3 pr-5 text-right">
+                            <td class="py-3 pr-5 text-right whitespace-nowrap">
                                 <a href="{{ route('admin.customers.show', $customer) }}" class="text-xs font-semibold text-black/50 hover:text-ink transition mr-3">View</a>
                                 <a href="{{ route('admin.customers.edit', $customer) }}" class="text-xs font-semibold text-black/50 hover:text-ink transition mr-3">Edit</a>
-                                <form method="POST" action="{{ route('admin.customers.destroy', $customer) }}" class="inline" onsubmit="return confirm('Delete this customer?');">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="text-xs font-semibold text-danger hover:text-danger/70 transition">Delete</button>
-                                </form>
+                                @if ($canDeleteCustomers)
+                                    <form method="POST" action="{{ route('admin.customers.destroy', $customer) }}" class="inline" onsubmit="return confirm('Delete {{ $customer->full_name }}? This also permanently removes their saved addresses, wishlist, and reward points. Their past orders are kept but unlinked from this account.');">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="text-xs font-semibold text-danger hover:text-danger/70 transition">Delete</button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="8" class="py-10 text-center text-black/40 text-sm">No customers yet.</td></tr>
+                        <tr><td colspan="{{ $canDeleteCustomers ? 9 : 8 }}" class="py-10 text-center text-black/40 text-sm">No customers yet.</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -140,3 +161,54 @@
     </div>
 
 @endsection
+
+@if ($canDeleteCustomers)
+    @push('scripts')
+    <script>
+      const customersTable = document.getElementById('customersTable');
+      const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
+      const selectedCountEl = document.getElementById('selectedCount');
+      const selectAllCustomers = document.getElementById('selectAllCustomers');
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content ?? '{{ csrf_token() }}';
+
+      function rowCheckboxes() {
+        return [...customersTable.querySelectorAll('.customer-select-checkbox')];
+      }
+
+      function syncSelectionUi() {
+        const boxes = rowCheckboxes();
+        const checked = boxes.filter(c => c.checked);
+        selectedCountEl.textContent = checked.length;
+        deleteSelectedBtn.classList.toggle('hidden', checked.length === 0);
+        selectAllCustomers.checked = boxes.length > 0 && checked.length === boxes.length;
+        selectAllCustomers.indeterminate = checked.length > 0 && checked.length < boxes.length;
+      }
+
+      selectAllCustomers.addEventListener('change', () => {
+        rowCheckboxes().forEach(c => { c.checked = selectAllCustomers.checked; });
+        syncSelectionUi();
+      });
+
+      customersTable.addEventListener('change', (e) => {
+        if (!e.target.classList.contains('customer-select-checkbox')) return;
+        syncSelectionUi();
+      });
+
+      deleteSelectedBtn.addEventListener('click', async () => {
+        const checked = rowCheckboxes().filter(c => c.checked);
+        if (!checked.length || !confirm(`Delete ${checked.length} selected customer(s)? This also permanently removes their saved addresses, wishlist, and reward points. Their past orders are kept but unlinked from their account. This cannot be undone.`)) return;
+
+        const res = await fetch(@json(route('admin.customers.destroyMany')), {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' },
+          body: JSON.stringify({ customer_ids: checked.map(c => c.value) }),
+        });
+
+        if (!res.ok) { alert('Could not delete the selected customers.'); return; }
+
+        checked.forEach(c => c.closest('tr').remove());
+        syncSelectionUi();
+      });
+    </script>
+    @endpush
+@endif

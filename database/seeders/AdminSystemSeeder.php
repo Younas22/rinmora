@@ -42,6 +42,7 @@ class AdminSystemSeeder extends Seeder
             ['name' => 'Manage Payments', 'slug' => 'manage-payments', 'group' => 'Orders'],
             ['name' => 'Delete Orders', 'slug' => 'delete-orders', 'group' => 'Orders'],
             ['name' => 'Manage Customers', 'slug' => 'manage-customers', 'group' => 'Customers'],
+            ['name' => 'Delete Customers', 'slug' => 'delete-customers', 'group' => 'Customers'],
             ['name' => 'Manage CMS Content', 'slug' => 'manage-cms-content', 'group' => 'Content'],
             ['name' => 'Manage Media', 'slug' => 'manage-media', 'group' => 'Content'],
             ['name' => 'Manage SEO', 'slug' => 'manage-seo', 'group' => 'Content'],

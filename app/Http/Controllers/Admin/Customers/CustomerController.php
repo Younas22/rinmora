@@ -111,13 +111,27 @@ class CustomerController extends Controller
         return redirect()->route('admin.customers.show', $customer)->with('success', 'Customer updated.');
     }
 
-    public function destroy(User $customer)
+    public function destroy(Request $request, User $customer)
     {
         abort_unless($customer->isCustomer(), 404);
+        abort_unless($request->user()->hasPermission('delete-customers'), 403);
 
         $customer->delete();
 
         return redirect()->route('admin.customers.index')->with('success', 'Customer deleted.');
+    }
+
+    public function destroyMany(Request $request)
+    {
+        abort_unless($request->user()->hasPermission('delete-customers'), 403);
+
+        $customers = User::customers()->whereIn('id', (array) $request->input('customer_ids', []))->get();
+
+        foreach ($customers as $customer) {
+            $customer->delete();
+        }
+
+        return response()->json(['deleted' => $customers->pluck('id')]);
     }
 
     protected function validated(Request $request, ?User $customer = null): array
