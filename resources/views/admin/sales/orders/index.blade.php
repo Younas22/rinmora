@@ -56,7 +56,9 @@
                 <thead>
                     <tr class="text-left text-black/40 text-xs uppercase tracking-wide border-b border-black/5">
                         @if ($canDeleteOrders)
-                            <th class="py-3 pl-5 w-8"><span class="sr-only">Select</span></th>
+                            <th class="py-3 pl-5 w-8">
+                                <input type="checkbox" id="selectAllOrders" aria-label="Select all orders on this page">
+                            </th>
                         @endif
                         <th class="py-3 font-medium {{ $canDeleteOrders ? '' : 'pl-5' }}">Order</th>
                         <th class="py-3 font-medium">Customer</th>
@@ -130,17 +132,34 @@
       const ordersTable = document.getElementById('ordersTable');
       const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
       const selectedCountEl = document.getElementById('selectedCount');
+      const selectAllOrders = document.getElementById('selectAllOrders');
       const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content ?? '{{ csrf_token() }}';
+
+      function rowCheckboxes() {
+        return [...ordersTable.querySelectorAll('.order-select-checkbox')];
+      }
+
+      function syncSelectionUi() {
+        const boxes = rowCheckboxes();
+        const checked = boxes.filter(c => c.checked);
+        selectedCountEl.textContent = checked.length;
+        deleteSelectedBtn.classList.toggle('hidden', checked.length === 0);
+        selectAllOrders.checked = boxes.length > 0 && checked.length === boxes.length;
+        selectAllOrders.indeterminate = checked.length > 0 && checked.length < boxes.length;
+      }
+
+      selectAllOrders.addEventListener('change', () => {
+        rowCheckboxes().forEach(c => { c.checked = selectAllOrders.checked; });
+        syncSelectionUi();
+      });
 
       ordersTable.addEventListener('change', (e) => {
         if (!e.target.classList.contains('order-select-checkbox')) return;
-        const count = ordersTable.querySelectorAll('.order-select-checkbox:checked').length;
-        selectedCountEl.textContent = count;
-        deleteSelectedBtn.classList.toggle('hidden', count === 0);
+        syncSelectionUi();
       });
 
       deleteSelectedBtn.addEventListener('click', async () => {
-        const checked = [...ordersTable.querySelectorAll('.order-select-checkbox:checked')];
+        const checked = rowCheckboxes().filter(c => c.checked);
         if (!checked.length || !confirm(`Delete ${checked.length} selected order(s)? This permanently removes them and their payment/refund history and cannot be undone.`)) return;
 
         const res = await fetch(@json(route('admin.sales.orders.destroyMany')), {
@@ -152,8 +171,7 @@
         if (!res.ok) { alert('Could not delete the selected orders.'); return; }
 
         checked.forEach(c => c.closest('tr').remove());
-        deleteSelectedBtn.classList.add('hidden');
-        selectedCountEl.textContent = '0';
+        syncSelectionUi();
       });
     </script>
     @endpush
