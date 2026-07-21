@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Admin\Sales;
 
 use App\Http\Controllers\Controller;
+use App\Mail\CustomerOrderDeliveredMail;
+use App\Mail\CustomerOrderShippedMail;
 use App\Models\Catalog\Product;
 use App\Models\Sales\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -183,6 +186,8 @@ class OrderController extends Controller
             'signee' => 'nullable|string|max:255',
         ]);
 
+        $previousStatus = $order->status;
+
         $order->update(['status' => $data['status']]);
 
         $description = match ($data['status']) {
@@ -196,6 +201,20 @@ class OrderController extends Controller
             'description' => $description,
             'created_by' => $request->user()->id,
         ]);
+
+        if ($data['status'] !== $previousStatus && in_array($data['status'], ['shipped', 'delivered'], true)) {
+            try {
+                if ($data['status'] === 'shipped') {
+                    Mail::to($order->customer_email)->send(new CustomerOrderShippedMail($order, $data['carrier'] ?? null, $data['tracking_number'] ?? null));
+                } else {
+                    Mail::to($order->customer_email)->send(new CustomerOrderDeliveredMail($order));
+                }
+            } catch (\Throwable $e) {
+                report($e);
+
+                return back()->with('error', "Order status updated, but the {$data['status']} email to {$order->customer_email} failed to send.");
+            }
+        }
 
         return back()->with('success', 'Order status updated.');
     }
