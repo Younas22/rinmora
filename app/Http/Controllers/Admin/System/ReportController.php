@@ -14,14 +14,55 @@ use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
+    protected const DATE_RANGES = ['this_month', 'last_month', 'last_7_days', 'last_30_days', 'this_year', 'custom'];
+
+    protected function resolveDateRange(Request $request): array
+    {
+        $range = $request->get('range', 'this_month');
+        if (!in_array($range, self::DATE_RANGES, true)) {
+            $range = 'this_month';
+        }
+
+        $today = Carbon::today();
+
+        if ($range === 'custom') {
+            $from = $request->get('from');
+            $to = $request->get('to');
+
+            if ($from && $to && strtotime($from) && strtotime($to)) {
+                $start = Carbon::parse($from)->startOfDay();
+                $end = Carbon::parse($to)->endOfDay();
+                if ($start->gt($end)) {
+                    [$start, $end] = [$end->copy()->startOfDay(), $start->copy()->endOfDay()];
+                }
+            } else {
+                $range = 'this_month';
+            }
+        }
+
+        if ($range !== 'custom') {
+            [$start, $end] = match ($range) {
+                'last_month' => [$today->copy()->subMonthNoOverflow()->startOfMonth(), $today->copy()->subMonthNoOverflow()->endOfMonth()],
+                'last_7_days' => [$today->copy()->subDays(6)->startOfDay(), $today->copy()->endOfDay()],
+                'last_30_days' => [$today->copy()->subDays(29)->startOfDay(), $today->copy()->endOfDay()],
+                'this_year' => [$today->copy()->startOfYear(), $today->copy()->endOfDay()],
+                default => [$today->copy()->startOfMonth(), $today->copy()->endOfDay()],
+            };
+        }
+
+        // Comparison window: the immediately preceding period of equal length,
+        // so "+X% vs last period" means the same thing for every range option.
+        $days = $start->diffInDays($end) + 1;
+        $prevEnd = $start->copy()->subDay()->endOfDay();
+        $prevStart = $prevEnd->copy()->subDays($days - 1)->startOfDay();
+
+        return [$start, $end, $prevStart, $prevEnd, $range];
+    }
+
     public function index(Request $request)
     {
         $reportType = $request->get('type', 'sales');
-
-        $start = Carbon::now()->startOfMonth();
-        $end = Carbon::now()->endOfDay();
-        $prevStart = (clone $start)->subMonthNoOverflow();
-        $prevEnd = (clone $start)->subDay()->endOfDay();
+        [$start, $end, $prevStart, $prevEnd, $dateRange] = $this->resolveDateRange($request);
 
         $totalRevenue = (float) Order::whereBetween('created_at', [$start, $end])->sum('total');
         $totalOrders = Order::whereBetween('created_at', [$start, $end])->count();
@@ -112,15 +153,14 @@ class ReportController extends Controller
             });
 
         return view('admin.system.reports.index', compact(
-            'reportType', 'kpis', 'start', 'end', 'revenueByCategory', 'categoryTotal',
+            'reportType', 'dateRange', 'kpis', 'start', 'end', 'revenueByCategory', 'categoryTotal',
             'weeklyVolume', 'maxWeekly', 'topProducts', 'topCustomers', 'dailySummary'
         ));
     }
 
     public function exportSalesCsv(Request $request)
     {
-        $start = Carbon::now()->startOfMonth();
-        $end = Carbon::now()->endOfDay();
+        [$start, $end] = $this->resolveDateRange($request);
 
         $rows = Order::whereBetween('created_at', [$start, $end])
             ->select(
@@ -132,7 +172,7 @@ class ReportController extends Controller
             ->orderBy('day')
             ->get();
 
-        $filename = 'sales-report-'.$start->format('Y-m').'.csv';
+        $filename = 'sales-report-'.$start->format('Y-m-d').'-to-'.$end->format('Y-m-d').'.csv';
 
         return response()->streamDownload(function () use ($rows) {
             $handle = fopen('php://output', 'w');
