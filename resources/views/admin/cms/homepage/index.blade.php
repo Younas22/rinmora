@@ -189,8 +189,8 @@
                     </div>
 
                     <div id="modalContentWrap" class="hidden">
-                        <label class="block text-sm font-medium mb-1.5" for="modalContent">Custom HTML</label>
-                        <textarea name="content" id="modalContent" rows="4" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition resize-none"></textarea>
+                        <label class="block text-sm font-medium mb-1.5" for="modalContent" id="modalContentLabel">Description Text</label>
+                        <textarea name="content" id="modalContent" rows="4" class="w-full px-4 py-2.5 rounded-xl border border-black/10 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition resize-none"></textarea>
                     </div>
 
                     <div class="flex items-center justify-between gap-4 py-1">
@@ -240,6 +240,7 @@
   const modalButtonLink = document.getElementById('modalButtonLink');
   const modalContent = document.getElementById('modalContent');
   const modalContentWrap = document.getElementById('modalContentWrap');
+  const modalContentLabel = document.getElementById('modalContentLabel');
   const modalVisible = document.getElementById('modalVisible');
   const modalImagePreviewWrap = document.getElementById('modalImagePreviewWrap');
   const modalImagePlaceholder = document.getElementById('modalImagePlaceholder');
@@ -249,8 +250,16 @@
   const reorderUrl = "{{ route('admin.cms.homepage-sections.reorder') }}";
   const csrfToken = "{{ csrf_token() }}";
 
+  // hero_slider and promotional_banner also render `content` as their
+  // description paragraph on the storefront (see page.tsx), not just
+  // custom_html — so the field must stay editable for those types too.
+  const TYPES_WITH_CONTENT = ['hero_slider', 'promotional_banner', 'custom_html'];
+
   function toggleContentField() {
-    modalContentWrap.classList.toggle('hidden', modalSectionType.value !== 'custom_html');
+    const type = modalSectionType.value;
+    modalContentWrap.classList.toggle('hidden', !TYPES_WITH_CONTENT.includes(type));
+    modalContentLabel.textContent = type === 'custom_html' ? 'Custom HTML' : 'Description Text';
+    modalContent.classList.toggle('font-mono', type === 'custom_html');
   }
   modalSectionType.addEventListener('change', toggleContentField);
 
