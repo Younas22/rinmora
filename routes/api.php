@@ -29,6 +29,7 @@ Route::prefix('storefront')->group(function () {
     Route::get('layout', [StorefrontController::class, 'layout']);
     Route::get('categories', [StorefrontController::class, 'categories']);
     Route::get('products', [StorefrontController::class, 'products']);
+    Route::get('products/price-range', [StorefrontController::class, 'priceRange']);
     Route::get('products/{slug}', [StorefrontController::class, 'productDetail']);
     Route::get('reels', [StorefrontController::class, 'reels']);
     Route::get('reviews', [StorefrontController::class, 'reviews']);

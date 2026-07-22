@@ -71,6 +71,19 @@ class StorefrontController extends Controller
         return ProductResource::collection($products);
     }
 
+    public function priceRange()
+    {
+        $bounds = Product::active()
+            ->where('is_visible', true)
+            ->selectRaw('MIN(price) as min_price, MAX(price) as max_price')
+            ->first();
+
+        return response()->json([
+            'min' => (float) ($bounds->min_price ?? 0),
+            'max' => (float) ($bounds->max_price ?? 0),
+        ]);
+    }
+
     public function productDetail(string $slug, Request $request)
     {
         $product = Product::active()
